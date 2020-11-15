@@ -5,7 +5,7 @@ export const MainContainer = styled.main`
     margin-left: 20vw;
     width: 80vw;
     min-height: 100vh;
-    background-color: lightpink;
+    background-color: ${props => props.theme.background};
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

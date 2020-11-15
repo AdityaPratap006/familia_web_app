@@ -12,8 +12,8 @@ export const StyledHeader = styled.header`
     position: fixed;
     top: 0;
     left: 0;
-    background: skyblue;
-    border-right: 1px solid blue;
+    background-color: ${props => props.theme.background};
+    border-right: 1px solid ${props => props.theme.defaultBorderColor};
     z-index: 50;
     overflow: hidden;
 

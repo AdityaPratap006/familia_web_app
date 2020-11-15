@@ -7,12 +7,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import { CustomThemeProvider } from './contexts/theme.context';
+
+const Main: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <CustomThemeProvider>
+        <ToastContainer />
+        <App />
+      </CustomThemeProvider>
+    </BrowserRouter>
+  );
+}
 
 ReactDOM.render(
-  <BrowserRouter>
-    <ToastContainer />
-    <App />
-  </BrowserRouter>,
+  <Main />,
   document.getElementById('root')
 );
 
