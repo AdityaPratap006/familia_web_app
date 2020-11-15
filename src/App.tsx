@@ -1,10 +1,14 @@
 import React from 'react';
+import MainNavigation from './navigation/MainNavigation';
 
-function App() {
+
+const App: React.FC = () => {
   return (
-    <div>
-      
-    </div>
+    <React.Fragment>
+      <MainNavigation>
+        <h1>Home Screen</h1>
+      </MainNavigation>
+    </React.Fragment>
   );
 }
 
