@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
-export const StyledHeader = styled.header`
+export const StyledNav = styled.nav`
     padding: 3rem 1rem;
-    width: 20vw;
+    width: 25vw;
     height: 100vh;
     display: flex;
     flex-direction: column;

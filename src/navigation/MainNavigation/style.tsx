@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const MainContainer = styled.main`
-    margin-left: 20vw;
-    width: 80vw;
+    margin-left: 25vw;
+    width: 75vw;
     min-height: 100vh;
     background-color: ${props => props.theme.background};
     display: flex;

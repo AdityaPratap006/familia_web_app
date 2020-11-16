@@ -1,12 +1,12 @@
 import React from 'react';
 import MainNavLinks from '../MainNavLinks';
-import { StyledHeader } from './style';
+import { StyledNav } from './style';
 
 const MainNavBar: React.FC = () => {
     return (
-        <StyledHeader>
+        <StyledNav>
             <MainNavLinks />
-        </StyledHeader>
+        </StyledNav>
     );
 };
 
