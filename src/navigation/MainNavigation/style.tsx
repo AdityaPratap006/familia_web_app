@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const MainContainer = styled.main`
-    margin-left: 25vw;
-    width: 75vw;
+    margin-left: 25%;
+    width: 75%;
     min-height: 100vh;
     background-color: ${props => props.theme.background};
     display: flex;
@@ -13,13 +13,13 @@ export const MainContainer = styled.main`
 
     //tablet
     @media (max-width: ${ScreenSize.SM_MAX}) {
-        margin-left: 10vw;
-        width: 90vw;
+        margin-left: 10%;
+        width: 90%;
     }
 
     // mobile
     @media (max-width: ${ScreenSize.XS_MAX}) {
         margin-left: 0;
-        width: 100vw;
+        width: 100%;
     }
 `;
