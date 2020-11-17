@@ -79,7 +79,7 @@ const navlinksList: NavLinkData[] = [
     },
 ];
 
-const MainNavLinks = () => {
+const MainNavLinks: React.FC = () => {
     const history = useHistory();
     const [currentRoute, setCurrentRoute] = useState(`${history.location.pathname}`);
 

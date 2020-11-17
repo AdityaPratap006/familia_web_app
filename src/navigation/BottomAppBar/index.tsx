@@ -52,7 +52,7 @@ const navlinksList: NavLinkData[] = [
     },
 ];
 
-const BottomAppBar = () => {
+const BottomAppBar: React.FC = () => {
     const history = useHistory();
     const [currentRoute, setCurrentRoute] = useState(`${history.location.pathname}`);
 
