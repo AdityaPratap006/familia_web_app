@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = props => {
 
     if (props.authBtn) {
         return (
-            <AuthButton addcss={props.addcss} >
+            <AuthButton addcss={props.addcss} onClick={props.onClick}>
                 {props.children}
             </AuthButton>
         );
