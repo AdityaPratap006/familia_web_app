@@ -45,9 +45,9 @@ export const blueTheme: ThemeColors = {
 };
 
 export const pinkTheme: ThemeColors = {
-    primary: '#e91e63',
-    primaryLight: '#ec407a',
-    primaryShadow: 'rgba(233,30,99, 0.2)',
+    primary: '#fc045c',
+    primaryLight: '	#FC367B',
+    primaryShadow: 'rgba(252, 4, 91, 0.2)',
 };
 
 export const greenTheme: ThemeColors = {

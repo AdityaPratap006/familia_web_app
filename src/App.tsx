@@ -5,6 +5,7 @@ import { SideDrawerProvider } from './contexts/sidedrawer.context';
 import { CustomThemeContext } from './contexts/theme.context';
 import MainNavigation from './navigation/MainNavigation';
 import { NavigationRoutes } from './navigation/navRoutes';
+import AuthScreen from './screens/AuthScreen';
 import HomeScreen from './screens/HomeScreen';
 import { getTheme } from './utils/theme';
 
@@ -24,6 +25,14 @@ const App: React.FC = () => {
     </Switch>
   );
 
+  const authRoutes = (
+    <Switch>
+      <Route exact to={`${NavigationRoutes.AUTH}`}>
+        <AuthScreen />
+      </Route>
+      <Redirect to={`${NavigationRoutes.AUTH}`} />
+    </Switch>
+  );
 
   const protectedContent = (
     <StyledThemeProvider theme={currentTheme}>
@@ -37,7 +46,8 @@ const App: React.FC = () => {
 
   return (
     <React.Fragment>
-      {protectedContent}
+      {true && authRoutes}
+      {false && protectedContent}
     </React.Fragment>
   );
 }

@@ -1,9 +1,7 @@
 export enum NavigationRoutes {
     HOME = `/`,
-    LOGIN = `/auth/login`,
-    REGISTER = `/auth/register`,
+    AUTH = `/auth`,
     CHATS = `/chats`,
-    COMPLETE_REGISTRATION = `/auth/complete-registration`,
     SETTINGS = `/settings`,
     PROFILE = `/profile`,
     FAMILIES = `/families`,
