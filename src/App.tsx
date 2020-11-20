@@ -8,6 +8,7 @@ import MainNavigation from './navigation/MainNavigation';
 import { NavigationRoutes } from './navigation/navRoutes';
 import AuthScreen from './screens/AuthScreen';
 import HomeScreen from './screens/HomeScreen';
+import SettingsScreen from './screens/SettingsScreen';
 import { getTheme } from './utils/theme';
 
 
@@ -26,6 +27,9 @@ const App: React.FC = () => {
     <Switch>
       <Route exact path={`${NavigationRoutes.HOME}`}>
         <HomeScreen />
+      </Route>
+      <Route exact path={`${NavigationRoutes.SETTINGS}`}>
+        <SettingsScreen />
       </Route>
       <Redirect to={`${NavigationRoutes.HOME}`} />
     </Switch>

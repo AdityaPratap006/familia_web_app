@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaPowerOff } from 'react-icons/fa';
-import { LogoutIconContainer, logoutBtnStyle } from './style';
+import { LogoutIconContainer, logoutBtnStyle, LogoutWarningContent } from './style';
 import Button from '../Button';
 import { firebaseAuth } from '../../utils/firebase';
 import Modal from '../Modal';
@@ -40,7 +40,9 @@ const LogoutButton: React.FC = () => {
                     </React.Fragment>
                 }
             >
-                <p>Do you want to logout?</p>
+                <LogoutWarningContent>
+                    <p>Do you want to logout?</p>
+                </LogoutWarningContent>
             </Modal>
         </React.Fragment>
     );

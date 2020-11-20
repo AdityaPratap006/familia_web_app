@@ -69,3 +69,7 @@ export const LogoutIconContainer = styled.div`
         height: 2rem;
     }
 `;
+
+export const LogoutWarningContent = styled.div`
+    color: ${props => props.theme.text};
+`;
