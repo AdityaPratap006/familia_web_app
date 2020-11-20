@@ -5,6 +5,7 @@ import { BackDropContainer } from './style';
 
 interface BackDropProps {
     show: boolean;
+    overSideDrawer?: boolean;
     onClick?: () => void;
 }
 
@@ -12,7 +13,7 @@ const BackDrop: React.FC<BackDropProps> = (props) => {
     const backDrop = (
         <CSSTransition
             in={props.show}
-            timeout={300}
+            timeout={100}
             classNames={{
                 enterActive: `enter-active`,
                 enterDone: `enter-done`,
@@ -22,7 +23,7 @@ const BackDrop: React.FC<BackDropProps> = (props) => {
             mountOnEnter
             unmountOnExit
         >
-            <BackDropContainer key="backdrop" onClick={props.onClick}></BackDropContainer>
+            <BackDropContainer key="backdrop" onClick={props.onClick} overSideDrawer={props.overSideDrawer}></BackDropContainer>
         </CSSTransition>
     );
 

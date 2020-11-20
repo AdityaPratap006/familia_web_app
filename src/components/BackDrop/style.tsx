@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const BackDropContainer = styled.div`
+interface BackDropContainerProps {
+    overSideDrawer?: boolean;
+}
+
+export const BackDropContainer = styled.div<BackDropContainerProps>`
     position: fixed;
     top: 0;
     left: 0;
@@ -8,7 +12,7 @@ export const BackDropContainer = styled.div`
     height: 100vh;
     background-color: ${props => props.theme.text};
     opacity: 0.25;
-    z-index: 80;
+    z-index: ${props => props.overSideDrawer ? 250 : 80};
 
     &.enter-active {
         opacity: 0;
@@ -16,7 +20,7 @@ export const BackDropContainer = styled.div`
 
     &.enter-done {
         opacity: 0.25;
-        transition: all 300ms;
+        transition: all 100ms;
     }
 
     &.exit-active {
@@ -25,6 +29,6 @@ export const BackDropContainer = styled.div`
 
     &.exit {
         opacity: 0;
-        transition: all 300ms;
+        transition: all 100ms;
     }
 `;

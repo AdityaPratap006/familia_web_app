@@ -18,7 +18,7 @@ import {
 } from 'react-icons/ri';
 import { NavLinkList, NavLinkItem } from './style';
 import { NavigationRoutes } from '../navRoutes';
-
+import LogoutButton from '../../components/LogoutButton';
 interface NavLinkData {
     route: string;
     inactiveIcon: JSX.Element;
@@ -109,6 +109,7 @@ const MainNavLinks: React.FC = () => {
     return (
         <NavLinkList>
             {renderedLinks}
+            <LogoutButton />
         </NavLinkList>
     );
 };
