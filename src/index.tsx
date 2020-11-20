@@ -8,14 +8,17 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { CustomThemeProvider } from './contexts/theme.context';
+import { AuthProvider } from './contexts/auth.context';
 
 const Main: React.FC = () => {
   return (
     <BrowserRouter>
-      <CustomThemeProvider>
-        <ToastContainer />
-        <App />
-      </CustomThemeProvider>
+      <AuthProvider>
+        <CustomThemeProvider>
+          <ToastContainer />
+          <App />
+        </CustomThemeProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
