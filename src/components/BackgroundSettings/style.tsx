@@ -52,4 +52,5 @@ export const IndicatorText = styled.span`
     width: 6rem;
     padding: 0.5rem 1rem;
     color: ${props => props.theme.primary};
+    transition: 0.5s ease;
 `;

@@ -27,7 +27,7 @@ export const lightMode: ModeColors = {
 export const darkMode: ModeColors = {
     background: '#000',
     text: '#fff',
-    paper: '#111',
+    paper: '#222',
     defaultBorderColor: `rgba(210, 210, 210, 0.2)`,
     appBarBackground: `#000`,
 }
