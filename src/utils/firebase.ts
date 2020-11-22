@@ -13,7 +13,11 @@ const firebaseConfig = {
 
 Firebase.initializeApp(firebaseConfig);
 
+export { Firebase };
 export const firebaseAuth = Firebase.auth();
 firebaseAuth.setPersistence(Firebase.auth.Auth.Persistence.LOCAL);
 
 export const googleAuthProvider = new Firebase.auth.GoogleAuthProvider();
+export const facebookAuthProvider = new Firebase.auth.FacebookAuthProvider();
+facebookAuthProvider.addScope('email');
+

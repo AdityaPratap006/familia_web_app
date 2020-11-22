@@ -10,6 +10,7 @@ const AuthScreen = () => {
     const {
         loading,
         loginWithGoogleHandler,
+        loginWithFacebookHandler,
     } = useLogin();
 
     const authCardContent = (
@@ -20,7 +21,7 @@ const AuthScreen = () => {
                 </IconContainer>
                 <span>Continue with Google</span>
             </Button>
-            <Button authBtn addcss={btnStyle}>
+            <Button authBtn addcss={btnStyle} onClick={loginWithFacebookHandler}>
                 <IconContainer>
                     <SiFacebook className='icon facebook' />
                 </IconContainer>

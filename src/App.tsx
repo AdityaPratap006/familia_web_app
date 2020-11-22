@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { AuthContext } from './contexts/auth.context';
@@ -15,6 +15,10 @@ import { getTheme } from './utils/theme';
 const App: React.FC = () => {
   const themeValue = useContext(CustomThemeContext);
   const auth = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log(auth.state.user);
+  }, [auth.state.user]);
 
   if (auth.loading) {
     return <h1>checking auth state...</h1>;

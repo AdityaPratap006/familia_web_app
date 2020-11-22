@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { pinkTheme } from '../../utils/theme';
 
 const facebookColor = `#1778f2`;
 const twitterColor = `#00acee`;
@@ -72,4 +73,43 @@ export const IconContainer = styled.div`
     justify-content: center;
     align-items: center;
     background-color: #fff;
+`;
+
+export const MergeAccountContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+`;
+
+export const MergeAccountTitle = styled.h3`
+    font-size: 1.4rem;
+    color: ${pinkTheme.primary};
+    margin: 0.5rem 0;
+    padding: 0;
+`;
+
+export const MergeAccountBody = styled.p`
+    font-size: 1rem;
+    color: #000;
+`;
+
+export const MergeAccountFooter = styled.footer`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+
+    button {
+        background-color: ${pinkTheme.primary};
+    }
+
+    button.button--inverse {
+        color: ${pinkTheme.primary};
+        border-color: ${pinkTheme.primary};
+
+        &:hover {
+            color: ${pinkTheme.primary};
+        }
+    }
 `;
