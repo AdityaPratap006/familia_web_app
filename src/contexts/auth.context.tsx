@@ -84,6 +84,7 @@ export const AuthProvider: React.FC = (props) => {
                     name: user.displayName || '',
                     email: user.email || '',
                     token: idTokenResult.token,
+                    signInProvider: idTokenResult.signInProvider || '',
                 },
             });
 

@@ -2,6 +2,7 @@ export interface IUser {
     token: string;
     name: string;
     email: string;
+    signInProvider: string;
 }
 
 export interface ProfileImage {

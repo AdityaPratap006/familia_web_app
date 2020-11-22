@@ -11,6 +11,7 @@ const AuthScreen = () => {
         loading,
         loginWithGoogleHandler,
         loginWithFacebookHandler,
+        loginWithTwitterHandler,
     } = useLogin();
 
     const authCardContent = (
@@ -27,7 +28,7 @@ const AuthScreen = () => {
                 </IconContainer>
                 <span className='facebook'>Continue with Facebook</span>
             </Button>
-            <Button authBtn addcss={btnStyle}>
+            <Button authBtn addcss={btnStyle} onClick={loginWithTwitterHandler}>
                 <IconContainer>
                     <SiTwitter className='icon twitter' />
                 </IconContainer>

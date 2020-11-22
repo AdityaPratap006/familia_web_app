@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import { Firebase, facebookAuthProvider, firebaseAuth, googleAuthProvider } from '../../utils/firebase';
+import { Firebase, facebookAuthProvider, firebaseAuth, googleAuthProvider, twitterAuthProvider } from '../../utils/firebase';
 import { MergeAccountBody, MergeAccountContent, MergeAccountFooter, MergeAccountTitle } from './style';
 
 interface AuthAlreadyExistsError {
@@ -76,7 +76,7 @@ const MergeAccountsAlert: React.FC<MergeAccountAlertProps> = ({ email, provider,
 }
 
 const facebookMergeToastId = 'facebook-merge';
-// const twitterMergeToastId = 'twitter-merge';
+const twitterMergeToastId = 'twitter-merge';
 
 const handleAccountAlreadyExistsError = async (error: AuthAlreadyExistsError, toastId: string, provider: string) => {
     const methods = await firebaseAuth.fetchSignInMethodsForEmail(error.email);
@@ -149,9 +149,32 @@ export const useLogin = () => {
         }
     }
 
+    const loginWithTwitterHandler = async () => {
+        setLoading(true);
+
+        try {
+            const { user } = await firebaseAuth.signInWithPopup(twitterAuthProvider);
+
+            handleLoginSuccess(user);
+
+        } catch (err) {
+            const error = err as AuthAlreadyExistsError;
+            console.log(error);
+
+            if (error.code === accountAlreadyExistsErrorCode) {
+                await handleAccountAlreadyExistsError(error, twitterMergeToastId, `Twitter`);
+            } else {
+                toast.error(error.message, { autoClose: false });
+            }
+
+            setLoading(false);
+        }
+    }
+
     return {
         loading,
         loginWithGoogleHandler,
         loginWithFacebookHandler,
+        loginWithTwitterHandler,
     }
 }
