@@ -5,6 +5,7 @@ import Card from '../../components/Card';
 import { Firebase, facebookAuthProvider, firebaseAuth, googleAuthProvider, twitterAuthProvider } from '../../utils/firebase';
 import { MergeAccountBody, MergeAccountContent, MergeAccountFooter, MergeAccountTitle } from './style';
 
+
 interface AuthAlreadyExistsError {
     code: string;
     credential: Firebase.auth.AuthCredential;
@@ -14,15 +15,18 @@ interface AuthAlreadyExistsError {
 
 const accountAlreadyExistsErrorCode = 'auth/account-exists-with-different-credential';
 
-const linkCredentialWithGoogle = async (methods: string[], error: AuthAlreadyExistsError) => {
+const linkCredentialWithProvider = async (authProvider: Firebase.auth.AuthProvider, error: AuthAlreadyExistsError) => {
     try {
-        console.log(methods);
-
-        const { user } = await firebaseAuth.signInWithPopup(googleAuthProvider);
+        const { user } = await firebaseAuth.signInWithPopup(authProvider);
 
         if (user) {
-            user.linkWithCredential(error.credential);
-            toast.success(`Logged in as ${user.email}!`);
+            try {
+                await user.linkWithCredential(error.credential);
+                toast.success(`Logged in as ${user.email}!`);
+            } catch (error) {
+                console.log('Could not link accounts, ', error);
+                toast.error(`Could not link accounts`);
+            }
         }
     } catch (newError) {
         console.log('newError', newError);
@@ -52,18 +56,19 @@ const handleLoginSuccess = async (user: Firebase.User | null) => {
 interface MergeAccountAlertProps {
     email: string;
     provider: string;
+    mergeIntoProvider: string;
     onAccept: () => void;
     onReject: () => void;
 }
 
-const MergeAccountsAlert: React.FC<MergeAccountAlertProps> = ({ email, provider, onAccept, onReject }) => {
+const MergeAccountsAlert: React.FC<MergeAccountAlertProps> = ({ email, provider, mergeIntoProvider, onAccept, onReject }) => {
     return (
         <Card>
             <MergeAccountContent>
-                <MergeAccountTitle>Merge {provider} account</MergeAccountTitle>
+                <MergeAccountTitle>Merge {provider} account with {mergeIntoProvider}</MergeAccountTitle>
                 <MergeAccountBody>
-                    You already have an account with email address "{email}" with Google. <br />
-                    Would you like to merge your Google and {provider} Credentials for
+                    You already have an account with email address "{email}" with {mergeIntoProvider}. <br />
+                    Would you like to merge your {mergeIntoProvider} and {provider} credentials for
                     a smooth login experience?
              </MergeAccountBody>
                 <MergeAccountFooter>
@@ -81,24 +86,46 @@ const twitterMergeToastId = 'twitter-merge';
 const handleAccountAlreadyExistsError = async (error: AuthAlreadyExistsError, toastId: string, provider: string) => {
     const methods = await firebaseAuth.fetchSignInMethodsForEmail(error.email);
 
+    console.log(methods);
+
+    let authProvider: Firebase.auth.AuthProvider;
+    if (methods.includes(Firebase.auth.GoogleAuthProvider.PROVIDER_ID)) {
+        console.log('merge with google');
+        authProvider = googleAuthProvider;
+    } else if (methods.includes(Firebase.auth.FacebookAuthProvider.PROVIDER_ID)) {
+        console.log(`merge with facebook`);
+        authProvider = facebookAuthProvider;
+    } else if (methods.includes(Firebase.auth.TwitterAuthProvider.PROVIDER_ID)) {
+        console.log(`merge with twitter`);
+        authProvider = twitterAuthProvider;
+    } else {
+        console.log('something went wrong, cannot login!');
+        return;
+    }
+
+    let mergeIntoProvider = authProvider.providerId.replace('.com', '');
+    mergeIntoProvider = mergeIntoProvider.charAt(0).toUpperCase() + mergeIntoProvider.slice(1);
+
     const acceptRequest = async () => {
-        await linkCredentialWithGoogle(methods, error);
+        await linkCredentialWithProvider(authProvider, error);
         toast.dismiss(toastId);
     };
 
     const rejectRequest = () => {
         toast.dismiss(toastId);
         toast.error(
-            `${provider} Login failed! Please merge ${provider} and Google accounts OR Try to login with Google.`,
+            `${provider} Login failed! Please merge ${provider} and ${mergeIntoProvider} accounts OR Try to login with ${mergeIntoProvider}.`,
             {
                 autoClose: false,
             }
         );
     }
 
+
     toast(<MergeAccountsAlert
         email={error.email}
         provider={provider}
+        mergeIntoProvider={mergeIntoProvider}
         onAccept={acceptRequest}
         onReject={rejectRequest}
     />, {
