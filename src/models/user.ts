@@ -17,6 +17,6 @@ export interface IUserProfile {
     about: string;
     createdAt: string;
     updatedAt: string;
-    images: ProfileImage;
+    image: ProfileImage;
     fcmToken?: string;
 }

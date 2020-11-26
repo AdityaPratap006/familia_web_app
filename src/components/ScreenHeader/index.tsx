@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { MdAccountCircle, MdArrowBack } from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
 import { HeaderBarWrapper, HeaderBar, Title, MenuButton, GoBackButton } from './style';
 import { SideDrawerContext } from '../../contexts/sidedrawer.context';
+import { UserProfileContext } from '../../contexts/userProfile.context';
+import Avatar from '../Avatar';
+import LoadingSpinner from '../LoadingSpinner';
 
 interface ScreenHeaderProps {
     title?: string;
@@ -13,6 +16,7 @@ interface ScreenHeaderProps {
 const ScreenHeader: React.FC<ScreenHeaderProps> = (props) => {
     const sideDrawerCTX = useContext(SideDrawerContext);
     const history = useHistory();
+    const { profile } = useContext(UserProfileContext);
 
     const goBackHandler = () => {
         history.goBack();
@@ -28,7 +32,8 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = (props) => {
                 )}
                 {!props.withGoBackButton && (
                     <MenuButton onClick={sideDrawerCTX.open}>
-                        <MdAccountCircle className="icon" />
+                        {!profile && <LoadingSpinner small />}
+                        {profile && <Avatar tiny alt={'profile_pic'} src={profile.image.url} />}
                     </MenuButton>
                 )}
                 <Title>{props.title}</Title>

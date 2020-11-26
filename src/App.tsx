@@ -13,6 +13,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import { getTheme } from './utils/theme';
 import { useNetworkStatus } from './hooks/networkStatus.hook';
 import UserProfileProvider from './contexts/userProfile.context';
+import LoadingBouncers from './components/LoadingBouncers';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -30,7 +31,11 @@ const App: React.FC = () => {
 
 
   if (auth.loading) {
-    return <h1>checking auth state...</h1>;
+    return (
+      <div className='app-loading-screen'>
+        <LoadingBouncers />
+      </div>
+    );
   }
 
   const authRoutes = (
@@ -56,7 +61,7 @@ const App: React.FC = () => {
   const httpLink = new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_ENDPOINT as string,
     headers: {
-      authorization: auth.state.user.token,
+      authorization: auth.state.user?.token,
     },
   });
 
