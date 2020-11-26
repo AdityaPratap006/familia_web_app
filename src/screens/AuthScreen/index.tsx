@@ -16,19 +16,19 @@ const AuthScreen = () => {
 
     const authCardContent = (
         <React.Fragment>
-            <Button authBtn addcss={btnStyle} onClick={loginWithGoogleHandler}>
+            <Button inverse addcss={btnStyle} onClick={loginWithGoogleHandler}>
                 <IconContainer>
                     <FcGoogle className='icon' />
                 </IconContainer>
                 <span>Continue with Google</span>
             </Button>
-            <Button authBtn addcss={btnStyle} onClick={loginWithFacebookHandler}>
+            <Button inverse addcss={btnStyle} onClick={loginWithFacebookHandler}>
                 <IconContainer>
                     <SiFacebook className='icon facebook' />
                 </IconContainer>
                 <span className='facebook'>Continue with Facebook</span>
             </Button>
-            <Button authBtn addcss={btnStyle} onClick={loginWithTwitterHandler}>
+            <Button inverse addcss={btnStyle} onClick={loginWithTwitterHandler}>
                 <IconContainer>
                     <SiTwitter className='icon twitter' />
                 </IconContainer>

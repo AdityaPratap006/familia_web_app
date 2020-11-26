@@ -2,7 +2,6 @@ import React from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import { StyledButton, StyledALink, StyledRouteLink, AuthButton } from './style';
 
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     href?: string;
     size?: string;
@@ -19,7 +18,11 @@ const Button: React.FC<ButtonProps> = props => {
 
     if (props.authBtn) {
         return (
-            <AuthButton addcss={props.addcss} onClick={props.onClick}>
+            <AuthButton
+                addcss={props.addcss}
+                onClick={props.onClick}
+                className={`${buttonSizeStyleClass} ${props.inverse && 'button--inverse'} ${props.danger && 'button--danger'}`}
+            >
                 {props.children}
             </AuthButton>
         );

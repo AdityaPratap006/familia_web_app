@@ -1,7 +1,7 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled, { DefaultTheme, FlattenInterpolation, FlattenSimpleInterpolation, ThemeProps } from 'styled-components';
 
 interface StyledCardProps {
-    addcss?: FlattenSimpleInterpolation;
+    addcss?: FlattenSimpleInterpolation | FlattenInterpolation<ThemeProps<DefaultTheme>>;
 }
 
 const Card = styled.div<StyledCardProps>`
@@ -13,7 +13,7 @@ const Card = styled.div<StyledCardProps>`
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
     } */
     transition: box-shadow 0.2s ease;
-    background-color: ${props => props.theme.paper};
+    background-color: ${props => props.theme.paper || '#fff'};
     ${props => props.addcss}
 `;
 

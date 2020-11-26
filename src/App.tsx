@@ -14,6 +14,7 @@ import { getTheme } from './utils/theme';
 import { useNetworkStatus } from './hooks/networkStatus.hook';
 import UserProfileProvider from './contexts/userProfile.context';
 import LoadingBouncers from './components/LoadingBouncers';
+import Screen from './components/Screen';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -22,19 +23,24 @@ const App: React.FC = () => {
   const auth = useContext(AuthContext);
   const isOnline = useNetworkStatus();
 
-
-
   useEffect(() => {
     console.log(auth.state.user);
 
   }, [auth.state.user]);
 
+  const { state: themeState } = themeValue;
+  const currentTheme = getTheme(themeState.theme, themeState.mode);
 
   if (auth.loading) {
     return (
-      <div className='app-loading-screen'>
-        <LoadingBouncers />
-      </div>
+      <StyledThemeProvider theme={currentTheme}>
+        <Screen withoutHeader>
+          <div className='app-loading-screen'>
+            <LoadingBouncers />
+          </div>
+        </Screen>
+      </StyledThemeProvider>
+
     );
   }
 
@@ -50,18 +56,17 @@ const App: React.FC = () => {
   if (!auth.state.user) {
     return (
       <React.Fragment>
-        {authRoutes}
+        <StyledThemeProvider theme={currentTheme}>
+          {authRoutes}
+        </StyledThemeProvider>
       </React.Fragment>
     );
   }
 
-  const { state: themeState } = themeValue;
-  const currentTheme = getTheme(themeState.theme, themeState.mode);
-
   const httpLink = new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_ENDPOINT as string,
     headers: {
-      authorization: auth.state.user?.token,
+      authorization: auth.state.user.token,
     },
   });
 

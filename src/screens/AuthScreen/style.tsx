@@ -11,11 +11,12 @@ export const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: ${props => props.theme.background || '#fff'};
 `;
 
 export const authCardStyle = css`
     border: none;
-    background-color: #fff;
+    background-color: ${({ theme }) => theme.paper || '#fff'};
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -102,6 +103,10 @@ export const MergeAccountFooter = styled.footer`
 
     button {
         background-color: ${pinkTheme.primary};
+
+        &:hover {
+            background-color: ${pinkTheme.primaryLight};
+        }
     }
 
     button.button--inverse {
@@ -109,7 +114,8 @@ export const MergeAccountFooter = styled.footer`
         border-color: ${pinkTheme.primary};
 
         &:hover {
-            color: ${pinkTheme.primary};
+            color: '#fff';
+            background-color: ${pinkTheme.primaryLight};
         }
     }
 `;

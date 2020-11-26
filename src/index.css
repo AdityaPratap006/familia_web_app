@@ -13,13 +13,13 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 .app-loading-screen {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 11rem);
   display: flex;
   flex-direction: column;
   justify-content: center;

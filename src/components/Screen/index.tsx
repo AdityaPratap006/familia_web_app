@@ -8,16 +8,19 @@ interface ScreenProps {
     subTitle?: string;
     withGoBackButton?: boolean;
     stackedUpScreen?: boolean;
+    withoutHeader?: boolean;
 }
 
 const Screen: React.FC<ScreenProps> = (props) => {
     return (
         <ScreenWrapper>
-            <ScreenHeader
-                title={props.title}
-                subTitle={props.subTitle}
-                withGoBackButton={props.withGoBackButton}
-            />
+            {!props.withoutHeader && (
+                <ScreenHeader
+                    title={props.title}
+                    subTitle={props.subTitle}
+                    withGoBackButton={props.withGoBackButton}
+                />
+            )}
             <ScreenContent stackedUpScreen={props.stackedUpScreen}>
                 {props.children}
             </ScreenContent>

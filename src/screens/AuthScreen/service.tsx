@@ -113,12 +113,7 @@ const handleAccountAlreadyExistsError = async (error: AuthAlreadyExistsError, to
 
     const rejectRequest = () => {
         toast.dismiss(toastId);
-        toast.error(
-            `${provider} Login failed! Please merge ${provider} and ${mergeIntoProvider} accounts OR Try to login with ${mergeIntoProvider}.`,
-            {
-                autoClose: false,
-            }
-        );
+        toast.error(`${provider} Login failed! Please merge ${provider} and ${mergeIntoProvider} accounts OR Try to login with ${mergeIntoProvider}.`);
     }
 
 
@@ -149,7 +144,7 @@ export const useLogin = () => {
 
         } catch (error) {
             console.log(error);
-            toast.error(error, { autoClose: false });
+            toast.error(error);
             setLoading(false);
         }
     }
@@ -169,7 +164,7 @@ export const useLogin = () => {
             if (error.code === accountAlreadyExistsErrorCode) {
                 await handleAccountAlreadyExistsError(error, facebookMergeToastId, `Facebook`);
             } else {
-                toast.error(error.message, { autoClose: false });
+                toast.error(error.message);
             }
 
             setLoading(false);
@@ -191,7 +186,7 @@ export const useLogin = () => {
             if (error.code === accountAlreadyExistsErrorCode) {
                 await handleAccountAlreadyExistsError(error, twitterMergeToastId, `Twitter`);
             } else {
-                toast.error(error.message, { autoClose: false });
+                toast.error(error.message);
             }
 
             setLoading(false);
