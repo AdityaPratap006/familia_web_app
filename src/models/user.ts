@@ -14,10 +14,9 @@ export interface IUserProfile {
     _id: string;
     name: string;
     email: string;
-    username: string;
     about: string;
     createdAt: string;
     updatedAt: string;
-    images: ProfileImage[];
+    images: ProfileImage;
     fcmToken?: string;
 }

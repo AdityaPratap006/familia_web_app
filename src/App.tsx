@@ -12,6 +12,7 @@ import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import { getTheme } from './utils/theme';
 import { useNetworkStatus } from './hooks/networkStatus.hook';
+import UserProfileProvider from './contexts/userProfile.context';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -20,9 +21,13 @@ const App: React.FC = () => {
   const auth = useContext(AuthContext);
   const isOnline = useNetworkStatus();
 
+
+
   useEffect(() => {
     console.log(auth.state.user);
+
   }, [auth.state.user]);
+
 
   if (auth.loading) {
     return <h1>checking auth state...</h1>;
@@ -92,10 +97,13 @@ const App: React.FC = () => {
     </StyledThemeProvider>
   );
 
+
   return (
     <React.Fragment>
       <ApolloProvider client={apolloClient}>
-        {protectedContent}
+        <UserProfileProvider>
+          {protectedContent}
+        </UserProfileProvider>
       </ApolloProvider>
     </React.Fragment>
   );
