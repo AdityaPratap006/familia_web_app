@@ -19,9 +19,16 @@ code {
 
 .app-loading-screen {
   width: 100vw;
+  max-width: 100%;
   height: calc(100vh - 11rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 760px) {
+  .app-loading-screen {
+    height: calc(100vh - 7rem);
+  }
 }
