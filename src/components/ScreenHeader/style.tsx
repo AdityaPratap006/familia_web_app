@@ -20,6 +20,16 @@ export const HeaderBar = styled.header`
     align-items: center;
 `;
 
+export const HeaderContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+`;
+
+
+
 export const Title = styled.h2`
     font-weight: bold;
     font-size: 1.5rem;
@@ -30,6 +40,10 @@ export const Title = styled.h2`
     @media (max-width: ${ScreenSize.XS_MAX}) {
         font-size: 1.36rem;
     }
+`;
+
+export const SubTitle = styled.div`
+    
 `;
 
 export const MenuButton = styled.button`

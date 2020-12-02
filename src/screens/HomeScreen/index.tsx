@@ -3,22 +3,29 @@ import { toast } from 'react-toastify';
 import { HomeScreenContent } from './style';
 import Screen from '../../components/Screen';
 import { FamilyContext } from '../../contexts/family.context';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const HomeScreen: React.FC = () => {
-    const { families, loadingFamilies } = useContext(FamilyContext);
+    const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
 
-    console.log(loadingFamilies, families);
+    console.log(loadingFamilies, currentFamily);
 
-    if (families?.length) {
-        toast.warn(`First family: ${families[0].name}`);
+    if (!loadingFamilies && families.length === 0) {
+        toast.warn(`Create a family!`);
+    }
+
+    if (!loadingFamilies && currentFamily) {
+        toast.success(`Current family: ${currentFamily.name}`);
     }
 
     return (
         <Screen
             title="Home"
+            subTitle={<p>{currentFamily?.name}</p>}
         >
             <HomeScreenContent>
-                <h1>Family Posts!</h1>
+                {!loadingFamilies && <h1>Family Posts!</h1>}
+                {loadingFamilies && <LoadingSpinner />}
             </HomeScreenContent>
         </Screen>
     );

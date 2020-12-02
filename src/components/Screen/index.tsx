@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import ScreenHeader from '../ScreenHeader';
 import ScreenWrapper from '../ScreenWrapper';
 import { ScreenContent } from './style';
 
 interface ScreenProps {
     title?: string;
-    subTitle?: string;
+    subTitle?: ReactNode;
     withGoBackButton?: boolean;
     stackedUpScreen?: boolean;
     withoutHeader?: boolean;

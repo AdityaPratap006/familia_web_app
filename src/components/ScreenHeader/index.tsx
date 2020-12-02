@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MdArrowBack } from 'react-icons/md';
-import { HeaderBarWrapper, HeaderBar, Title, MenuButton, GoBackButton } from './style';
+import { HeaderBarWrapper, HeaderBar, Title, MenuButton, GoBackButton, HeaderContent, SubTitle } from './style';
 import { SideDrawerContext } from '../../contexts/sidedrawer.context';
 import { UserProfileContext } from '../../contexts/userProfile.context';
 import Avatar from '../Avatar';
@@ -9,7 +9,7 @@ import LoadingSpinner from '../LoadingSpinner';
 
 interface ScreenHeaderProps {
     title?: string;
-    subTitle?: string;
+    subTitle?: ReactNode;
     withGoBackButton?: boolean;
 }
 
@@ -36,7 +36,10 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = (props) => {
                         {profile && <Avatar tiny alt={'profile_pic'} src={profile.image.url} />}
                     </MenuButton>
                 )}
-                <Title>{props.title}</Title>
+                <HeaderContent>
+                    <Title>{props.title}</Title>
+                    <SubTitle>{props.subTitle}</SubTitle>
+                </HeaderContent>
             </HeaderBar>
         </HeaderBarWrapper>
     );
