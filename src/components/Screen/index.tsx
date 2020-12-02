@@ -6,6 +6,7 @@ import { ScreenContent } from './style';
 interface ScreenProps {
     title?: string;
     subTitle?: ReactNode;
+    rightComponent?: ReactNode;
     withGoBackButton?: boolean;
     stackedUpScreen?: boolean;
     withoutHeader?: boolean;
@@ -18,6 +19,7 @@ const Screen: React.FC<ScreenProps> = (props) => {
                 <ScreenHeader
                     title={props.title}
                     subTitle={props.subTitle}
+                    rightComponent={props.rightComponent}
                     withGoBackButton={props.withGoBackButton}
                 />
             )}

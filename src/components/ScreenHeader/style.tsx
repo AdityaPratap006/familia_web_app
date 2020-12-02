@@ -5,7 +5,9 @@ export const HeaderBarWrapper = styled.div`
     width: 100%;
     position: absolute;
     top: 0;
+    left: 0;
     right: 0;
+    z-index: 50;
 `;
 
 export const HeaderBar = styled.header`
@@ -13,8 +15,6 @@ export const HeaderBar = styled.header`
     border-bottom: 1px solid ${props => props.theme.defaultBorderColor};
     padding: 0.5rem 1rem;
     background-color: ${props => props.theme.background};
-    z-index: 50;
-    position: fixed;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -22,10 +22,12 @@ export const HeaderBar = styled.header`
 
 export const HeaderContent = styled.div`
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
 
+    @media (max-width: ${ScreenSize.XS_MAX}) {
+        /* flex-direction: column; */
+    }
 `;
 
 
@@ -34,7 +36,7 @@ export const Title = styled.h2`
     font-weight: bold;
     font-size: 1.5rem;
     color: ${props => props.theme.text};
-    margin: 0.5rem;
+    margin: 0.5rem 1.5rem 0.5rem 0.5rem;
     text-transform: capitalize;
 
     @media (max-width: ${ScreenSize.XS_MAX}) {
@@ -43,8 +45,13 @@ export const Title = styled.h2`
 `;
 
 export const SubTitle = styled.div`
-    
+
 `;
+
+export const RightElement = styled.div`
+    margin-left: auto;
+    margin-right: 1rem;
+`
 
 export const MenuButton = styled.button`
     border: none;

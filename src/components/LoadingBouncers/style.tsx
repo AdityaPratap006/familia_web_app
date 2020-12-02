@@ -5,8 +5,21 @@ export const BouncerContainer = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    width: 6rem;
-    height: 6rem;
+
+    &.small {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    &.medium {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    &.large {
+        width: 7rem;
+        height: 7rem;
+    }
 `;
 
 const bouncerAnimation = (heightInRem: number) => keyframes`
@@ -24,7 +37,19 @@ export const BouncingBall = styled.div`
     height: 20%;
     background-color: ${props => props.theme.primary || pinkTheme.primary};
     border-radius: 50%;
-    animation: ${bouncerAnimation(6)} 0.5s cubic-bezier(0.19, 0.57, 0.30, 0.98) infinite alternate;
+    /* animation: ${bouncerAnimation(4)} 0.5s cubic-bezier(0.19, 0.57, 0.30, 0.98) infinite alternate; */
+
+    &.small {
+        animation: ${bouncerAnimation(2.4)} 0.5s cubic-bezier(0.19, 0.57, 0.30, 0.98) infinite alternate;
+    }
+
+    &.medium {
+        animation: ${bouncerAnimation(4)} 0.5s cubic-bezier(0.19, 0.57, 0.30, 0.98) infinite alternate;
+    }
+
+    &.large {
+        animation: ${bouncerAnimation(7)} 0.5s cubic-bezier(0.19, 0.57, 0.30, 0.98) infinite alternate;
+    }
 
     &:nth-child(2) {
         animation-delay: 0.1s;
