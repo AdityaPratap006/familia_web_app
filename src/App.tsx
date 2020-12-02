@@ -13,8 +13,8 @@ import SettingsScreen from './screens/SettingsScreen';
 import { getTheme } from './utils/theme';
 import { useNetworkStatus } from './hooks/networkStatus.hook';
 import UserProfileProvider from './contexts/userProfile.context';
-import LoadingBouncers from './components/LoadingBouncers';
-import Screen from './components/Screen';
+import FamilyProvider from './contexts/family.context';
+import AppLoadingScreen from './screens/AppLoadingScreen';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -34,11 +34,7 @@ const App: React.FC = () => {
   if (auth.loading) {
     return (
       <StyledThemeProvider theme={currentTheme}>
-        <Screen withoutHeader>
-          <div className='app-loading-screen'>
-            <LoadingBouncers />
-          </div>
-        </Screen>
+        <AppLoadingScreen />
       </StyledThemeProvider>
 
     );
@@ -98,23 +94,25 @@ const App: React.FC = () => {
   );
 
   const protectedContent = (
-    <StyledThemeProvider theme={currentTheme}>
-      <SideDrawerProvider>
-        <MainNavigation>
-          {protectedRoutes}
-        </MainNavigation>
-      </SideDrawerProvider>
-    </StyledThemeProvider>
+    <SideDrawerProvider>
+      <MainNavigation>
+        {protectedRoutes}
+      </MainNavigation>
+    </SideDrawerProvider>
   );
 
 
   return (
     <React.Fragment>
-      <ApolloProvider client={apolloClient}>
-        <UserProfileProvider>
-          {protectedContent}
-        </UserProfileProvider>
-      </ApolloProvider>
+      <StyledThemeProvider theme={currentTheme}>
+        <ApolloProvider client={apolloClient}>
+          <UserProfileProvider>
+            <FamilyProvider>
+              {protectedContent}
+            </FamilyProvider>
+          </UserProfileProvider>
+        </ApolloProvider>
+      </StyledThemeProvider>
     </React.Fragment>
   );
 }
