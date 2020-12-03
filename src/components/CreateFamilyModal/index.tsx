@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../Button';
+import { TextAreaInput, TextFieldInput } from '../Input';
 import Modal from '../Modal';
 
 interface CreateFamilyModalProps {
@@ -9,7 +10,8 @@ interface CreateFamilyModalProps {
 }
 
 interface IFormInput {
-    name: string;
+    familyName: string;
+    familyDescription: string;
 }
 
 const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal }) => {
@@ -18,7 +20,7 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
     });
 
     const onSubmit = (data: IFormInput) => {
-        console.log(data, errors);
+        console.log(data);
     }
 
     return (
@@ -34,18 +36,28 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
                 </>
             }
         >
-            <label>Family Name</label>
-            <input
-                name="name"
+            <TextFieldInput
+                id="familyName"
+                name="familyName"
+                label="Family Name"
                 type="text"
                 ref={register({
-                    pattern: { value: /.*\S.*/, message: "name cannot be empty" },
-                    required: { value: true, message: "name is required" },
-                    maxLength: { value: 30, message: "name is too long" },
+                    pattern: { value: /.*\S.*/, message: "Family name cannot be empty" },
+                    required: { value: true, message: "A name is required" },
+                    maxLength: { value: 30, message: "The name is too long" },
                 })}
-
+                errorText={errors.familyName && errors.familyName.message}
             />
-            {errors.name && errors.name.message}
+            <TextAreaInput
+                id="familyDescription"
+                name="familyDescription"
+                label="Description"
+                rows={4}
+                ref={register({
+                    maxLength: { value: 200, message: "The description is too long" },
+                })}
+                errorText={errors.familyDescription && errors.familyDescription.message}
+            />
         </Modal>
     );
 };
