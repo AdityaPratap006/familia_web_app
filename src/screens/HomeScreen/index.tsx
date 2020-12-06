@@ -9,8 +9,6 @@ import CurrentFamilyIndicator from '../../components/CurrentFamilyIndicator';
 const HomeScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
 
-    console.log(loadingFamilies, currentFamily);
-
     useEffect(() => {
         if (!loadingFamilies && families.length === 0) {
             toast.warn(`Create a family!`);
@@ -18,6 +16,7 @@ const HomeScreen: React.FC = () => {
     }, [loadingFamilies, families]);
 
     useEffect(() => {
+        console.log(loadingFamilies, currentFamily);
         if (!loadingFamilies && currentFamily) {
             toast.success(`Current family: ${currentFamily.name}`);
         }

@@ -21,7 +21,7 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
     const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
         mode: "all",
     });
-    const { sendCreateFamilyRequest, sendSetDefaultFamilyRequest, setCurrentFamily } = useContext(FamilyContext);
+    const { sendCreateFamilyRequest, setCurrentFamily } = useContext(FamilyContext);
     const [loading, setLoading] = useState(false);
 
     const onSubmit = async (inputs: IFormInput) => {
@@ -42,11 +42,11 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
             }
 
             if (data) {
-                await sendSetDefaultFamilyRequest(data.createFamily._id);
                 setCurrentFamily(data.createFamily);
+                localStorage.setItem('defaultFamilyId', data.createFamily._id);
                 setLoading(false);
-                toast.success(`You created family: ${data.createFamily.name}`);
                 closeModal();
+                toast.success(`You created family: ${data.createFamily.name}`);
             }
 
         } catch (error) {

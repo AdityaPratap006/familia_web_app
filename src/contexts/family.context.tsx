@@ -1,11 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { IFamily } from '../models/family';
 import { GET_FAMILIES_OF_USER_QUERY } from '../graphql/family/queries';
-import { UserProfileContext } from './userProfile.context';
-import { IUserProfile } from '../models/user';
-import { SET_DEFAULT_FAMILY_ID } from '../graphql/user/mutations';
 import { CREATE_FAMILY_MUTATION } from '../graphql/family/mutations';
 
 interface IFamilyContext {
@@ -13,7 +10,6 @@ interface IFamilyContext {
     loadingFamilies: boolean;
     currentFamily: IFamily | undefined;
     setCurrentFamily: React.Dispatch<React.SetStateAction<IFamily | undefined>>;
-    sendSetDefaultFamilyRequest: (familyId: string) => Promise<void>;
     sendCreateFamilyRequest: (args: CreateFamilyArgs) => Promise<FetchResult<{
         createFamily: IFamily;
     }, Record<string, any>, Record<string, any>>>;
@@ -29,35 +25,18 @@ export const FamilyContext = createContext<IFamilyContext>({
     loadingFamilies: false,
     currentFamily: undefined,
     setCurrentFamily: () => null,
-    sendSetDefaultFamilyRequest: () => Promise.resolve(),
     sendCreateFamilyRequest: () => Promise.resolve({}),
 });
 
 const FamilyProvider: React.FC = (props) => {
     const familiesOfUser = useQuery<{ getFamiliesOfUser: IFamily[] }>(GET_FAMILIES_OF_USER_QUERY);
-    const { profile: userProfile } = useContext(UserProfileContext);
-    const [setDefaultFamilyIdMutation] = useMutation<{ setDefaultFamilyId: IUserProfile }>(SET_DEFAULT_FAMILY_ID);
     const [currentFamily, setCurrentFamily] = useState<IFamily>();
     const [createFamilyMutation] = useMutation<{ createFamily: IFamily }>(CREATE_FAMILY_MUTATION, {
         refetchQueries: [
             { query: GET_FAMILIES_OF_USER_QUERY },
         ],
+        awaitRefetchQueries: true,
     });
-
-    const sendSetDefaultFamilyRequest = useCallback(async (familyId: string) => {
-        try {
-            await setDefaultFamilyIdMutation({
-                variables: {
-                    input: {
-                        familyId: familyId,
-                    }
-                }
-            });
-
-        } catch (error) {
-            console.log(error);
-        }
-    }, [setDefaultFamilyIdMutation]);
 
     const sendCreateFamilyRequest = async (args: CreateFamilyArgs) => {
         const result = await createFamilyMutation({
@@ -66,26 +45,48 @@ const FamilyProvider: React.FC = (props) => {
             }
         });
 
+        if (result.errors) {
+            toast.error(result.errors[0].message);
+        }
+        
+        if (result.data) {
+            localStorage.setItem('defaultFamilyId', result.data.createFamily._id);
+        }
+
         return result;
     }
 
     useEffect(() => {
 
-        if (userProfile && familiesOfUser.data && familiesOfUser.data.getFamiliesOfUser) {
+        if (familiesOfUser.data && familiesOfUser.data.getFamiliesOfUser.length) {
+            console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
 
-            if (userProfile.defaultFamilyId) {
+            const defaultFamilyId = localStorage.getItem('defaultFamilyId');
+
+            if (defaultFamilyId) {
                 console.log('user has a default family, load it');
                 const families = familiesOfUser.data.getFamiliesOfUser;
-                const defaultFamily = families.find(family => family._id === userProfile.defaultFamilyId);
-                setCurrentFamily(defaultFamily);
+                const defaultFamily = families.find(family => family._id === defaultFamilyId);
+                
+                if (!defaultFamily) {
+                    setCurrentFamily(families[0]);
+                    localStorage.setItem('defaultFamilyId', families[0]._id);
+                } else {
+                    if (currentFamily?._id !== defaultFamily._id) {
+                        setCurrentFamily(defaultFamily);
+                    } else {
+                        console.log('default family already set!!!!');
+                    }
+                }
+
             } else {
                 console.log('set the first family as default family');
                 const families = familiesOfUser.data.getFamiliesOfUser;
                 setCurrentFamily(families[0]);
-                sendSetDefaultFamilyRequest(families[0]._id);
+                localStorage.setItem('defaultFamilyId', families[0]._id);
             }
         }
-    }, [userProfile, familiesOfUser.data, sendSetDefaultFamilyRequest]);
+    }, [familiesOfUser.data, currentFamily?._id]);
 
     if (familiesOfUser.error) {
         toast.error(familiesOfUser.error.message);
@@ -98,7 +99,6 @@ const FamilyProvider: React.FC = (props) => {
             loadingFamilies: familiesOfUser.loading,
             currentFamily,
             setCurrentFamily,
-            sendSetDefaultFamilyRequest,
             sendCreateFamilyRequest,
         }}>
             {props.children}

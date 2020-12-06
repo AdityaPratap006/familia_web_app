@@ -1,11 +1,11 @@
 import gql from 'graphql-tag';
 
-export const CREATE_USER_MUTATION = gql`
-    mutation {
-        createUser {
+export const GET_USER_PROFILE_QUERY = gql`
+    query {
+        profile {
+            _id,
             name,
             email,
-            _id,
             about,
             image {
                 public_id,

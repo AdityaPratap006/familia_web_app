@@ -19,5 +19,4 @@ export interface IUserProfile {
     updatedAt: string;
     image: ProfileImage;
     fcmToken?: string;
-    defaultFamilyId: string;
 }
