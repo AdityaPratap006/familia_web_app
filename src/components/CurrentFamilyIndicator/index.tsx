@@ -9,7 +9,7 @@ const CurrentFamilyIndicator: React.FC = () => {
     const [showCreateFamilyModal, setShowCreateFamilyModal] = useState<boolean>(false);
 
     if (loadingFamilies) {
-        return <LoadingBouncers small />
+        return <LoadingBouncers small />;
     }
 
     const closeCreateFamilyModal = () => {

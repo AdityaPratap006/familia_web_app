@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { FamilyContext } from '../../contexts/family.context';
 import Button from '../Button';
 import { TextAreaInput, TextFieldInput } from '../Input';
+import LoadingSpinner from '../LoadingSpinner';
 import Modal from '../Modal';
 
 interface CreateFamilyModalProps {
@@ -18,9 +21,39 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
     const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
         mode: "all",
     });
+    const { sendCreateFamilyRequest, sendSetDefaultFamilyRequest, setCurrentFamily } = useContext(FamilyContext);
+    const [loading, setLoading] = useState(false);
 
-    const onSubmit = (data: IFormInput) => {
-        console.log(data);
+    const onSubmit = async (inputs: IFormInput) => {
+        console.log(inputs);
+
+        setLoading(true);
+
+        try {
+            const { data, errors } = await sendCreateFamilyRequest({
+                name: inputs.familyName,
+                description: inputs.familyDescription,
+            });
+
+            if (errors) {
+                toast.error(errors[0].message);
+                setLoading(false);
+                return;
+            }
+
+            if (data) {
+                await sendSetDefaultFamilyRequest(data.createFamily._id);
+                setCurrentFamily(data.createFamily);
+                setLoading(false);
+                toast.success(`You created family: ${data.createFamily.name}`);
+                closeModal();
+            }
+
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            toast.error(`Something went wrong, please try again`);
+        }
     }
 
     return (
@@ -30,10 +63,10 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
             onCancel={closeModal}
             onSubmit={handleSubmit(onSubmit)}
             footerComponent={
-                <>
+                !loading ? <>
                     <Button type="submit" disabled={!formState.isValid}>CREATE</Button>
                     <Button type="button" inverse onClick={closeModal}>CANCEL</Button>
-                </>
+                </> : <LoadingSpinner />
             }
         >
             <TextFieldInput

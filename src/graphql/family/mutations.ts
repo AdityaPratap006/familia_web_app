@@ -1,17 +1,15 @@
 import gql from 'graphql-tag';
 
-export const GET_FAMILIES_OF_USER_QUERY = gql`
-    query {
-        getFamiliesOfUser {
+export const CREATE_FAMILY_MUTATION = gql`
+    mutation ($input: CreateFamilyInput!) {
+    createFamily(input: $input) {
             _id,
             name,
-            description,
             memberCount,
+            description,
             creator {
-                _id,
                 name,
                 email,
-                about,
                 image {
                     url,
                 },

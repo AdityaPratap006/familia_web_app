@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { HomeScreenContent } from './style';
 import Screen from '../../components/Screen';
@@ -11,13 +11,17 @@ const HomeScreen: React.FC = () => {
 
     console.log(loadingFamilies, currentFamily);
 
-    if (!loadingFamilies && families.length === 0) {
-        toast.warn(`Create a family!`);
-    }
+    useEffect(() => {
+        if (!loadingFamilies && families.length === 0) {
+            toast.warn(`Create a family!`);
+        }
+    }, [loadingFamilies, families]);
 
-    if (!loadingFamilies && currentFamily) {
-        toast.success(`Current family: ${currentFamily.name}`);
-    }
+    useEffect(() => {
+        if (!loadingFamilies && currentFamily) {
+            toast.success(`Current family: ${currentFamily.name}`);
+        }
+    }, [loadingFamilies, currentFamily]);
 
     return (
         <Screen
