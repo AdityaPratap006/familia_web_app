@@ -1,18 +1,12 @@
 import gql from 'graphql-tag';
+import { USER_PROFILE_FRAGMENT } from './fragments';
 
 export const GET_USER_PROFILE_QUERY = gql`
     query {
         profile {
-            _id,
-            name,
-            email,
-            about,
-            image {
-                public_id,
-                url,
-            },
-            createdAt,
-            updatedAt,
+             ...userProfile
         }
     }
+
+    ${USER_PROFILE_FRAGMENT}
 `;
