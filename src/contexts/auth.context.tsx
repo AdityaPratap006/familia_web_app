@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState, createContext } from 'react';
 import { IUser } from '../models/user';
-import { firebaseAuth } from '../utils/firebase';
+import { firebaseAuth, Firebase } from '../utils/firebase';
 
 export interface AuthState {
     user: IUser | undefined;
@@ -63,33 +63,37 @@ export const AuthProvider: React.FC = (props) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const unsubscribeAuth = firebaseAuth.onAuthStateChanged(async user => {
-            setLoading(true);
+    const handleUserAuthState = async (user: Firebase.User | null) => {
+        setLoading(true);
 
-            if (!user) {
-                dispatch({
-                    type: AuthActionType.LOGOUT,
-                });
-
-                setLoading(false);
-                return;
-            }
-            
-            const idTokenResult = await user.getIdTokenResult();
-
+        if (!user) {
             dispatch({
-                type: AuthActionType.LOGIN,
-                payload: {
-                    name: user.displayName || '',
-                    email: user.email || '',
-                    token: idTokenResult.token,
-                    signInProvider: idTokenResult.signInProvider || '',
-                },
+                type: AuthActionType.LOGOUT,
             });
 
             setLoading(false);
+            return;
+        }
+
+        const idTokenResult = await user.getIdTokenResult();
+
+        dispatch({
+            type: AuthActionType.LOGIN,
+            payload: {
+                name: user.displayName || '',
+                email: user.email || '',
+                token: idTokenResult.token,
+                signInProvider: idTokenResult.signInProvider || '',
+            },
         });
+
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        const unsubscribeAuth = firebaseAuth.onIdTokenChanged(async user => {
+            await handleUserAuthState(user);
+        })
 
         return function cleanUp() {
             unsubscribeAuth();
