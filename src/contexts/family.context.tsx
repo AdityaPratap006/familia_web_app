@@ -9,7 +9,7 @@ interface IFamilyContext {
     families: IFamily[];
     loadingFamilies: boolean;
     currentFamily: IFamily | undefined;
-    setCurrentFamily: React.Dispatch<React.SetStateAction<IFamily | undefined>>;
+    setCurrentFamilyHandler: (family: IFamily) => void;
     sendCreateFamilyRequest: (args: CreateFamilyArgs) => Promise<FetchResult<{
         createFamily: IFamily;
     }, Record<string, any>, Record<string, any>>>;
@@ -24,7 +24,7 @@ export const FamilyContext = createContext<IFamilyContext>({
     families: [],
     loadingFamilies: false,
     currentFamily: undefined,
-    setCurrentFamily: () => null,
+    setCurrentFamilyHandler: () => null,
     sendCreateFamilyRequest: () => Promise.resolve({}),
 });
 
@@ -38,6 +38,12 @@ const FamilyProvider: React.FC = (props) => {
         awaitRefetchQueries: true,
     });
 
+    const setCurrentFamilyHandler = (family: IFamily) => {
+        setCurrentFamily(family);
+        localStorage.setItem('defaultFamilyId', family._id);
+
+    }
+
     const sendCreateFamilyRequest = async (args: CreateFamilyArgs) => {
         const result = await createFamilyMutation({
             variables: {
@@ -50,7 +56,7 @@ const FamilyProvider: React.FC = (props) => {
         }
         
         if (result.data) {
-            localStorage.setItem('defaultFamilyId', result.data.createFamily._id);
+            setCurrentFamilyHandler(result.data.createFamily);
         }
 
         return result;
@@ -69,11 +75,11 @@ const FamilyProvider: React.FC = (props) => {
                 const defaultFamily = families.find(family => family._id === defaultFamilyId);
                 
                 if (!defaultFamily) {
-                    setCurrentFamily(families[0]);
-                    localStorage.setItem('defaultFamilyId', families[0]._id);
+                    setCurrentFamilyHandler(families[0]);
+                    // localStorage.setItem('defaultFamilyId', families[0]._id);
                 } else {
                     if (currentFamily?._id !== defaultFamily._id) {
-                        setCurrentFamily(defaultFamily);
+                        setCurrentFamilyHandler(defaultFamily);
                     } else {
                         console.log('default family already set!!!!');
                     }
@@ -82,8 +88,7 @@ const FamilyProvider: React.FC = (props) => {
             } else {
                 console.log('set the first family as default family');
                 const families = familiesOfUser.data.getFamiliesOfUser;
-                setCurrentFamily(families[0]);
-                localStorage.setItem('defaultFamilyId', families[0]._id);
+                setCurrentFamilyHandler(families[0]);
             }
         }
     }, [familiesOfUser.data, currentFamily?._id]);
@@ -98,7 +103,7 @@ const FamilyProvider: React.FC = (props) => {
             families: familiesOfUser.data?.getFamiliesOfUser || [],
             loadingFamilies: familiesOfUser.loading,
             currentFamily,
-            setCurrentFamily,
+            setCurrentFamilyHandler,
             sendCreateFamilyRequest,
         }}>
             {props.children}

@@ -5,7 +5,7 @@ export const SelectFamilyModalBody = styled.div`
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto, minmax(4rem, 1fr));
     gap: 1rem;
-    max-height: 30vh;
+    max-height: 40vh;
     overflow-y: scroll;
 
     &::-webkit-scrollbar {
@@ -40,6 +40,7 @@ export const SelectFamilyCardContent = styled.div`
     span {
         font-size: 1rem;
         color: ${props => props.theme.text};
+        margin: 0.5rem 0 1rem 0;
     }
 `;
 
@@ -49,5 +50,13 @@ export const SelectFamilyCardMemberList = styled.div`
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
-    height: 4rem;
+    /* height: 4rem; */
+`;
+
+export const SelectFamilyCardFooter = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1rem;
 `;

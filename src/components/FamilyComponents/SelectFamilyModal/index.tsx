@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FamilyContext } from '../../../contexts/family.context';
+import { IFamily } from '../../../models/family';
 import Button from '../../Button';
 import Modal from '../../Modal';
 import SelectFamilyCard from './SelectFamilyCard';
@@ -12,7 +13,12 @@ interface SelectFamilyModalProps {
 
 const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal }) => {
 
-    const { families } = useContext(FamilyContext);
+    const { families, setCurrentFamilyHandler } = useContext(FamilyContext);
+
+    const onSelectHandler = (family: IFamily) => {
+        setCurrentFamilyHandler(family);
+        closeModal();
+    }
 
     return (
         <Modal
@@ -28,15 +34,9 @@ const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal 
             <SelectFamilyModalBody>
                 {
                     families.map(family => (
-                        <SelectFamilyCard key={family._id} family={family} />
+                        <SelectFamilyCard key={family._id} family={family} onSelect={onSelectHandler} />
                     ))
                 }
-                {
-                    families.map(family => (
-                        <SelectFamilyCard key={family._id} family={family} />
-                    ))
-                }
-
             </SelectFamilyModalBody>
         </Modal>
     );

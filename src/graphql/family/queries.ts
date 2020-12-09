@@ -10,3 +10,17 @@ export const GET_FAMILIES_OF_USER_QUERY = gql`
 
     ${FAMILY_FRAGMENT}
 `;
+
+export const GET_MEMBERS_OF_A_FAMILY_QUERY = gql`
+    query($input: GetMembersInput!) {
+        getMembersOfAFamily(input: $input){
+            _id,
+            name,
+            email,
+            image {
+                url,
+            },
+            about,
+        }
+    }
+`;
