@@ -16,8 +16,8 @@ export const ModalContainer = styled.div<ModalContainerProps>`
     overflow: hidden;
 
     @media (min-width: ${ScreenSize.SM_MIN}) {
-        left: calc(50% - 20rem);
-        width: 40rem;
+        left: calc(50% - 15rem);
+        width: 30rem;
     }
 
     &.modal-enter-active {

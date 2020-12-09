@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { FamilyContext } from '../../../contexts/family.context';
 import Button from '../../Button';
 import Modal from '../../Modal';
+import SelectFamilyCard from './SelectFamilyCard';
+import { SelectFamilyModalBody } from './styles';
 
 interface SelectFamilyModalProps {
     show: boolean;
@@ -23,11 +25,19 @@ const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal 
                 </>
             }
         >
-            {
-                families.map(family => (
-                    <h1 key={family._id}> {family.name}</h1>
-                ))
-            }
+            <SelectFamilyModalBody>
+                {
+                    families.map(family => (
+                        <SelectFamilyCard key={family._id} family={family} />
+                    ))
+                }
+                {
+                    families.map(family => (
+                        <SelectFamilyCard key={family._id} family={family} />
+                    ))
+                }
+
+            </SelectFamilyModalBody>
         </Modal>
     );
 };
