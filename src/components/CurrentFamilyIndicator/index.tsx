@@ -3,10 +3,12 @@ import { Indicator, IndicatorText } from './style';
 import { FamilyContext } from '../../contexts/family.context';
 import LoadingBouncers from '../LoadingBouncers';
 import CreateFamilyModal from '../CreateFamilyModal';
+import SelectFamilyModal from '../SelectFamilyModal';
 
 const CurrentFamilyIndicator: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
     const [showCreateFamilyModal, setShowCreateFamilyModal] = useState<boolean>(false);
+    const [showSelectFamilyModal, setShowSelectFamilyModal] = useState<boolean>(false);
 
     if (loadingFamilies) {
         return <LoadingBouncers small />;
@@ -20,14 +22,26 @@ const CurrentFamilyIndicator: React.FC = () => {
         setShowCreateFamilyModal(true);
     }
 
+    const closeSelectFamilyModal = () => {
+        setShowSelectFamilyModal(false);
+    }
+
+    const openSelectFamilyModal = () => {
+        setShowSelectFamilyModal(true);
+    }
+
     return (
         <React.Fragment>
             <CreateFamilyModal
                 show={showCreateFamilyModal}
                 closeModal={closeCreateFamilyModal}
             />
+            <SelectFamilyModal
+                show={showSelectFamilyModal}
+                closeModal={closeSelectFamilyModal}
+            />
             <Indicator>
-                {currentFamily && <IndicatorText> {currentFamily.name}</IndicatorText>}
+                {currentFamily && <IndicatorText onClick={openSelectFamilyModal}> {currentFamily.name}</IndicatorText>}
                 {!currentFamily && families.length === 0 && <IndicatorText onClick={openCreateFamilyModal}>Create a Family</IndicatorText>}
             </Indicator>
         </React.Fragment>
