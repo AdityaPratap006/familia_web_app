@@ -2,10 +2,10 @@ import React, { ReactNode, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MdArrowBack } from 'react-icons/md';
 import { HeaderBarWrapper, HeaderBar, Title, MenuButton, GoBackButton, HeaderContent, SubTitle, RightElement } from './style';
-import { SideDrawerContext } from '../../contexts/sidedrawer.context';
-import { UserProfileContext } from '../../contexts/userProfile.context';
-import Avatar from '../Avatar';
-import LoadingSpinner from '../LoadingSpinner';
+import { SideDrawerContext } from '../../../contexts/sidedrawer.context';
+import { UserProfileContext } from '../../../contexts/userProfile.context';
+import Avatar from '../../Avatar';
+import LoadingSpinner from '../../LoadingSpinner';
 
 interface ScreenHeaderProps {
     title?: string;

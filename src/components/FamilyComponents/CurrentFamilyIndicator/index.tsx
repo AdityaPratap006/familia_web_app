@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Indicator, IndicatorText } from './style';
-import { FamilyContext } from '../../contexts/family.context';
-import LoadingBouncers from '../LoadingBouncers';
+import { FamilyContext } from '../../../contexts/family.context';
+import LoadingBouncers from '../../LoadingBouncers';
 import CreateFamilyModal from '../CreateFamilyModal';
 import SelectFamilyModal from '../SelectFamilyModal';
 

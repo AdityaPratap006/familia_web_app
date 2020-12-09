@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { FamilyContext } from '../../contexts/family.context';
-import Button from '../Button';
-import Modal from '../Modal';
+import { FamilyContext } from '../../../contexts/family.context';
+import Button from '../../Button';
+import Modal from '../../Modal';
 
 interface SelectFamilyModalProps {
     show: boolean;
@@ -10,7 +10,7 @@ interface SelectFamilyModalProps {
 
 const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal }) => {
 
-    const { loadingFamilies, families, currentFamily, setCurrentFamily } = useContext(FamilyContext);
+    const { families } = useContext(FamilyContext);
 
     return (
         <Modal

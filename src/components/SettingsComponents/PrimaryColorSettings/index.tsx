@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { MdDone } from 'react-icons/md';
 import { Container, ColorSelector, ColorCircle, ColorLabel } from './style';
-import Card from '../Card';
+import Card from '../../Card';
 import SettingsHeader from '../SettingsHeader';
-import { getPrimary } from '../../utils/theme';
-import { CustomThemeContext } from '../../contexts/theme.context';
-import { THEME, ThemeActionType } from '../../hooks/theme.hook';
+import { getPrimary } from '../../../utils/theme';
+import { CustomThemeContext } from '../../../contexts/theme.context';
+import { THEME, ThemeActionType } from '../../../hooks/theme.hook';
 
 const colorOptions = [
     {

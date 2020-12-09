@@ -1,5 +1,5 @@
 import React from 'react';
-import Screen from '../../components/Screen';
+import Screen from '../../components/ScreenComponents/Screen';
 import LoadingBouncers from '../../components/LoadingBouncers';
 
 const AppLoadingScreen: React.FC = () => {

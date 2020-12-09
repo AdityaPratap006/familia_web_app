@@ -1,8 +1,8 @@
 import React from 'react';
 import { BackgroundSettingsContainer, SettingsGrid, ThemeSettingsContainer, SettingsScreenContent } from './style';
-import BackgroundSettings from '../../components/BackgroundSettings';
-import PrimaryColorSettings from '../../components/PrimaryColorSettings';
-import Screen from '../../components/Screen';
+import BackgroundSettings from '../../components/SettingsComponents/BackgroundSettings';
+import PrimaryColorSettings from '../../components/SettingsComponents/PrimaryColorSettings';
+import Screen from '../../components/ScreenComponents/Screen';
 
 const SettingsScreen = () => {
     return (

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Container, SwitchSelector, Thumb, IndicatorText } from './style';
-import Card from '../Card';
-import { ThemeActionType, MODE } from '../../hooks/theme.hook';
-import { CustomThemeContext } from '../../contexts/theme.context';
+import Card from '../../Card';
+import { ThemeActionType, MODE } from '../../../hooks/theme.hook';
+import { CustomThemeContext } from '../../../contexts/theme.context';
 import SettingsHeader from '../SettingsHeader';
 
 

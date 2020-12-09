@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ScreenSize } from '../../utils/screenSizes';
+import { ScreenSize } from '../../../utils/screenSizes';
 
 export const HeaderBarWrapper = styled.div`
     width: 100%;
