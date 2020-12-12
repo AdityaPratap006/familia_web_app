@@ -5,16 +5,19 @@ export const StyledArrow = styled.button`
     border: none;
     outline: none;
     -webkit-tap-highlight-color: transparent;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    background-color: ${props => props.theme.primary};
+    border-radius: 100%;
+    background-color: transparent;
     cursor: pointer;
-    margin: auto 0 auto 0;
+    margin: auto 0;
+    padding: 0;
+    
+    .icon {
+        color: ${props => props.theme.primary};
+        font-size: 1.8rem;
+    }
 
     &:disabled {
-        background-color: ${props => props.theme.primaryShadow};
-        cursor: not-allowed;
+        display: none;
     }
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
