@@ -54,7 +54,7 @@ const FamilyProvider: React.FC = (props) => {
         if (result.errors) {
             toast.error(result.errors[0].message);
         }
-        
+
         if (result.data) {
             setCurrentFamilyHandler(result.data.createFamily);
         }
@@ -68,12 +68,13 @@ const FamilyProvider: React.FC = (props) => {
             console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
 
             const defaultFamilyId = localStorage.getItem('defaultFamilyId');
+            const families = familiesOfUser.data.getFamiliesOfUser;
 
             if (defaultFamilyId) {
                 console.log('user has a default family, load it');
-                const families = familiesOfUser.data.getFamiliesOfUser;
+
                 const defaultFamily = families.find(family => family._id === defaultFamilyId);
-                
+
                 if (!defaultFamily) {
                     setCurrentFamilyHandler(families[0]);
                     // localStorage.setItem('defaultFamilyId', families[0]._id);
@@ -87,7 +88,6 @@ const FamilyProvider: React.FC = (props) => {
 
             } else {
                 console.log('set the first family as default family');
-                const families = familiesOfUser.data.getFamiliesOfUser;
                 setCurrentFamilyHandler(families[0]);
             }
         }
@@ -98,9 +98,10 @@ const FamilyProvider: React.FC = (props) => {
         console.log("error loading families: ", familiesOfUser.error);
     }
 
+    const families = familiesOfUser.data?.getFamiliesOfUser || []
     return (
         <FamilyContext.Provider value={{
-            families: familiesOfUser.data?.getFamiliesOfUser || [],
+            families: families,
             loadingFamilies: familiesOfUser.loading,
             currentFamily,
             setCurrentFamilyHandler,

@@ -1,27 +1,15 @@
 import styled, { css } from 'styled-components';
 
 export const SelectFamilyModalBody = styled.div`
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(auto, minmax(4rem, 1fr));
-    gap: 1rem;
-    max-height: 40vh;
-    overflow-y: scroll;
-
-    &::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: ${props => props.theme.primary};
-        border-radius: 100px;
-    }
+    position: relative;
+    width: 100%;
+    /* margin: 0 auto 0 auto; */
 `;
-
-
 
 export const SelectFamilyCardStyles = css`
     box-shadow: none;
+    width: 100%;
+    margin: 0 0.25rem;
 `;
 
 export const SelectFamilyCardTitle = styled.h4`

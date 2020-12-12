@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
 import { IFamily } from '../../../models/family';
@@ -26,10 +26,12 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
     });
 
 
-    if (error) {
-        toast.error(`Couldn't load family members`);
-        console.log('members loading failed: ', error);
-    }
+    useEffect(() => {
+        if (error) {
+            toast.error(`Couldn't load family members`);
+            console.log('members loading failed: ', error);
+        }
+    }, [error]);
 
 
 
@@ -37,7 +39,7 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
         <Card addcss={SelectFamilyCardStyles}>
             <SelectFamilyCardTitle>{family.name}</SelectFamilyCardTitle>
             <SelectFamilyCardContent>
-                <span>Members</span>
+                <span>Members {`( ${family.memberCount} )`}</span>
                 <SelectFamilyCardMemberList>
                     {
                         data?.getMembersOfAFamily.map(member => (
