@@ -30,6 +30,11 @@ const CurrentFamilyIndicator: React.FC = () => {
         setShowSelectFamilyModal(true);
     }
 
+    const createNewFamilyHandler = () => {
+        setShowSelectFamilyModal(false);
+        setShowCreateFamilyModal(true);
+    }
+
     return (
         <React.Fragment>
             <CreateFamilyModal
@@ -39,6 +44,7 @@ const CurrentFamilyIndicator: React.FC = () => {
             <SelectFamilyModal
                 show={showSelectFamilyModal}
                 closeModal={closeSelectFamilyModal}
+                onCreateNewFamily={createNewFamilyHandler}
             />
             <Indicator>
                 {currentFamily && <IndicatorText onClick={openSelectFamilyModal}> {currentFamily.name}</IndicatorText>}

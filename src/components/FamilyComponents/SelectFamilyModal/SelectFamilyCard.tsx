@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { FamilyContext } from '../../../contexts/family.context';
 import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
 import { IFamily } from '../../../models/family';
 import { IMember } from '../../../models/member';
@@ -24,6 +25,8 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
             }
         }
     });
+
+    const { currentFamily } = useContext(FamilyContext);
 
 
     useEffect(() => {
@@ -51,11 +54,25 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
                     }
                 </SelectFamilyCardMemberList>
                 <SelectFamilyCardFooter>
-                    <Button type="button" onClick={() => {
-                        onSelect(family);
-                    }}>
-                        SELECT
-                    </Button>
+                    {
+                        currentFamily?._id !== family._id && (
+                            <Button type="button" onClick={() => {
+                                onSelect(family);
+                            }}>
+                                SELECT
+                            </Button>
+                        )
+                    }
+                    {
+                        currentFamily?._id === family._id && (
+                            <Button
+                                type="button"
+                                inverse
+                            >
+                                SELECTED
+                            </Button>
+                        )
+                    }
                 </SelectFamilyCardFooter>
             </SelectFamilyCardContent>
         </Card>

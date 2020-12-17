@@ -3,6 +3,7 @@ import { FamilyContext } from '../../../contexts/family.context';
 import { IFamily } from '../../../models/family';
 import Button from '../../Button';
 import HorizontalList from '../../HorizontalList';
+import LoadingBouncers from '../../LoadingBouncers';
 import Modal from '../../Modal';
 import SelectFamilyCard from './SelectFamilyCard';
 import { SelectFamilyModalBody } from './styles';
@@ -10,15 +11,22 @@ import { SelectFamilyModalBody } from './styles';
 interface SelectFamilyModalProps {
     show: boolean;
     closeModal: () => void;
+    onCreateNewFamily: () => void;
 }
 
-const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal }) => {
-    const { families, setCurrentFamilyHandler } = useContext(FamilyContext);
+const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal, onCreateNewFamily }) => {
+    const { families, setCurrentFamilyHandler, currentFamily } = useContext(FamilyContext);
 
     const onSelectHandler = (family: IFamily) => {
         setCurrentFamilyHandler(family);
         closeModal();
     }
+
+    if (!currentFamily) {
+        return <LoadingBouncers />;
+    }
+
+    const familyList = [currentFamily, ...families.filter(fam => fam._id !== currentFamily._id)];
 
     return (
         <Modal
@@ -27,6 +35,7 @@ const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal 
             onCancel={closeModal}
             footerComponent={
                 <>
+                    <Button type="button" onClick={onCreateNewFamily}>CREATE NEW</Button>
                     <Button type="button" inverse onClick={closeModal}>CANCEL</Button>
                 </>
             }
@@ -40,7 +49,7 @@ const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal 
                     preventDefaultTouchmoveEvent={true}
                 >
                     {
-                        families.map(family => (
+                        familyList.map(family => (
                             <SelectFamilyCard key={family._id} family={family} onSelect={onSelectHandler} />
                         ))
                     }
