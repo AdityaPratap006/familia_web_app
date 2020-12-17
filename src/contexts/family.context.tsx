@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { IFamily } from '../models/family';
@@ -31,11 +31,16 @@ export const FamilyContext = createContext<IFamilyContext>({
 const FamilyProvider: React.FC = (props) => {
     const familiesOfUser = useQuery<{ getFamiliesOfUser: IFamily[] }>(GET_FAMILIES_OF_USER_QUERY);
     const [currentFamily, setCurrentFamily] = useState<IFamily>();
+    const createdNewFamily = useRef(false);
     const [createFamilyMutation] = useMutation<{ createFamily: IFamily }>(CREATE_FAMILY_MUTATION, {
         refetchQueries: [
             { query: GET_FAMILIES_OF_USER_QUERY },
         ],
         awaitRefetchQueries: true,
+        onCompleted: (data) => {
+            const { createFamily: createdFamily } = data;
+            setCurrentFamilyHandler(createdFamily);
+        }
     });
 
     const setCurrentFamilyHandler = (family: IFamily) => {
@@ -45,6 +50,8 @@ const FamilyProvider: React.FC = (props) => {
     }
 
     const sendCreateFamilyRequest = async (args: CreateFamilyArgs) => {
+        createdNewFamily.current = true;
+
         const result = await createFamilyMutation({
             variables: {
                 input: args,
@@ -55,9 +62,9 @@ const FamilyProvider: React.FC = (props) => {
             toast.error(result.errors[0].message);
         }
 
-        if (result.data) {
-            setCurrentFamilyHandler(result.data.createFamily);
-        }
+        // if (result.data) {
+        //     setCurrentFamilyHandler(result.data.createFamily);
+        // }
 
         return result;
     }
@@ -66,6 +73,12 @@ const FamilyProvider: React.FC = (props) => {
 
         if (familiesOfUser.data && familiesOfUser.data.getFamiliesOfUser.length) {
             console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
+
+            if (createdNewFamily.current) {
+                console.log('Just created a new family!');
+                createdNewFamily.current = false;
+                return;
+            }
 
             const defaultFamilyId = localStorage.getItem('defaultFamilyId');
             const families = familiesOfUser.data.getFamiliesOfUser;
