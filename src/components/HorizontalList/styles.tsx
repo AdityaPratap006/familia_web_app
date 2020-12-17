@@ -17,7 +17,10 @@ export const StyledArrow = styled.button`
     }
 
     &:disabled {
-        display: none;
+        cursor: not-allowed;
+        .icon {
+            color: ${props => props.theme.primaryShadow};
+        }
     }
 
     @media (max-width: ${ScreenSize.SM_MAX}) {

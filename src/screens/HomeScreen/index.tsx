@@ -25,6 +25,7 @@ const HomeScreen: React.FC = () => {
     return (
         <Screen
             title="Home"
+            subTitle={currentFamily?.name}
             rightComponent={<CurrentFamilyIndicator />}
         >
             <HomeScreenContent>

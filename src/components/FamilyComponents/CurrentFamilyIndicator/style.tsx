@@ -10,12 +10,6 @@ export const Indicator = styled.div`
     align-items: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-
-    &:hover {
-        span {
-            text-decoration: underline;
-        }
-    }
 `;
 
 export const IndicatorText = styled.span`
@@ -26,4 +20,17 @@ export const IndicatorText = styled.span`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+`;
+
+export const IconContainer = styled.div`
+
+    .icon {
+        width: 1.8rem;
+        height: 1.8rem;
+        color: ${props => props.theme.primary};
+
+        &:hover {
+            color: ${props => props.theme.primaryLight};
+        }
+    }
 `;

@@ -11,6 +11,7 @@ const HorizontalList: React.FC<HorizontalListProps> = (props) => {
     return (
         <ReactElasticCarousel
             {...props}
+            enableMouseSwipe={false}
             renderArrow={props => {
                 let icon;
                 if (props.type === 'NEXT') {

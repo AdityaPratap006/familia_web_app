@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { Indicator, IndicatorText } from './style';
+import { FaBorderAll } from 'react-icons/fa';
+import { AiOutlineAppstoreAdd } from 'react-icons/ai';
+import { Indicator, IconContainer } from './style';
 import { FamilyContext } from '../../../contexts/family.context';
 import LoadingBouncers from '../../LoadingBouncers';
 import CreateFamilyModal from '../CreateFamilyModal';
@@ -47,8 +49,22 @@ const CurrentFamilyIndicator: React.FC = () => {
                 onCreateNewFamily={createNewFamilyHandler}
             />
             <Indicator>
-                {currentFamily && <IndicatorText onClick={openSelectFamilyModal}> {currentFamily.name}</IndicatorText>}
-                {!currentFamily && families.length === 0 && <IndicatorText onClick={openCreateFamilyModal}>Create a Family</IndicatorText>}
+                {currentFamily && (
+                    <IconContainer >
+                        <FaBorderAll
+                            className="icon"
+                            onClick={openSelectFamilyModal}
+                        />
+                    </IconContainer>
+                )}
+                {!currentFamily && families.length === 0 && (
+                    <IconContainer>
+                        <AiOutlineAppstoreAdd
+                            className="icon"
+                            onClick={openCreateFamilyModal}
+                        />
+                    </IconContainer>
+                )}
             </Indicator>
         </React.Fragment>
     );
