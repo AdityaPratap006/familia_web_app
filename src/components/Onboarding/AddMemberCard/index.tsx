@@ -9,11 +9,15 @@ const AddMemberCard: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
     const { profile } = useContext(UserProfileContext);
 
-    if (currentFamily && currentFamily.memberCount > 1) {
+    if (!currentFamily || !profile) {
         return null;
     }
 
-    if (profile && currentFamily && profile._id !== currentFamily.creator._id) {
+    if (currentFamily.memberCount > 1) {
+        return null;
+    }
+
+    if (profile._id !== currentFamily.creator._id) {
         return null;
     }
 
