@@ -5,6 +5,8 @@ import {
     RiUserFill,
     RiSettings2Fill,
     RiSettings2Line,
+    RiGroupLine,
+    RiGroupFill,
 } from 'react-icons/ri';
 import { NavLinkList, NavLinkItem } from './style';
 import { NavigationRoutes } from '../navRoutes';
@@ -29,6 +31,13 @@ const navlinksList: NavLinkData[] = [
     },
     {
         id: 2,
+        route: `${NavigationRoutes.FAMILIES}`,
+        label: `families`,
+        inactiveIcon: <RiGroupLine className='nav-icon' />,
+        activeIcon: <RiGroupFill className='nav-icon' />,
+    },
+    {
+        id: 3,
         route: `${NavigationRoutes.SETTINGS}`,
         label: `settings`,
         inactiveIcon: <RiSettings2Line className='nav-icon' />,

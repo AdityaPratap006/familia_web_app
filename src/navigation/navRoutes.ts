@@ -1,11 +1,12 @@
 export enum NavigationRoutes {
-    HOME = `/`,
     AUTH = `/auth`,
+    HOME = `/`,
     CHATS = `/chats`,
+    LOCATE = `/locate`,
+    MEMORIES = `/memories`,
     SETTINGS = `/settings`,
     PROFILE = `/profile`,
     FAMILIES = `/families`,
     NOTIFICATIONS = `/notifications`,
-    LOCATE = `/locate`,
     POST_CREATE = `/post/create`,
 }

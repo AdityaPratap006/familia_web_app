@@ -13,7 +13,7 @@ export const NavLinkList = styled.ul`
 `;
 
 export const NavLinkItem = styled.li`
-    margin: 0.3rem 0;
+    margin: 0.1rem 0;
     padding: 0;
     width: 100%;
     height: 3rem;

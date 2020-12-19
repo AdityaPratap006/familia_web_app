@@ -45,8 +45,8 @@ const navlinksList: NavLinkData[] = [
     },
     {
         id: 4,
-        route: `${NavigationRoutes.FAMILIES}`,
-        label: `families`,
+        route: `${NavigationRoutes.MEMORIES}`,
+        label: `memories`,
         inactiveIcon: <RiHeartsLine className='nav-icon' />,
         activeIcon: <RiHeartsFill className='nav-icon' />,
     },

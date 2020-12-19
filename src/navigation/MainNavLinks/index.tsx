@@ -15,6 +15,8 @@ import {
     RiHeartsLine,
     RiNotification2Line,
     RiNotification2Fill,
+    RiGroupFill,
+    RiGroupLine,
 } from 'react-icons/ri';
 import { NavLinkList, NavLinkItem } from './style';
 import { NavigationRoutes } from '../navRoutes';
@@ -51,8 +53,8 @@ const navlinksList: NavLinkData[] = [
     },
     {
         id: 4,
-        route: `${NavigationRoutes.FAMILIES}`,
-        label: `families`,
+        route: `${NavigationRoutes.MEMORIES}`,
+        label: `memories`,
         inactiveIcon: <RiHeartsLine className='nav-icon' />,
         activeIcon: <RiHeartsFill className='nav-icon' />,
     },
@@ -65,13 +67,20 @@ const navlinksList: NavLinkData[] = [
     },
     {
         id: 6,
+        route: `${NavigationRoutes.FAMILIES}`,
+        label: `families`,
+        inactiveIcon: <RiGroupLine className='nav-icon' />,
+        activeIcon: <RiGroupFill className='nav-icon' />,
+    },
+    {
+        id: 7,
         route: `${NavigationRoutes.PROFILE}`,
         label: `profile`,
         inactiveIcon: <RiUserLine className='nav-icon' />,
         activeIcon: <RiUserFill className='nav-icon' />,
     },
     {
-        id: 7,
+        id: 8,
         route: `${NavigationRoutes.SETTINGS}`,
         label: `settings`,
         inactiveIcon: <RiSettings2Line className='nav-icon' />,
