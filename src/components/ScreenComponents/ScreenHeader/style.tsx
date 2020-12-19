@@ -3,7 +3,7 @@ import { ScreenSize } from '../../../utils/screenSizes';
 
 export const HeaderBarWrapper = styled.div`
     width: 100%;
-    position: absolute;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;

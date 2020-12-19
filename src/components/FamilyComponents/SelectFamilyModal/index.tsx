@@ -23,7 +23,21 @@ const SelectFamilyModal: React.FC<SelectFamilyModalProps> = ({ show, closeModal,
     }
 
     if (!currentFamily) {
-        return <LoadingBouncers />;
+        return (
+            <Modal
+                show={show}
+                headerComponent={'Select a Family!'}
+                onCancel={closeModal}
+                footerComponent={
+                    <>
+                        <Button type="button" onClick={onCreateNewFamily}>CREATE NEW</Button>
+                        <Button type="button" inverse onClick={closeModal}>CANCEL</Button>
+                    </>
+                }
+            >
+                <LoadingBouncers />
+            </Modal>
+        );
     }
 
     const familyList = [currentFamily, ...families.filter(fam => fam._id !== currentFamily._id)];

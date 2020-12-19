@@ -7,6 +7,7 @@ export const FAMILY_FRAGMENT = gql`
         memberCount,
         description,
         creator {
+            _id,
             name,
             email,
             image {
