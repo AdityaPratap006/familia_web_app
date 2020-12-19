@@ -15,6 +15,7 @@ import { useNetworkStatus } from './hooks/networkStatus.hook';
 import UserProfileProvider from './contexts/userProfile.context';
 import FamilyProvider from './contexts/family.context';
 import AppLoadingScreen from './screens/AppLoadingScreen';
+import MemoriesScreen from './screens/MemoriesScreen';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -85,6 +86,9 @@ const App: React.FC = () => {
     <Switch>
       <Route exact path={`${NavigationRoutes.HOME}`}>
         <HomeScreen />
+      </Route>
+      <Route exact path={`${NavigationRoutes.MEMORIES}`}>
+        <MemoriesScreen />
       </Route>
       <Route exact path={`${NavigationRoutes.SETTINGS}`}>
         <SettingsScreen />

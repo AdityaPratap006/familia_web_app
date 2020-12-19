@@ -1,6 +1,6 @@
 import { IUserProfile, ProfileImage} from './user';
 
-interface FamilyCreator {
+export interface FamilyMember {
     _id: IUserProfile['_id'];
     name: IUserProfile['name'];
     email: IUserProfile['email'];
@@ -17,5 +17,5 @@ export interface IFamily {
     description?: string;
     createdAt: string;
     updatedAt: string;
-    creator: FamilyCreator;
+    creator: FamilyMember;
 }

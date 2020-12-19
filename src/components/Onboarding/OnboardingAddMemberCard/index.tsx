@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { FamilyContext } from '../../../contexts/family.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
+import { NavigationRoutes } from '../../../navigation/navRoutes';
 import Button from '../../Button';
 import Card from '../../Card';
 import { StyledTitle } from './style';
 
-const AddMemberCard: React.FC = () => {
+const OnboardingAddMemberCard: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
     const { profile } = useContext(UserProfileContext);
 
@@ -24,13 +25,13 @@ const AddMemberCard: React.FC = () => {
     return (
         <Card>
             <StyledTitle>
-                You are all alone here, invite your loved ones to join {currentFamily?.name}.
+                You are all alone here, invite your loved ones to join {currentFamily.name}.
             </StyledTitle>
-            <Button inverse>
+            <Button inverse to={`${NavigationRoutes.MEMORIES}`}>
                 Invite Members
             </Button>
         </Card>
     );
 };
 
-export default AddMemberCard;
+export default OnboardingAddMemberCard;

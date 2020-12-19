@@ -5,7 +5,7 @@ import { FamilyContext } from '../../contexts/family.context';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboarder';
-import AddMemberCard from '../../components/Onboarding/AddMemberCard';
+import AddMemberCard from '../../components/Onboarding/OnboardingAddMemberCard';
 import { ScreenSize } from '../../utils/screenSizes';
 
 const HomeScreen: React.FC = () => {
@@ -27,7 +27,12 @@ const HomeScreen: React.FC = () => {
         mediaQueryList.addEventListener("change", (event) => {
             handleMediaQueryChange(event.matches);
         });
-        
+
+        return () => {
+            mediaQueryList.removeEventListener("change", (event) => {
+                handleMediaQueryChange(event.matches);
+            });
+        };
     }, []);
 
     if (!loadingFamilies && families.length === 0) {
