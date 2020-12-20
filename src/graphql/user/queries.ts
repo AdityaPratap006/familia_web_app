@@ -10,3 +10,13 @@ export const GET_USER_PROFILE_QUERY = gql`
 
     ${USER_PROFILE_FRAGMENT}
 `;
+
+export const SEARCH_USERS_QUERY = gql`
+    query($input: SearchUsersInput!) {
+        searchUsers(input: $input){
+            ...userProfile
+        }
+    }
+
+    ${USER_PROFILE_FRAGMENT}
+`;
