@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import _ from 'lodash';
 import { useLazyQuery } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -8,6 +9,7 @@ import Button from '../../Button';
 import { TextFieldInput } from '../../Input';
 import LoadingSpinner from '../../LoadingSpinner';
 import Modal from '../../Modal';
+import { FamilyContext } from '../../../contexts/family.context';
 
 interface SearchUserModalProps {
     show: boolean;
@@ -24,6 +26,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
     });
 
     const [searchUsers, searchUsersResult] = useLazyQuery<{ searchUsers: FamilyMember[] }>(SEARCH_USERS_QUERY);
+    const { currentFamily } = useContext(FamilyContext);
 
     const onSubmit = (inputs: IFormInput) => {
         try {
@@ -39,6 +42,8 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
         }
     }
 
+    const handleSubmitDebounced = _.debounce(handleSubmit(onSubmit), 500, { maxWait: 0 });
+
     useEffect(() => {
         if (searchUsersResult.error) {
             toast.error(searchUsersResult.error.message);
@@ -46,10 +51,22 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
         }
     }, [searchUsersResult.error]);
 
+    if (!currentFamily) {
+        return (
+            <Modal
+                headerComponent={'Please wait...'}
+                show={show}
+                onCancel={closeModal}
+            >
+                <LoadingSpinner large />
+            </Modal>
+        );
+    }
+
     return (
         <Modal
             show={show}
-            headerComponent={'Create a new Family!'}
+            headerComponent={`Invite people you know to '${currentFamily.name}'!`}
             onCancel={closeModal}
             footerComponent={
                 <>
@@ -61,10 +78,11 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
                 id="queryText"
                 name="queryText"
                 label="Search Users"
+                placeholder={"e.g: Aditya"}
                 type="text"
                 ref={register()}
                 errorText={formErrors.queryText && formErrors.queryText.message}
-                onChange={handleSubmit(onSubmit)}
+                onChange={handleSubmitDebounced}
             />
             {searchUsersResult.loading && <LoadingSpinner />}
             {searchUsersResult.data && JSON.stringify(searchUsersResult.data.searchUsers)}
