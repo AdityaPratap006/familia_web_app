@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const SearchResultsGrid = styled.div`
+    margin-top: 1rem;
     width: 100%;
     height: 30vh;
     display: grid;
@@ -9,7 +10,8 @@ export const SearchResultsGrid = styled.div`
     overflow-y: scroll;
 `;
 
-export const NoResultText = styled.h5`
+export const StatusText = styled.h5`
     font-size: 1rem;
+    margin: 0.5rem;
     color: ${props => props.theme.primary};
 `;

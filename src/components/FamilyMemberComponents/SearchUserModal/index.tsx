@@ -10,8 +10,9 @@ import { TextFieldInput } from '../../Input';
 import LoadingSpinner from '../../LoadingSpinner';
 import Modal from '../../Modal';
 import { FamilyContext } from '../../../contexts/family.context';
-import MemberCard from '../MemberCard';
-import { NoResultText, SearchResultsGrid } from './style';
+import { StatusText, SearchResultsGrid } from './style';
+import InviteMemberCard from '../InviteMemberCard';
+import LoadingBouncers from '../../LoadingBouncers';
 
 interface SearchUserModalProps {
     show: boolean;
@@ -72,7 +73,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
             const { searchUsers: usersList } = data;
 
             return usersList.map(user => (
-                <MemberCard key={user._id} user={user} />
+                <InviteMemberCard key={user._id} user={user} />
             ));
         }
 
@@ -100,16 +101,21 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
                 errorText={formErrors.queryText && formErrors.queryText.message}
                 onChange={handleSubmitDebounced}
             />
-            {searchUsersResult.loading && <LoadingSpinner />}
+            {searchUsersResult.loading && <LoadingBouncers small />}
             {!searchUsersResult.loading && !searchUsersResult.data && (
-                <NoResultText>
+                <StatusText>
                     No results
-                </NoResultText>
+                </StatusText>
             )}
             {!searchUsersResult.loading && searchUsersResult.data && searchUsersResult.data.searchUsers.length === 0 && (
-                <NoResultText>
+                <StatusText>
                     No results
-                </NoResultText>
+                </StatusText>
+            )}
+            {searchUsersResult.data && searchUsersResult.data.searchUsers.length > 0 && (
+                <StatusText>
+                    {searchUsersResult.data.searchUsers.length} result{searchUsersResult.data.searchUsers.length > 1 && 's'}
+                </StatusText>
             )}
             {searchUsersResult.data && searchUsersResult.data.searchUsers.length > 0 && (
                 <SearchResultsGrid>
