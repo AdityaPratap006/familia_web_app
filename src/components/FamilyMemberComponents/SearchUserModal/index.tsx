@@ -10,6 +10,8 @@ import { TextFieldInput } from '../../Input';
 import LoadingSpinner from '../../LoadingSpinner';
 import Modal from '../../Modal';
 import { FamilyContext } from '../../../contexts/family.context';
+import MemberCard from '../MemberCard';
+import { NoResultText, SearchResultsGrid } from './style';
 
 interface SearchUserModalProps {
     show: boolean;
@@ -63,6 +65,20 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
         );
     }
 
+    const renderUsersList = (): React.ReactNode => {
+        const { data } = searchUsersResult;
+
+        if (data) {
+            const { searchUsers: usersList } = data;
+
+            return usersList.map(user => (
+                <MemberCard key={user._id} user={user} />
+            ));
+        }
+
+        return null;
+    }
+
     return (
         <Modal
             show={show}
@@ -85,7 +101,21 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
                 onChange={handleSubmitDebounced}
             />
             {searchUsersResult.loading && <LoadingSpinner />}
-            {searchUsersResult.data && JSON.stringify(searchUsersResult.data.searchUsers)}
+            {!searchUsersResult.loading && !searchUsersResult.data && (
+                <NoResultText>
+                    No results
+                </NoResultText>
+            )}
+            {!searchUsersResult.loading && searchUsersResult.data && searchUsersResult.data.searchUsers.length === 0 && (
+                <NoResultText>
+                    No results
+                </NoResultText>
+            )}
+            {searchUsersResult.data && searchUsersResult.data.searchUsers.length > 0 && (
+                <SearchResultsGrid>
+                    {renderUsersList()}
+                </SearchResultsGrid>
+            )}
         </Modal>
     );
 };
