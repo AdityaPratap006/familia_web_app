@@ -34,8 +34,8 @@ export const StyledName = styled.h4`
 export const StyledEmail = styled.small`
     padding: 0;
     margin: 0.2rem 0 0.5rem 0;
-    font-size: 0.8rem;
-    letter-spacing: 0.05rem;
+    font-size: 0.9rem;
+    font-weight: bold;
     color: ${props => props.theme.primary};
 `;
 
