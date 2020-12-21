@@ -1,14 +1,14 @@
 import styled, { css } from 'styled-components';
 import { ScreenSize } from '../../../utils/screenSizes';
-import CoupleImage from '../../../assets/mixkit-couple-cuddling.png';
+import WeBareBearsImage from '../../../assets/bears-night.jpg';
 
 export const CardCSS = css`
     padding: 0rem;
     max-width: 30rem;
     height: 24rem;
-    background-image: url(${CoupleImage});
+    background-image: url(${WeBareBearsImage});
     background-size: cover;
-    background-position: center;
+    background-position: bottom;
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
@@ -24,7 +24,7 @@ export const StyledCardBody = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.6);
 `;
 
 export const StyledText = styled.p`

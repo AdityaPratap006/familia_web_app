@@ -9,7 +9,7 @@ export const StyledBody = styled.div`
 `;
 
 export const AvatarContainer = styled.div`
-    width: 35%;
+     
     padding: 1rem;
     display: flex;
     justify-content: center;
@@ -18,7 +18,7 @@ export const AvatarContainer = styled.div`
 `;
 
 export const StyledContent = styled.div`
-    width: 65%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

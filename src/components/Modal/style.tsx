@@ -15,6 +15,7 @@ export const ModalContainer = styled.div<ModalContainerProps>`
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     border-radius: 8px;
     overflow: hidden;
+    background-color: ${props => props.theme.background};
 
     @media (min-width: ${ScreenSize.SM_MIN}) {
         width: 30rem;
@@ -55,12 +56,12 @@ export const ModalHeader = styled.header`
 `;
 
 export const ModalContent = styled.div`
-    background: ${props => props.theme.paper};
+    background: ${props => props.theme.background};
     padding: 1rem 0.5rem;
 `;
 
 export const ModalFooter = styled.footer`
-    background: ${props => props.theme.paper};
+    background: ${props => props.theme.background};
     padding: 1rem 0.5rem;
     display: flex;
     justify-content: flex-end;
