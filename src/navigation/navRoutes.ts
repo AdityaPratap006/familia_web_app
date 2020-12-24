@@ -6,7 +6,7 @@ export enum NavigationRoutes {
     MEMORIES = `/memories`,
     SETTINGS = `/settings`,
     PROFILE = `/profile`,
-    FAMILIES = `/families`,
+    INVITES = `/invites`,
     NOTIFICATIONS = `/notifications`,
     POST_CREATE = `/post/create`,
 }
