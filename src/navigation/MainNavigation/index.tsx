@@ -4,7 +4,6 @@ import MainNavBar from '../MainNavBar';
 import SideDrawer from '../SideDrawer';
 import BackDrop from '../../components/BackDrop';
 import { SideDrawerContext } from '../../contexts/sidedrawer.context';
-import BottomAppBar from '../BottomAppBar';
 
 const MainNavigation: React.FC = ({ children }) => {
     const sideDrawerCTX = useContext(SideDrawerContext);
@@ -21,7 +20,6 @@ const MainNavigation: React.FC = ({ children }) => {
             <MainContainer>
                 {children}
             </MainContainer>
-            <BottomAppBar />
         </React.Fragment>
     );
 };

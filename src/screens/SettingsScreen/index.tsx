@@ -8,7 +8,7 @@ const SettingsScreen = () => {
     return (
         <Screen
             title="settings"
-            stackedUpScreen
+            withoutBottomAppBar
             withGoBackButton
         >
             <SettingsScreenContent>

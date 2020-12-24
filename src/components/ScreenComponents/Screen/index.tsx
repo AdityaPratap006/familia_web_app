@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import BottomAppBar from '../../../navigation/BottomAppBar';
 import ScreenHeader from '../ScreenHeader';
 import ScreenWrapper from '../ScreenWrapper';
 import { ScreenContent } from './style';
@@ -8,7 +9,7 @@ interface ScreenProps {
     subTitle?: ReactNode;
     rightComponent?: ReactNode;
     withGoBackButton?: boolean;
-    stackedUpScreen?: boolean;
+    withoutBottomAppBar?: boolean;
     withoutHeader?: boolean;
 }
 
@@ -23,9 +24,10 @@ const Screen: React.FC<ScreenProps> = (props) => {
                     withGoBackButton={props.withGoBackButton}
                 />
             )}
-            <ScreenContent stackedUpScreen={props.stackedUpScreen}>
+            <ScreenContent withoutBottomAppBar={props.withoutBottomAppBar}>
                 {props.children}
             </ScreenContent>
+            {!props.withoutBottomAppBar && <BottomAppBar />}
         </ScreenWrapper>
     )
 };

@@ -16,6 +16,7 @@ import UserProfileProvider from './contexts/userProfile.context';
 import FamilyProvider from './contexts/family.context';
 import AppLoadingScreen from './screens/AppLoadingScreen';
 import MemoriesScreen from './screens/MemoriesScreen';
+import InvitesScreen from './screens/InvitesScreen';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -89,6 +90,9 @@ const App: React.FC = () => {
       </Route>
       <Route exact path={`${NavigationRoutes.MEMORIES}`}>
         <MemoriesScreen />
+      </Route>
+      <Route exact path={`${NavigationRoutes.INVITES}`}>
+        <InvitesScreen />
       </Route>
       <Route exact path={`${NavigationRoutes.SETTINGS}`}>
         <SettingsScreen />
