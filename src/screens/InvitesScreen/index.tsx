@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from '@apollo/client';
 import { InvitesGrid, InvitesScreenContent, InvitesTab, InvitesTabsHeader } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import Card from '../../components/Card';
+import { GET_INVITES_RECEIVED_BY_USER } from '../../graphql/invite/queries';
+import { IInvite } from '../../models/invite';
 
 enum InviteTab {
     SENT = 'SENT',
@@ -10,6 +13,13 @@ enum InviteTab {
 
 const InvitesScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<InviteTab>(InviteTab.RECEIVED);
+    const receviedInvites = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
+
+    useEffect(() => {
+        if (receviedInvites.data) {
+            console.log(receviedInvites.data);
+        }
+    }, [receviedInvites.data]);
 
     const handleTabChange = (tab: InviteTab) => {
         setActiveTab(tab);
