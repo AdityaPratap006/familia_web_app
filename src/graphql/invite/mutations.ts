@@ -10,3 +10,9 @@ export const CREATE_INVITE_MUTATION = gql`
 
     ${INVITE_FRAGMENT}
 `;
+
+export const DELETE_INVITE_MUTATION = gql`
+    mutation ($input: DeleteInviteInput!) {
+        deleteInvite(input: $input)
+    }
+`;

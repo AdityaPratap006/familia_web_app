@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
 import { FamilyContext } from '../../../contexts/family.context';
-import { CREATE_INVITE_MUTATION } from '../../../graphql/invite/mutation';
+import { CREATE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
 import { FamilyMember } from '../../../models/family';
 import { IInvite } from '../../../models/invite';
 import Avatar from '../../Avatar';
@@ -65,7 +65,7 @@ const InviteMemberCard: React.FC<InviteMemberCardProps> = ({ user }) => {
                         {user.about}
                     </StyledAbout>
                     <StyledActionContainer>
-                        {createInviteMutationResult.called && createInviteMutationResult.loading && <LoadingSpinner />}
+                        {createInviteMutationResult.called && createInviteMutationResult.loading && <LoadingSpinner small />}
                         {!(createInviteMutationResult.called && createInviteMutationResult.loading) && (
                             <Button
                                 type="button"

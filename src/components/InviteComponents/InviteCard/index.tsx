@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { IInvite } from '../../../models/invite';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
@@ -8,6 +8,10 @@ import { IMember } from '../../../models/member';
 import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
 import LoadingBouncers from '../../LoadingBouncers';
 import Button from '../../Button';
+import { DELETE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
+import { toast } from 'react-toastify';
+import LoadingSpinner from '../../LoadingSpinner';
+import { GET_INVITES_SENT_BY_USER } from '../../../graphql/invite/queries';
 
 interface InviteCardProps {
     invite: IInvite;
@@ -21,6 +25,13 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                 familyId: invite.family._id,
             }
         }
+    });
+
+    const [deleteInviteMutation, deleteInviteMutationResult] = useMutation<{ deleteInvite: string; }>(DELETE_INVITE_MUTATION, {
+        refetchQueries: [
+            { query: GET_INVITES_SENT_BY_USER },
+        ],
+        awaitRefetchQueries: true,
     });
 
     const renderFamilyMembers = (): React.ReactNode => {
@@ -52,6 +63,29 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                 )}
             </>
         )
+    }
+
+    const cancelInviteHandler = async () => {
+        try {
+            const result = await deleteInviteMutation({
+                variables: {
+                    input: {
+                        inviteId: invite._id,
+                    },
+                },
+            });
+
+            if (result.errors) {
+                toast.error(result.errors[0]?.message);
+            }
+
+            if (result.data) {
+                toast.success(`Invite deleted successfully`);
+            }
+
+        } catch (error) {
+            toast.error(error.message);
+        }
     }
 
     let avatarImgSrc = '';
@@ -98,13 +132,17 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                         ACCEPT
                     </Button>
                 )}
-                {type === 'sent' && (
+                {type === 'sent' && !(deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
                     <Button
                         type="button"
                         size="small"
+                        onClick={cancelInviteHandler}
                     >
                         CANCEL INVITE
                     </Button>
+                )}
+                {type === 'sent' && (deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
+                    <LoadingSpinner small />
                 )}
             </InviteCardFooter>
         </Card>
