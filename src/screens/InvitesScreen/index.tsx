@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { InvitesLodingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader } from './style';
+import { InvitesLoadingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader, NoInvitesText } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../graphql/invite/queries';
 import { IInvite } from '../../models/invite';
@@ -46,9 +46,19 @@ const InvitesScreen: React.FC = () => {
                     </InvitesTab>
                 </InvitesTabsHeader>
                 {((activeTab === InviteTab.RECEIVED && receviedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
-                    <InvitesLodingContainer>
+                    <InvitesLoadingContainer>
                         <LoadingBouncers />
-                    </InvitesLodingContainer>
+                    </InvitesLoadingContainer>
+                )}
+                {activeTab === InviteTab.RECEIVED && receviedInvitesQuery.data && receviedInvitesQuery.data.getInvitesReceivedByUser.length === 0 && (
+                    <NoInvitesText>
+                        No Invites
+                    </NoInvitesText>
+                )}
+                {activeTab === InviteTab.SENT && sentInvitesQuery.data && sentInvitesQuery.data.getInvitesSentByUser.length === 0 && (
+                    <NoInvitesText>
+                        No Invites
+                    </NoInvitesText>
                 )}
                 {activeTab === InviteTab.RECEIVED && receviedInvitesQuery.data && (
                     <InviteList

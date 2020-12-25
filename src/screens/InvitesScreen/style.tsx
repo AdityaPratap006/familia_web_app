@@ -45,10 +45,18 @@ export const InvitesTab = styled.button`
     }
 `;
 
-export const InvitesLodingContainer = styled.div`
+export const InvitesLoadingContainer = styled.div`
     width: 100%;
     padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+export const NoInvitesText = styled.p`
+    color: ${props => props.theme.text};
+    font-size: 1rem;
+    width: 100%;
+    padding: 2rem;
+    margin: 0;
 `;
