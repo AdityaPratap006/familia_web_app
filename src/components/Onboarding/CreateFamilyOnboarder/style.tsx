@@ -10,6 +10,7 @@ export const CardCSS = css`
     background-size: cover;
     background-position: bottom;
     background-repeat: no-repeat;
+    border: 3px solid ${props => props.theme.primary};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -61,4 +62,5 @@ export const StyledCardFooter = styled.footer`
     display: flex;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.6));
 `;
