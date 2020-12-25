@@ -10,3 +10,13 @@ export const GET_INVITES_RECEIVED_BY_USER = gql`
 
     ${INVITE_FRAGMENT}
 `;
+
+export const GET_INVITES_SENT_BY_USER = gql`
+    query {
+        getInvitesSentByUser {
+            ...invite
+        }
+    }
+
+    ${INVITE_FRAGMENT}
+`;

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { InvitesGrid, InvitesScreenContent, InvitesTab, InvitesTabsHeader } from './style';
+import { InvitesLodingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
-import Card from '../../components/Card';
-import { GET_INVITES_RECEIVED_BY_USER } from '../../graphql/invite/queries';
+import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../graphql/invite/queries';
 import { IInvite } from '../../models/invite';
+import InviteList from '../../components/InviteComponents/InviteList';
+import LoadingBouncers from '../../components/LoadingBouncers';
 
 enum InviteTab {
     SENT = 'SENT',
@@ -13,13 +14,9 @@ enum InviteTab {
 
 const InvitesScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<InviteTab>(InviteTab.RECEIVED);
-    const receviedInvites = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
+    const receviedInvitesQuery = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
+    const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
 
-    useEffect(() => {
-        if (receviedInvites.data) {
-            console.log(receviedInvites.data);
-        }
-    }, [receviedInvites.data]);
 
     const handleTabChange = (tab: InviteTab) => {
         setActiveTab(tab);
@@ -48,14 +45,23 @@ const InvitesScreen: React.FC = () => {
                         Sent
                     </InvitesTab>
                 </InvitesTabsHeader>
-                <InvitesGrid>
-                    <Card>
-                        afafaa
-                        afafsef
-                        aefaesfaef
-                        aefaesfes
-                    </Card>
-                </InvitesGrid>
+                {((activeTab === InviteTab.RECEIVED && receviedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
+                    <InvitesLodingContainer>
+                        <LoadingBouncers />
+                    </InvitesLodingContainer>
+                )}
+                {activeTab === InviteTab.RECEIVED && receviedInvitesQuery.data && (
+                    <InviteList
+                        invites={receviedInvitesQuery.data.getInvitesReceivedByUser}
+                        type='received'
+                    />
+                )}
+                {activeTab === InviteTab.SENT && sentInvitesQuery.data && (
+                    <InviteList
+                        invites={sentInvitesQuery.data.getInvitesSentByUser}
+                        type='sent'
+                    />
+                )}
             </InvitesScreenContent>
         </Screen>
     );

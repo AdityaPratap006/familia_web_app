@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { ScreenSize } from '../../utils/screenSizes';
 
 export const InvitesScreenContent = styled.div`
     width: 100%;
@@ -10,7 +9,7 @@ export const InvitesContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
 `;
 
 export const InvitesTabsHeader = styled.div`
@@ -46,19 +45,10 @@ export const InvitesTab = styled.button`
     }
 `;
 
-export const InvitesGrid = styled.div`
-    padding-top: 1rem;
+export const InvitesLodingContainer = styled.div`
     width: 100%;
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(3, 1fr);
-
-    @media (max-width: ${ScreenSize.SM_MAX}) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: ${ScreenSize.XS_MAX}) {
-        grid-template-columns: repeat(1, 1fr);
-    }
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
-
