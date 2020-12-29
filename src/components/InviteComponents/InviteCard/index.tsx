@@ -35,7 +35,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
         awaitRefetchQueries: true,
     });
 
-    const [acceptInviteMutation, acceptInviteMutationResult] = useMutation<{}>(ACCEPT_INVITE_MUTATION, {
+    const [acceptInviteMutation, acceptInviteMutationResult] = useMutation<{ acceptInvite: string; }>(ACCEPT_INVITE_MUTATION, {
         refetchQueries: [
             { query: GET_INVITES_SENT_BY_USER },
         ],
