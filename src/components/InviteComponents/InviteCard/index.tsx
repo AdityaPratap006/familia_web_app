@@ -8,10 +8,11 @@ import { IMember } from '../../../models/member';
 import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
 import LoadingBouncers from '../../LoadingBouncers';
 import Button from '../../Button';
-import { DELETE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
+import { ACCEPT_INVITE_MUTATION, DELETE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
 import { toast } from 'react-toastify';
 import LoadingSpinner from '../../LoadingSpinner';
 import { GET_INVITES_SENT_BY_USER } from '../../../graphql/invite/queries';
+import { NavigationRoutes } from '../../../navigation/navRoutes';
 
 interface InviteCardProps {
     invite: IInvite;
@@ -28,6 +29,13 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
     });
 
     const [deleteInviteMutation, deleteInviteMutationResult] = useMutation<{ deleteInvite: string; }>(DELETE_INVITE_MUTATION, {
+        refetchQueries: [
+            { query: GET_INVITES_SENT_BY_USER },
+        ],
+        awaitRefetchQueries: true,
+    });
+
+    const [acceptInviteMutation, acceptInviteMutationResult] = useMutation<{}>(ACCEPT_INVITE_MUTATION, {
         refetchQueries: [
             { query: GET_INVITES_SENT_BY_USER },
         ],
@@ -88,6 +96,30 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
         }
     }
 
+    const acceptInviteHandler = async () => {
+        try {
+            const result = await acceptInviteMutation({
+                variables: {
+                    input: {
+                        inviteId: invite._id,
+                    },
+                },
+            });
+
+            if (result.errors) {
+                toast.error(result.errors[0]?.message);
+            }
+
+            if (result.data) {
+                toast.success(`Invite accepted`);
+                window.location.replace(`${NavigationRoutes.HOME}`);
+            }
+
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
     let avatarImgSrc = '';
     if (type === 'received') {
         avatarImgSrc = invite.from.image.url;
@@ -124,13 +156,17 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                 </InviteCardFamilyMembersList>
             </InviteCardBody>
             <InviteCardFooter>
-                {type === 'received' && (
+                {type === 'received' && !(acceptInviteMutationResult.called && acceptInviteMutationResult.loading) && (
                     <Button
                         type="button"
                         size="small"
+                        onClick={acceptInviteHandler}
                     >
                         ACCEPT
                     </Button>
+                )}
+                {type === 'received' && (acceptInviteMutationResult.called && acceptInviteMutationResult.loading) && (
+                    <LoadingSpinner small />
                 )}
                 {type === 'sent' && !(deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
                     <Button

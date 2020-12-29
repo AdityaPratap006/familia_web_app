@@ -12,7 +12,13 @@ export const CREATE_INVITE_MUTATION = gql`
 `;
 
 export const DELETE_INVITE_MUTATION = gql`
-    mutation ($input: DeleteInviteInput!) {
+    mutation($input: DeleteInviteInput!) {
         deleteInvite(input: $input)
+    }
+`;
+
+export const ACCEPT_INVITE_MUTATION = gql`
+    mutation($input: AcceptInviteInput!) {
+        acceptInvite(input: $input)
     }
 `;
