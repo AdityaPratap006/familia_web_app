@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split, from } from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from '@apollo/client/link/ws';
 import { AuthContext } from './contexts/auth.context';
 import { SideDrawerProvider } from './contexts/sidedrawer.context';
 import { CustomThemeContext } from './contexts/theme.context';
@@ -68,8 +70,27 @@ const App: React.FC = () => {
     },
   });
 
+  const wsLink = new WebSocketLink({
+    uri: process.env.REACT_APP_GRAPHQL_WEBSOCKET_URL as string,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        authorization: auth.state.user.token,
+      },
+    }
+  });
+
+  const splitLink = split(({ query }) => {
+    const definition = getMainDefinition(query);
+    return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription');
+  }, wsLink, httpLink);
+
+  const link = from([
+    splitLink,
+  ]);
+
   const apolloClient = new ApolloClient({
-    link: httpLink,
+    link: link,
     connectToDevTools: true,
     cache: cache,
     defaultOptions: {
