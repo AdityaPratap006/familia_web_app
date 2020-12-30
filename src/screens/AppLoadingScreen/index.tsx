@@ -4,7 +4,7 @@ import LoadingBouncers from '../../components/LoadingBouncers';
 
 const AppLoadingScreen: React.FC = () => {
     return (
-        <Screen withoutHeader>
+        <Screen withoutHeader withoutBottomAppBar>
             <div className='app-loading-screen'>
                 <LoadingBouncers />
             </div>
