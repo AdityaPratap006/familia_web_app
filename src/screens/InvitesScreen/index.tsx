@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { InvitesLoadingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader, NoInvitesText } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
@@ -6,17 +6,41 @@ import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../gr
 import { IInvite } from '../../models/invite';
 import InviteList from '../../components/InviteComponents/InviteList';
 import LoadingBouncers from '../../components/LoadingBouncers';
+import { INVITE_CREATED_SUBSCRIPTION } from '../../graphql/invite/subscriptions';
 
 enum InviteTab {
     SENT = 'SENT',
     RECEIVED = 'RECEIVED',
 }
 
+interface IInviteCreatedResult {
+    inviteCreated: IInvite;
+}
+
 const InvitesScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<InviteTab>(InviteTab.RECEIVED);
-    const receviedInvitesQuery = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
+    const receivedInvitesQuery = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
     const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
 
+    const { subscribeToMore: subscribeToMoreReceivedInvites } = receivedInvitesQuery;
+    useEffect(() => {
+        const unsubscribe = subscribeToMoreReceivedInvites<IInviteCreatedResult>({
+            document: INVITE_CREATED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                console.log(prev);
+                const existingInvites = prev.getInvitesReceivedByUser;
+                const newInvite = subscriptionData.data.inviteCreated;
+
+                return {
+                    getInvitesReceivedByUser: [newInvite, ...existingInvites],
+                };
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        }
+    }, [subscribeToMoreReceivedInvites]);
 
     const handleTabChange = (tab: InviteTab) => {
         setActiveTab(tab);
@@ -45,12 +69,12 @@ const InvitesScreen: React.FC = () => {
                         Sent
                     </InvitesTab>
                 </InvitesTabsHeader>
-                {((activeTab === InviteTab.RECEIVED && receviedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
+                {((activeTab === InviteTab.RECEIVED && receivedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
                     <InvitesLoadingContainer>
                         <LoadingBouncers />
                     </InvitesLoadingContainer>
                 )}
-                {activeTab === InviteTab.RECEIVED && receviedInvitesQuery.data && receviedInvitesQuery.data.getInvitesReceivedByUser.length === 0 && (
+                {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && receivedInvitesQuery.data.getInvitesReceivedByUser.length === 0 && (
                     <NoInvitesText>
                         No Invites
                     </NoInvitesText>
@@ -60,9 +84,9 @@ const InvitesScreen: React.FC = () => {
                         No Invites
                     </NoInvitesText>
                 )}
-                {activeTab === InviteTab.RECEIVED && receviedInvitesQuery.data && (
+                {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && (
                     <InviteList
-                        invites={receviedInvitesQuery.data.getInvitesReceivedByUser}
+                        invites={receivedInvitesQuery.data.getInvitesReceivedByUser}
                         type='received'
                     />
                 )}
