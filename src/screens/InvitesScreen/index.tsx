@@ -6,7 +6,7 @@ import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../gr
 import { IInvite } from '../../models/invite';
 import InviteList from '../../components/InviteComponents/InviteList';
 import LoadingBouncers from '../../components/LoadingBouncers';
-import { INVITE_CREATED_SUBSCRIPTION } from '../../graphql/invite/subscriptions';
+import { INVITE_CREATED_SUBSCRIPTION, INVITE_DELETED_SUBSCRIPTION } from '../../graphql/invite/subscriptions';
 
 enum InviteTab {
     SENT = 'SENT',
@@ -14,7 +14,11 @@ enum InviteTab {
 }
 
 interface IInviteCreatedResult {
-    inviteCreated: IInvite;
+    onInviteCreated: IInvite;
+}
+
+interface IInviteDeletedResult {
+    onInviteDeleted: string;
 }
 
 const InvitesScreen: React.FC = () => {
@@ -23,13 +27,13 @@ const InvitesScreen: React.FC = () => {
     const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
 
     const { subscribeToMore: subscribeToMoreReceivedInvites } = receivedInvitesQuery;
+
     useEffect(() => {
-        const unsubscribe = subscribeToMoreReceivedInvites<IInviteCreatedResult>({
+        subscribeToMoreReceivedInvites<IInviteCreatedResult>({
             document: INVITE_CREATED_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {
-                console.log(prev);
                 const existingInvites = prev.getInvitesReceivedByUser;
-                const newInvite = subscriptionData.data.inviteCreated;
+                const newInvite = subscriptionData.data.onInviteCreated;
 
                 return {
                     getInvitesReceivedByUser: [newInvite, ...existingInvites],
@@ -37,9 +41,19 @@ const InvitesScreen: React.FC = () => {
             }
         });
 
-        return () => {
-            unsubscribe();
-        }
+        subscribeToMoreReceivedInvites<IInviteDeletedResult>({
+            document: INVITE_DELETED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                console.log(subscriptionData);
+                const existingInvites = prev.getInvitesReceivedByUser;
+                const deletedInviteId = subscriptionData.data.onInviteDeleted;
+
+                return {
+                    getInvitesReceivedByUser: existingInvites.filter(invite => invite._id !== deletedInviteId),
+                }
+            }
+        });
+
     }, [subscribeToMoreReceivedInvites]);
 
     const handleTabChange = (tab: InviteTab) => {
