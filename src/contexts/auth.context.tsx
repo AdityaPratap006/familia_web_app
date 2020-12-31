@@ -59,9 +59,12 @@ export const AuthContext = createContext<IAuthContext>({
     setLoading: () => null,
 });
 
+let logoutTimer: number;
+
 export const AuthProvider: React.FC = (props) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
     const [loading, setLoading] = useState(true);
+    const [tokenExpirationTime, setTokenExpirationTime] = useState<Date>(new Date(new Date().getTime() + 1000 * 60 * 10));
 
     const handleUserAuthState = async (user: Firebase.User | null) => {
         setLoading(true);
@@ -76,6 +79,10 @@ export const AuthProvider: React.FC = (props) => {
         }
 
         const idTokenResult = await user.getIdTokenResult();
+
+        const expiryTime = new Date(idTokenResult.expirationTime);
+
+        setTokenExpirationTime(expiryTime);
 
         dispatch({
             type: AuthActionType.LOGIN,
@@ -99,6 +106,21 @@ export const AuthProvider: React.FC = (props) => {
             unsubscribeAuth();
         }
     }, []);
+
+    useEffect(() => {
+        console.log(`expiry time: ${tokenExpirationTime.toLocaleString()}`);
+        const remainingTime = tokenExpirationTime.getTime() - new Date().getTime();
+        if (state.user) {
+            logoutTimer = setTimeout(() => {
+                dispatch({
+                    type: AuthActionType.LOGOUT,
+                });
+                // firebaseAuth.signOut();
+            }, remainingTime);
+        } else {
+            clearTimeout(logoutTimer);
+        }
+    }, [state.user, tokenExpirationTime]);
 
     const value: IAuthContext = { state, dispatch, loading, setLoading };
 
