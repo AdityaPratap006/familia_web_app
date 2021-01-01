@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 import { QueryLazyOptions, useLazyQuery, useMutation } from '@apollo/client';
 import { CREATE_USER_MUTATION } from '../graphql/user/mutations';
 import { toast } from 'react-toastify';
@@ -19,12 +19,12 @@ export const UserProfileContext = createContext<IUserProfileContext>({
 const UserProfileProvider: React.FC = (props) => {
     const [createUser] = useMutation<{ createUser: IUserProfile }>(CREATE_USER_MUTATION);
     const [userProfile, setUserProfile] = useState<IUserProfile>();
-    const  [fetchUserProfile, userProfileResult] = useLazyQuery<{ profile: IUserProfile }>(GET_USER_PROFILE_QUERY);
+    const [fetchUserProfile, userProfileResult] = useLazyQuery<{ profile: IUserProfile }>(GET_USER_PROFILE_QUERY);
+    const shouldSetProfile = useRef(true);
 
-    
     useEffect(() => {
         const sendCreateUserRequest = async () => {
-             
+
             try {
                 const result = await createUser();
                 if (result.errors) {
@@ -34,7 +34,9 @@ const UserProfileProvider: React.FC = (props) => {
 
                 if (result.data) {
                     console.log(result.data.createUser);
-                    setUserProfile(result.data.createUser);
+                    if (shouldSetProfile.current) {
+                        setUserProfile(result.data.createUser);
+                    }
                 }
 
             } catch (error) {
@@ -44,6 +46,10 @@ const UserProfileProvider: React.FC = (props) => {
         }
 
         sendCreateUserRequest();
+
+        return function cleanUp() {
+            shouldSetProfile.current = false;
+        };
     }, [createUser]);
 
     useEffect(() => {
@@ -51,7 +57,7 @@ const UserProfileProvider: React.FC = (props) => {
             console.log(`refetched user profile: `, userProfileResult.data.profile);
         }
     }, [userProfileResult.data]);
-   
+
     return (
         <UserProfileContext.Provider value={{
             profile: userProfileResult.data?.profile || userProfile,
