@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split, from } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { setContext } from '@apollo/client/link/context';
 import { AuthContext } from './contexts/auth.context';
 import { SideDrawerProvider } from './contexts/sidedrawer.context';
 import { CustomThemeContext } from './contexts/theme.context';
@@ -20,7 +19,6 @@ import FamilyProvider from './contexts/family.context';
 import AppLoadingScreen from './screens/AppLoadingScreen';
 import MemoriesScreen from './screens/MemoriesScreen';
 import InvitesScreen from './screens/InvitesScreen';
-import { firebaseAuth } from './utils/firebase';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -28,6 +26,11 @@ const App: React.FC = () => {
   const themeValue = useContext(CustomThemeContext);
   const auth = useContext(AuthContext);
   const isOnline = useNetworkStatus();
+
+  useEffect(() => {
+    console.log(auth.state.user);
+
+  }, [auth.state.user]);
 
   const { state: themeState } = themeValue;
   const currentTheme = getTheme(themeState.theme, themeState.mode);
@@ -60,30 +63,20 @@ const App: React.FC = () => {
     );
   }
 
-  const authLink = setContext((_req, prevContext) => {
-    return firebaseAuth.currentUser?.getIdToken()
-      .then(token => {
-        console.log(`auth token: ${token}`);
-        return {
-          headers: {
-            ...prevContext.headers,
-            authorization: token,
-          }
-        };
-      })
-      .catch(err => {
-        console.log(`cannot initialize auth link: `, err);
-      });
-  })
-
   const httpLink = new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_ENDPOINT as string,
+    headers: {
+      authorization: auth.state.user.token,
+    },
   });
 
   const wsLink = new WebSocketLink({
     uri: process.env.REACT_APP_GRAPHQL_WEBSOCKET_URL as string,
     options: {
       reconnect: true,
+      connectionParams: {
+        authorization: auth.state.user.token,
+      },
     }
   });
 
@@ -93,7 +86,6 @@ const App: React.FC = () => {
   }, wsLink, httpLink);
 
   const link = from([
-    authLink,
     splitLink,
   ]);
 
