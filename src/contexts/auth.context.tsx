@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState, createContext } from 'react';
+import React, { useReducer, useEffect, useState, createContext, useRef } from 'react';
 import { IUser } from '../models/user';
 import { firebaseAuth, Firebase } from '../utils/firebase';
 
@@ -59,42 +59,56 @@ export const AuthContext = createContext<IAuthContext>({
     setLoading: () => null,
 });
 
-let logoutTimer: number;
+let refreshTokenTimer: number;
+// let remainingTimeTimer: number;
+
+const loginAction = (dispatch: React.Dispatch<AuthAction>, userData: IUser) => {
+    dispatch({
+        type: AuthActionType.LOGIN,
+        payload: userData,
+    });
+};
+
+const logoutAction = (dispatch: React.Dispatch<AuthAction>) => {
+    dispatch({
+        type: AuthActionType.LOGOUT,
+    });
+}
 
 export const AuthProvider: React.FC = (props) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
     const [loading, setLoading] = useState(true);
     const [tokenExpirationTime, setTokenExpirationTime] = useState<Date>(new Date(new Date().getTime() + 1000 * 60 * 10));
+    const shouldForceRefreshToken = useRef(false);
 
     const handleUserAuthState = async (user: Firebase.User | null) => {
         setLoading(true);
 
         if (!user) {
-            dispatch({
-                type: AuthActionType.LOGOUT,
-            });
-
+            logoutAction(dispatch);
             setLoading(false);
             return;
         }
 
-        const idTokenResult = await user.getIdTokenResult();
+        const idTokenResult = await user.getIdTokenResult(shouldForceRefreshToken.current);
 
         const expiryTime = new Date(idTokenResult.expirationTime);
-
         setTokenExpirationTime(expiryTime);
 
-        dispatch({
-            type: AuthActionType.LOGIN,
-            payload: {
-                name: user.displayName || '',
-                email: user.email || '',
-                token: idTokenResult.token,
-                signInProvider: idTokenResult.signInProvider || '',
-            },
+        loginAction(dispatch, {
+            name: user.displayName || '',
+            email: user.email || '',
+            token: idTokenResult.token,
+            signInProvider: idTokenResult.signInProvider || '',
         });
 
         setLoading(false);
+
+        refreshTokenTimer = setTimeout(() => {
+            console.log(`refreshing token: ${new Date().toLocaleString()}`);
+            shouldForceRefreshToken.current = true;
+            handleUserAuthState(user);
+        }, 59 * 60 * 1000);
     }
 
     useEffect(() => {
@@ -104,23 +118,18 @@ export const AuthProvider: React.FC = (props) => {
 
         return function cleanUp() {
             unsubscribeAuth();
+            clearTimeout(refreshTokenTimer);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
+        console.log(`token: ${state.user?.token}`);
+    }, [state.user?.token]);
+
+    useEffect(() => {
         console.log(`expiry time: ${tokenExpirationTime.toLocaleString()}`);
-        const remainingTime = tokenExpirationTime.getTime() - new Date().getTime();
-        if (state.user) {
-            logoutTimer = setTimeout(() => {
-                dispatch({
-                    type: AuthActionType.LOGOUT,
-                });
-                // firebaseAuth.signOut();
-            }, remainingTime);
-        } else {
-            clearTimeout(logoutTimer);
-        }
-    }, [state.user, tokenExpirationTime]);
+    }, [tokenExpirationTime]);
 
     const value: IAuthContext = { state, dispatch, loading, setLoading };
 
