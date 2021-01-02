@@ -16,18 +16,20 @@ export const FormControl = styled.div`
         width: 100%;
         font: inherit;
         border: 1px solid #ccc;
-        background: #f8f8f8;
+        background: transparent;
+        color: ${props => props.theme.text};
         padding: 0.25rem;
         border-radius: 6px;
 
         &:focus {
             outline: none;
-            background: #ebebeb;
+            /* background: #ebebeb; */
             border-color: ${props => props.theme.primary};
         }
 
         &:disabled {
             background: lightgray;
+            color: #000;
         }
     }
 
@@ -37,13 +39,14 @@ export const FormControl = styled.div`
         font: inherit;
         border: 1px solid #ccc;
         border-radius: 6px;
-        background: #f8f8f8;
+        background: transparent;
+        color: ${props => props.theme.text};
         padding: 0.15rem 0.25rem;
         white-space: pre-wrap;
 
         &:focus {
             outline: none;
-            background: #ebebeb;
+            /* background: #ebebeb; */
             border-color: ${props => props.theme.primary};
         }
     }
