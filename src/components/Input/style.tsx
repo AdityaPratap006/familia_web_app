@@ -64,11 +64,13 @@ export const FormControl = styled.div`
         input {
             border-color: red;
             background: #ffd1d1;
+            color: #000;
         }
 
         textarea {
             border-color: red;
             background: #ffd1d1;
+            color: #000;
         }
     }
 `;
