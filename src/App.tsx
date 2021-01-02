@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split, from } from '@apollo/client';
@@ -27,11 +27,6 @@ const App: React.FC = () => {
   const themeValue = useContext(CustomThemeContext);
   const auth = useContext(AuthContext);
   const isOnline = useNetworkStatus();
-
-  useEffect(() => {
-    console.log(auth.state.user);
-
-  }, [auth.state.user]);
 
   const { state: themeState } = themeValue;
   const currentTheme = getTheme(themeState.theme, themeState.mode);

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState, createContext, useRef } from 'react';
+import React, { useReducer, useEffect, useState, createContext } from 'react';
 import { IUser } from '../models/user';
 import { firebaseAuth, Firebase } from '../utils/firebase';
 
@@ -79,7 +79,6 @@ export const AuthProvider: React.FC = (props) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
     const [loading, setLoading] = useState(true);
     const [tokenExpirationTime, setTokenExpirationTime] = useState<Date>(new Date(new Date().getTime() + 1000 * 60 * 10));
-    const shouldForceRefreshToken = useRef(false);
 
     const handleUserAuthState = async (user: Firebase.User | null) => {
         setLoading(true);
@@ -90,7 +89,7 @@ export const AuthProvider: React.FC = (props) => {
             return;
         }
 
-        const idTokenResult = await user.getIdTokenResult(shouldForceRefreshToken.current);
+        const idTokenResult = await user.getIdTokenResult(true);
 
         const expiryTime = new Date(idTokenResult.expirationTime);
         setTokenExpirationTime(expiryTime);
@@ -105,8 +104,6 @@ export const AuthProvider: React.FC = (props) => {
         setLoading(false);
 
         refreshTokenTimer = setTimeout(() => {
-            console.log(`refreshing token: ${new Date().toLocaleString()}`);
-            shouldForceRefreshToken.current = true;
             handleUserAuthState(user);
         }, 59 * 60 * 1000);
     }

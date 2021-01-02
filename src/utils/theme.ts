@@ -17,9 +17,9 @@ interface ModeColors {
 export type ITheme = ThemeColors & ModeColors;
 
 export const lightMode: ModeColors = {
-    background: '#fff',
+    background: '#fefefe',
     text: '#141d26',
-    paper: '#fafafa',
+    paper: '#fff',
     defaultBorderColor: `rgb(159,159,159, 0.5)`,
     appBarBackground: `#fff`,
 };
