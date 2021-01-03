@@ -19,7 +19,11 @@ export const UserProfileContext = createContext<IUserProfileContext>({
 const UserProfileProvider: React.FC = (props) => {
     const [createUser] = useMutation<{ createUser: IUserProfile }>(CREATE_USER_MUTATION);
     const [userProfile, setUserProfile] = useState<IUserProfile>();
-    const [fetchUserProfile, userProfileResult] = useLazyQuery<{ profile: IUserProfile }>(GET_USER_PROFILE_QUERY);
+    const [fetchUserProfile, userProfileResult] = useLazyQuery<{ profile: IUserProfile }>(GET_USER_PROFILE_QUERY, {
+        onCompleted: ({ profile }) => {
+            setUserProfile(profile);
+        }
+    });
     const shouldSetUserProfileState = useRef(true);
 
     useEffect(() => {

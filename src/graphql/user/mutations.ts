@@ -10,3 +10,13 @@ export const CREATE_USER_MUTATION = gql`
 
     ${USER_PROFILE_FRAGMENT}
 `;
+
+export const UPDATE_USER_MUTATION = gql`
+    mutation($input: UpdateUserInput) {
+        updateUser(input: $input) {
+            ...userProfile
+        }
+    }
+
+    ${USER_PROFILE_FRAGMENT}
+`;
