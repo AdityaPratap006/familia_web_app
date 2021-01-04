@@ -11,7 +11,7 @@ import Button from '../../Button';
 import { ACCEPT_INVITE_MUTATION, DELETE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
 import { toast } from 'react-toastify';
 import LoadingSpinner from '../../LoadingSpinner';
-import { GET_INVITES_SENT_BY_USER } from '../../../graphql/invite/queries';
+import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../../graphql/invite/queries';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
 
 interface InviteCardProps {
@@ -31,6 +31,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
     const [deleteInviteMutation, deleteInviteMutationResult] = useMutation<{ deleteInvite: string; }>(DELETE_INVITE_MUTATION, {
         refetchQueries: [
             { query: GET_INVITES_SENT_BY_USER },
+            { query: GET_INVITES_RECEIVED_BY_USER },
         ],
         awaitRefetchQueries: true,
     });
@@ -38,6 +39,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
     const [acceptInviteMutation, acceptInviteMutationResult] = useMutation<{ acceptInvite: string; }>(ACCEPT_INVITE_MUTATION, {
         refetchQueries: [
             { query: GET_INVITES_SENT_BY_USER },
+            { query: GET_INVITES_RECEIVED_BY_USER },
         ],
         awaitRefetchQueries: true,
     });
@@ -165,6 +167,16 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                         ACCEPT
                     </Button>
                 )}
+                {type === 'received' && !(deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
+                    <Button
+                        type="button"
+                        size="small"
+                        inverse
+                        onClick={cancelInviteHandler}
+                    >
+                        IGNORE
+                    </Button>
+                )}
                 {type === 'received' && (acceptInviteMutationResult.called && acceptInviteMutationResult.loading) && (
                     <LoadingSpinner small />
                 )}
@@ -177,7 +189,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                         CANCEL INVITE
                     </Button>
                 )}
-                {type === 'sent' && (deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
+                {(deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
                     <LoadingSpinner small />
                 )}
             </InviteCardFooter>

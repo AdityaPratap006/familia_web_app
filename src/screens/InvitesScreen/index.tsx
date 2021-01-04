@@ -27,6 +27,7 @@ const InvitesScreen: React.FC = () => {
     const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
 
     const { subscribeToMore: subscribeToMoreReceivedInvites } = receivedInvitesQuery;
+    const { subscribeToMore: subscribeToMoreSentInvites } = sentInvitesQuery;
 
     useEffect(() => {
         subscribeToMoreReceivedInvites<IInviteCreatedResult>({
@@ -55,6 +56,33 @@ const InvitesScreen: React.FC = () => {
         });
 
     }, [subscribeToMoreReceivedInvites]);
+
+    useEffect(() => {
+        subscribeToMoreSentInvites<IInviteCreatedResult>({
+            document: INVITE_CREATED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                const existingInvites = prev.getInvitesSentByUser;
+                const newInvite = subscriptionData.data.onInviteCreated;
+
+                return {
+                    getInvitesSentByUser: [newInvite, ...existingInvites],
+                };
+            }
+        });
+
+        subscribeToMoreSentInvites<IInviteDeletedResult>({
+            document: INVITE_DELETED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                console.log(subscriptionData);
+                const existingInvites = prev.getInvitesSentByUser;
+                const deletedInviteId = subscriptionData.data.onInviteDeleted;
+
+                return {
+                    getInvitesSentByUser: existingInvites.filter(invite => invite._id !== deletedInviteId),
+                }
+            }
+        });
+    }, [subscribeToMoreSentInvites]);
 
     const handleTabChange = (tab: InviteTab) => {
         setActiveTab(tab);
