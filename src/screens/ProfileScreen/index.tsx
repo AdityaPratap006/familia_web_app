@@ -8,13 +8,12 @@ import { UserProfileContext } from '../../contexts/userProfile.context';
 import Card from '../../components/Card';
 import { TextAreaInput, TextFieldInput } from '../../components/Input';
 import LoadingBouncers from '../../components/LoadingBouncers';
-import Avatar from '../../components/Avatar';
 import { getLocalDateText } from '../../utils/dates';
 import Button from '../../components/Button';
 import { IUserProfile } from '../../models/user';
 import { UPDATE_USER_MUTATION } from '../../graphql/user/mutations';
 import ProfileImagePicker from '../../components/ProfileImagePicker';
-import { convertToBase64 } from '../../utils/filesUpload';
+import { resizeImageFile } from '../../utils/filesUpload';
 
 interface IFormInput {
     name: string;
@@ -55,37 +54,40 @@ const ProfileScreen: React.FC = () => {
     }
 
     const onSubmit = async (input: IFormInput) => {
-        const base64Image = await convertToBase64(profilePic);
-        console.log({
-            ...input,
-            imageBase64String: base64Image.trim(),
-        });
+        let base64Image = '';
+        try {
+            base64Image = await resizeImageFile({ file: profilePic });
+        } catch (error) {
 
-        return;
+            toast.error(`Error Loading Image`);
+        }
 
-        // try {
-        //     const { data, errors } = await updateUserMutation({
-        //         variables: {
-        //             input: {
-        //                 name: input.name,
-        //                 about: input.about,
-        //             }
-        //         }
-        //     });
+        const resizedImageString = base64Image.trim() === 'File Not Found' ? '' : base64Image.trim();
 
-        //     if (errors) {
-        //         toast.error(errors[0]?.message);
-        //         return;
-        //     }
+        try {
+            const { data, errors } = await updateUserMutation({
+                variables: {
+                    input: {
+                        name: input.name,
+                        about: input.about,
+                        imageBase64String: resizedImageString,
+                    },
+                },
+            });
 
-        //     if (data) {
-        //         toast.success(`Profile Updated!`);
-        //     }
+            if (errors) {
+                toast.error(errors[0]?.message);
+                return;
+            }
 
-        // } catch (error) {
-        //     console.log(error);
-        //     toast.error(error.message);
-        // }
+            if (data) {
+                toast.success(`Profile Updated!`);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
     }
 
     const { called, loading } = updateUserMutationResult;
@@ -157,7 +159,7 @@ const ProfileScreen: React.FC = () => {
                         {!loading && (
                             <Button
                                 type="submit"
-                                disabled={!formState.isValid}
+                                disabled={!formState.isValid || !formState.touched}
                             >
                                 SAVE
                             </Button>

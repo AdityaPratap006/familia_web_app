@@ -23,6 +23,7 @@
     "react-elastic-carousel": "^0.9.5",
     "react-hook-form": "^6.12.2",
     "react-icons": "^3.11.0",
+    "react-image-file-resizer": "^0.3.10",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "react-toastify": "^6.1.0",
