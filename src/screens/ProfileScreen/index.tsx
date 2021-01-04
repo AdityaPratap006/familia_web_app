@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
@@ -13,6 +13,8 @@ import { getLocalDateText } from '../../utils/dates';
 import Button from '../../components/Button';
 import { IUserProfile } from '../../models/user';
 import { UPDATE_USER_MUTATION } from '../../graphql/user/mutations';
+import ProfileImagePicker from '../../components/ProfileImagePicker';
+import { convertToBase64 } from '../../utils/filesUpload';
 
 interface IFormInput {
     name: string;
@@ -24,11 +26,16 @@ const ProfileScreen: React.FC = () => {
     const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
         mode: "all",
     });
+    const [profilePic, setProfilePic] = useState<File>();
     const [updateUserMutation, updateUserMutationResult] = useMutation<{ updateUser: IUserProfile }>(UPDATE_USER_MUTATION, {
         onCompleted: () => {
             fetchUserProfile();
         },
     });
+
+    useEffect(() => {
+        console.log(`Profile Pic:`, profilePic);
+    }, [profilePic]);
 
     if (!profile) {
         return (
@@ -43,30 +50,42 @@ const ProfileScreen: React.FC = () => {
         );
     }
 
+    const onProfilePicInput = (file: File) => {
+        setProfilePic(file);
+    }
+
     const onSubmit = async (input: IFormInput) => {
-        try {
-            const { data, errors } = await updateUserMutation({
-                variables: {
-                    input: {
-                        name: input.name,
-                        about: input.about,
-                    }
-                }
-            });
+        const base64Image = await convertToBase64(profilePic);
+        console.log({
+            ...input,
+            imageBase64String: base64Image.trim(),
+        });
 
-            if (errors) {
-                toast.error(errors[0]?.message);
-                return;
-            }
+        return;
 
-            if (data) {
-                toast.success(`Profile Updated!`);
-            }
+        // try {
+        //     const { data, errors } = await updateUserMutation({
+        //         variables: {
+        //             input: {
+        //                 name: input.name,
+        //                 about: input.about,
+        //             }
+        //         }
+        //     });
 
-        } catch (error) {
-            console.log(error);
-            toast.error(error.message);
-        }
+        //     if (errors) {
+        //         toast.error(errors[0]?.message);
+        //         return;
+        //     }
+
+        //     if (data) {
+        //         toast.success(`Profile Updated!`);
+        //     }
+
+        // } catch (error) {
+        //     console.log(error);
+        //     toast.error(error.message);
+        // }
     }
 
     const { called, loading } = updateUserMutationResult;
@@ -80,10 +99,11 @@ const ProfileScreen: React.FC = () => {
             <ProfileScreenContent>
                 <Card addcss={ProfileCardCSS}>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <Avatar
-                            alt={profile.name}
-                            src={profile.image.url}
-                            large
+                        <ProfileImagePicker
+                            id="profileImage"
+                            name="profileImage"
+                            initialPreviewImageURL={profile.image.url}
+                            onFileInput={onProfilePicInput}
                         />
                         <TextFieldInput
                             id="name"
