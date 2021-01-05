@@ -129,6 +129,8 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
         avatarImgSrc = invite.to.image.url;
     }
 
+    const receivedCardActionCalled = (acceptInviteMutationResult.called && acceptInviteMutationResult.loading) || (deleteInviteMutationResult.called && deleteInviteMutationResult.loading);
+
     return (
         <Card>
             <InviteCardHeader>
@@ -158,7 +160,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                 </InviteCardFamilyMembersList>
             </InviteCardBody>
             <InviteCardFooter>
-                {type === 'received' && !(acceptInviteMutationResult.called && acceptInviteMutationResult.loading) && (
+                {type === 'received' && !receivedCardActionCalled && (
                     <Button
                         type="button"
                         size="small"
@@ -167,7 +169,7 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
                         ACCEPT
                     </Button>
                 )}
-                {type === 'received' && !(deleteInviteMutationResult.called && deleteInviteMutationResult.loading) && (
+                {type === 'received' && !receivedCardActionCalled && (
                     <Button
                         type="button"
                         size="small"
