@@ -53,3 +53,47 @@ export const PostBodyContent = styled.p`
     font-size: 1rem;
     color: ${props => props.theme.text};
 `;
+
+export const PostFooter = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+`;
+
+export const PostLikesData = styled.span`
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: ${props => props.theme.primary};
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const PostLikeButton = styled.button`
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    background: transparent;
+    cursor: pointer;
+
+    .icon {
+        width: 1.8rem;
+        height: auto;
+        transition: 0.2s ease;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+
+        &.unliked {
+            color: ${props => props.theme.text};
+        }
+    }
+`;

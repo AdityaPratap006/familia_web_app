@@ -1,8 +1,9 @@
 import React from 'react';
+import { BsHeartFill, BsHeart } from 'react-icons/bs';
 import { IPost } from '../../../models/post';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
-import { PostBody, PostBodyTitle, PostBodyContent, PostCardCss, PostHeader, PostHeaderAuthorAvatar, PostHeaderAuthorName } from './style';
+import { PostBody, PostBodyTitle, PostBodyContent, PostCardCss, PostHeader, PostHeaderAuthorAvatar, PostHeaderAuthorName, PostFooter, PostLikesData, PostLikeButton } from './style';
 
 interface PostCardProps {
     post: IPost;
@@ -25,6 +26,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 {/*Post Image goes here*/}
                 {post.content && <PostBodyContent>{post.content}</PostBodyContent>}
             </PostBody>
+            <PostFooter>
+                <PostLikesData>
+                    5 likes
+                </PostLikesData>
+                <PostLikeButton type='button'>
+                    <BsHeart className={`icon unliked`} />
+                </PostLikeButton>
+            </PostFooter>
         </Card>
     );
 };
