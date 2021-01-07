@@ -8,6 +8,7 @@ import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboa
 import AddMemberCard from '../../components/Onboarding/OnboardingAddMemberCard';
 import { ScreenSize } from '../../utils/screenSizes';
 import HomeMemberList from '../../components/FamilyMemberComponents/HomeMemberList';
+import PostList from '../../components/PostComponents/PostList';
 
 const HomeScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
@@ -63,8 +64,8 @@ const HomeScreen: React.FC = () => {
                     {isMobileScreen && (
                         <AddMemberCard />
                     )}
-                    {!loadingFamilies && <h1>Family Posts!</h1>}
                     {loadingFamilies && <LoadingSpinner />}
+                    {!loadingFamilies && <PostList />}
                 </PostFeed>
                 <MemberList>
                     <HomeMemberList />
