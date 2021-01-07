@@ -12,7 +12,7 @@ export const MainContainer = styled.main`
     align-items: flex-start;
 
     //tablet
-    @media (max-width: ${ScreenSize.SM_MAX}) {
+    @media (max-width: ${ScreenSize.MD_MAX}) {
         margin-left: 10%;
         width: 90%;
     }

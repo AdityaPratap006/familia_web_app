@@ -15,7 +15,7 @@ export const ScreenContent = styled.div<ScreenContentProps>`
     justify-content: flex-start;
     align-items: flex-start;
     background-color: ${props => props.theme.background};
-    z-index: ${props => props.withoutBottomAppBar ? 30 : 0};
+    /* z-index: ${props => props.withoutBottomAppBar ? 30 : 0}; */
 
     @media (max-width: ${ScreenSize.XS_MAX}) {
         padding-bottom: 6rem;

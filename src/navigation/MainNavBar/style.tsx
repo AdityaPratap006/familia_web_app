@@ -18,7 +18,7 @@ export const StyledNav = styled.nav`
     overflow: hidden;
 
     // tablet
-    @media (max-width: ${ScreenSize.SM_MAX}) {
+    @media (max-width: ${ScreenSize.MD_MAX}) {
         width: 10%;
         padding: 3rem 0.5rem;
     }

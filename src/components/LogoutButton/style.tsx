@@ -31,7 +31,7 @@ export const logoutBtnStyle = css`
     }
 
     // tablet
-    @media (max-width: ${ScreenSize.SM_MAX}) and (min-width: ${ScreenSize.SM_MIN}) {
+    @media (max-width: ${ScreenSize.MD_MAX}) and (min-width: ${ScreenSize.SM_MIN}) {
         margin: 1.8rem auto 1rem auto;
         padding: 0.3rem !important;
         border-radius: 50%;

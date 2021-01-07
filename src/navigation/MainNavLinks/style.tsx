@@ -71,7 +71,7 @@ export const NavLinkItem = styled.li`
 
     
     // tablet
-    @media (max-width: ${ScreenSize.SM_MAX}) {
+    @media (max-width: ${ScreenSize.MD_MAX}) {
         margin: 1.2rem 0;
 
         a {
