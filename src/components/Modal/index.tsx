@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
+import { DefaultTheme, FlattenInterpolation, FlattenSimpleInterpolation, ThemeProps } from 'styled-components';
 import { ModalContainer, ModalHeader, ModalContent, ModalFooter } from './style';
 import BackDrop from '../BackDrop';
 
@@ -14,11 +15,12 @@ interface ModalOverlayProps {
     footerComponent?: React.ReactNode;
     onSubmit?: (event?: React.FormEvent<HTMLFormElement>) => void;
     overSideDrawer?: boolean;
+    addcss?: FlattenSimpleInterpolation | FlattenInterpolation<ThemeProps<DefaultTheme>>;
 }
 
 const ModalOverlay: React.FC<ModalOverlayProps> = props => {
     const content = (
-        <ModalContainer className={props.className} style={props.style} overSideDrawer={props.overSideDrawer}>
+        <ModalContainer addcss={props.addcss} className={props.className} style={props.style} overSideDrawer={props.overSideDrawer}>
             <ModalHeader className={props.headerClassName}>
                 <h2>{props.headerComponent}</h2>
             </ModalHeader>

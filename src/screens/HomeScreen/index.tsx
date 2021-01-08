@@ -9,6 +9,7 @@ import AddMemberCard from '../../components/Onboarding/OnboardingAddMemberCard';
 import { ScreenSize } from '../../utils/screenSizes';
 import HomeMemberList from '../../components/FamilyMemberComponents/HomeMemberList';
 import PostList from '../../components/PostComponents/PostList';
+import AddPostButton from '../../components/PostComponents/AddPostButton';
 
 const HomeScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
@@ -65,6 +66,7 @@ const HomeScreen: React.FC = () => {
                         <AddMemberCard />
                     )}
                     {loadingFamilies && <LoadingSpinner />}
+                    {!loadingFamilies && <AddPostButton />}
                     {!loadingFamilies && <PostList />}
                 </PostFeed>
                 <MemberList>

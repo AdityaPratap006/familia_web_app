@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { DefaultTheme, FlattenInterpolation, FlattenSimpleInterpolation, ThemeProps } from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 interface ModalContainerProps {
     overSideDrawer?: boolean;
+    addcss?: FlattenSimpleInterpolation | FlattenInterpolation<ThemeProps<DefaultTheme>>;
 }
 
 export const ModalContainer = styled.div<ModalContainerProps>`
@@ -20,6 +22,8 @@ export const ModalContainer = styled.div<ModalContainerProps>`
     @media (min-width: ${ScreenSize.SM_MIN}) {
         width: 30rem;
     }
+
+    ${props => props.addcss}
 
     &.modal-enter-active {
         transform: translateY(-10rem) translateX(-50%);
@@ -58,6 +62,8 @@ export const ModalHeader = styled.header`
 export const ModalContent = styled.div`
     background: ${props => props.theme.background};
     padding: 1rem 0.5rem;
+    max-height: 70vh;
+    overflow-y: scroll;
 `;
 
 export const ModalFooter = styled.footer`

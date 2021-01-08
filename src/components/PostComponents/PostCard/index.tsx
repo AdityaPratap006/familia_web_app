@@ -3,7 +3,12 @@ import { BsHeartFill, BsHeart } from 'react-icons/bs';
 import { IPost } from '../../../models/post';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
-import { PostBody, PostBodyTitle, PostBodyContent, PostCardCss, PostHeader, PostHeaderAuthorAvatar, PostHeaderAuthorName, PostFooter, PostLikesData, PostLikeButton } from './style';
+import {
+    PostBody, PostBodyTitle, PostBodyContent,
+    PostCardCss, PostHeader, PostHeaderAuthorAvatar,
+    PostHeaderAuthorName, PostFooter, PostLikesData,
+    PostLikeButton
+} from './style';
 
 interface PostCardProps {
     post: IPost;
