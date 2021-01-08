@@ -36,14 +36,7 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
     const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
         mode: "all",
     });
-    const [createPostMutation, { loading, called }] = useMutation<CreatePostMutationResponse>(CREATE_POST_MUTATION, {
-        refetchQueries: [
-            {
-                query: GET_ALL_POSTS_IN_FAMILY,
-            }
-        ],
-        awaitRefetchQueries: true,
-    });
+    const [createPostMutation, { loading, called }] = useMutation<CreatePostMutationResponse>(CREATE_POST_MUTATION);
 
     const { isValid: isFormValid } = formState;
 
@@ -84,7 +77,7 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
     const onSubmitHandler = async (input: IFormInput) => {
         let base64Image = '';
         try {
-            base64Image = await resizeImageFile({ file: file });
+            base64Image = await resizeImageFile({ file: file, maxHeight: 500, maxWidth: 500, quality: 90 });
         } catch (error) {
 
             toast.error(`Error Loading Image`);
@@ -102,6 +95,17 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
                         imageBase64String: resizedImageString,
                     },
                 },
+                refetchQueries: [
+                    {
+                        query: GET_ALL_POSTS_IN_FAMILY,
+                        variables: {
+                            input: {
+                                familyId: currentFamily._id,
+                            }
+                        }
+                    }
+                ],
+                awaitRefetchQueries: true,
             });
 
             if (errors) {
@@ -111,6 +115,7 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
 
             if (data) {
                 toast.success(`Post Shared!`);
+                onCancel();
             }
 
         } catch (error) {

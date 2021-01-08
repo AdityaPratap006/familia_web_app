@@ -7,7 +7,8 @@ import {
     PostBody, PostBodyTitle, PostBodyContent,
     PostCardCss, PostHeader, PostHeaderAuthorAvatar,
     PostHeaderAuthorName, PostFooter, PostLikesData,
-    PostLikeButton
+    PostLikeButton,
+    PostBodyImage
 } from './style';
 
 interface PostCardProps {
@@ -28,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             </PostHeader>
             <PostBody>
                 <PostBodyTitle>{post.title}</PostBodyTitle>
-                {/*Post Image goes here*/}
+                {post.image && <PostBodyImage alt={`picture`} src={post.image.url} />}
                 {post.content && <PostBodyContent>{post.content}</PostBodyContent>}
             </PostBody>
             <PostFooter>

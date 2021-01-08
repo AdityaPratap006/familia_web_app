@@ -54,6 +54,11 @@ export const PostBodyContent = styled.p`
     color: ${props => props.theme.text};
 `;
 
+export const PostBodyImage = styled.img`
+    width: 100%;
+    margin: 0.5rem 0;
+`;
+
 export const PostFooter = styled.div`
     display: flex;
     justify-content: space-between;
