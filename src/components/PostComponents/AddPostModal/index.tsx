@@ -1,7 +1,13 @@
+import { useMutation } from '@apollo/client';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { MdInsertPhoto } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import { FamilyContext } from '../../../contexts/family.context';
+import { CREATE_POST_MUTATION } from '../../../graphql/post/mutations';
+import { GET_ALL_POSTS_IN_FAMILY } from '../../../graphql/post/queries';
+import { IPost } from '../../../models/post';
+import { resizeImageFile } from '../../../utils/filesUpload';
 import Button from '../../Button';
 import { TextFieldInput, TextAreaInput } from '../../Input';
 import LoadingBouncers from '../../LoadingBouncers';
@@ -18,6 +24,10 @@ interface IFormInput {
     content: string;
 }
 
+interface CreatePostMutationResponse {
+    createPost: IPost;
+}
+
 const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
     const { currentFamily } = useContext(FamilyContext);
     const [file, setFile] = useState<File>();
@@ -26,9 +36,16 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
     const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
         mode: "all",
     });
+    const [createPostMutation, { loading, called }] = useMutation<CreatePostMutationResponse>(CREATE_POST_MUTATION, {
+        refetchQueries: [
+            {
+                query: GET_ALL_POSTS_IN_FAMILY,
+            }
+        ],
+        awaitRefetchQueries: true,
+    });
 
     const { isValid: isFormValid } = formState;
-
 
     useEffect(() => {
         if (!file) {
@@ -64,11 +81,42 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
         filePickerRef.current?.click();
     }
 
-    const onSubmitHandler = (input: IFormInput) => {
-        console.log({
-            input,
-            file,
-        });
+    const onSubmitHandler = async (input: IFormInput) => {
+        let base64Image = '';
+        try {
+            base64Image = await resizeImageFile({ file: file });
+        } catch (error) {
+
+            toast.error(`Error Loading Image`);
+        }
+
+        const resizedImageString = base64Image.trim() === 'File Not Found' ? '' : base64Image.trim();
+
+        try {
+            const { data, errors } = await createPostMutation({
+                variables: {
+                    input: {
+                        title: input.title,
+                        content: input.content,
+                        familyId: currentFamily._id,
+                        imageBase64String: resizedImageString,
+                    },
+                },
+            });
+
+            if (errors) {
+                toast.error(errors[0]?.message);
+                return;
+            }
+
+            if (data) {
+                toast.success(`Post Shared!`);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
     }
 
     return (
@@ -79,8 +127,13 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
             show={show}
             footerComponent={
                 <React.Fragment>
-                    <Button size="small" inverse onClick={onCancel}>CANCEL</Button>
-                    <Button disabled={!isFormValid} onClick={handleSubmit(onSubmitHandler)}>SHARE</Button>
+                    {!loading && (
+                        <React.Fragment>
+                            <Button size="small" inverse onClick={onCancel}>CANCEL</Button>
+                            <Button disabled={!isFormValid} onClick={handleSubmit(onSubmitHandler)}>SHARE</Button>
+                        </React.Fragment>
+                    )}
+                    {called && loading && <LoadingBouncers small />}
                 </React.Fragment>
             }
         >
@@ -106,11 +159,13 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
                 })}
                 errorText={errors.content && errors.content.message}
             />
-            {previewUrl && (
-                <PicturePreviewContainer>
-                    <PicturePreview alt='image-preview' src={previewUrl} />
-                </PicturePreviewContainer>
-            )}
+            {
+                previewUrl && (
+                    <PicturePreviewContainer>
+                        <PicturePreview alt='image-preview' src={previewUrl} />
+                    </PicturePreviewContainer>
+                )
+            }
             <PictureInput
                 id="image"
                 name="image"
@@ -123,7 +178,7 @@ const AddPostModal: React.FC<AddPostModalProps> = ({ onCancel, show }) => {
             <AddPictureButton type="button" onClick={pickImageHandler}>
                 <MdInsertPhoto className="icon" />
             </AddPictureButton>
-        </Modal>
+        </Modal >
     );
 };
 
