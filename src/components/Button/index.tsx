@@ -13,7 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     authBtn?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = props => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     const buttonSizeStyleClass = `button--${props.size || 'default'}`;
 
     if (props.authBtn) {
@@ -59,10 +59,11 @@ const Button: React.FC<ButtonProps> = props => {
             onClick={props.onClick}
             disabled={props.disabled}
             addcss={props.addcss}
+            ref={ref}
         >
             {props.children}
         </StyledButton>
     );
-};
+});
 
 export default Button;
