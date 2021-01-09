@@ -8,6 +8,28 @@ export const PostCardCss = css`
     @media (max-width: ${ScreenSize.XS_MAX}) {
         width: 100%;
     }
+
+    &.post-card-enter-active {
+        transform: translateY(0) translateX(-100vw);
+        opacity: 0;
+    }
+    
+    &.post-card-enter-done {
+        transform: translateY(0) translateX(0);
+        opacity: 1;
+        transition: all 200ms;
+    }
+
+    &.post-card-exit-active {
+        transform: translateY(0) translateX(0);
+        opacity: 1;
+    }
+        
+    &.post-card-exit {
+        transform: translateY(0) translateX(-100vw);
+        opacity: 0;
+        transition: all 200ms;
+    }
 `;
 
 export const PostHeader = styled.div`
