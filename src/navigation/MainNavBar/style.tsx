@@ -15,7 +15,21 @@ export const StyledNav = styled.nav`
     background-color: ${props => props.theme.background};
     border-right: 1px solid ${props => props.theme.defaultBorderColor};
     z-index: 50;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    
+    &::-webkit-scrollbar {
+        width: 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: ${props => props.theme.primary};
+        width: 1px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: ${props => props.theme.paper};
+    }
 
     // tablet
     @media (max-width: ${ScreenSize.MD_MAX}) {

@@ -2,8 +2,8 @@ import styled, { css } from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const logoutBtnStyle = css`
-    padding: 0.4rem 0.8rem 0.4rem 0.5rem !important;
-    margin-top: 3rem;
+    padding: 0.4rem 1rem 0.4rem 0.75rem !important;
+    margin-top: 0.5rem;
     border-radius: 100rem;
     display: flex;
     justify-content: space-between;
