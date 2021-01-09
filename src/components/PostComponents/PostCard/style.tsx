@@ -79,6 +79,7 @@ export const PostBodyContent = styled.p`
 export const PostBodyImage = styled.img`
     width: 100%;
     margin: 0.5rem 0;
+    border-radius: 10px;
 `;
 
 export const PostFooter = styled.div`
