@@ -11,7 +11,7 @@ import {
 import { NavLinkList, NavLinkItem } from './style';
 import { NavigationRoutes } from '../navRoutes';
 import { SideDrawerContext } from '../../contexts/sidedrawer.context';
-import LogoutButton from '../../components/LogoutButton';
+import UserProfileCard from '../UserProfileCard';
 
 interface NavLinkData {
     route: string;
@@ -75,7 +75,7 @@ const SideDrawerNavLinks: React.FC = () => {
     return (
         <NavLinkList>
             {renderedLinks}
-            <LogoutButton />
+            <UserProfileCard />
         </NavLinkList>
     );
 };

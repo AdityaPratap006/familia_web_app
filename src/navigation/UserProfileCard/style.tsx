@@ -12,6 +12,10 @@ export const UserProfileCardCSS = css`
     @media (max-width: ${ScreenSize.MD_MAX}) {
        padding: 0.1rem;
     }
+
+    @media (max-width: ${ScreenSize.XS_MAX}) {
+        padding: 0.5rem;
+    }
 `;
 
 export const UserProfileCardBody = styled.div`
@@ -52,6 +56,10 @@ export const UserProfileContent = styled.div`
 
     @media (max-width: ${ScreenSize.MD_MAX}) {
         display: none;
+    }
+
+    @media (max-width: ${ScreenSize.XS_MAX}) {
+        display: flex;
     }
 `;
 

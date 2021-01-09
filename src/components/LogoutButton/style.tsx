@@ -20,7 +20,7 @@ export const logoutBtnStyle = css`
 
     // mobile
     @media (max-width: ${ScreenSize.XS_MAX}) {
-        margin: 6rem auto 1rem auto;
+        margin: 1rem;
         padding: 0.2rem;
         border-radius: 100rem;
 
