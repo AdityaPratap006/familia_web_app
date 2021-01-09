@@ -8,24 +8,30 @@ export const StyledAddPostButton = styled.button`
     margin: 0;
     z-index: 40;
     cursor: pointer;
-    background: transparent;
+    background:  ${props => props.theme.primary};
     border-radius: 20px;
     font-family: inherit;
     -webkit-tap-highlight-color: transparent;
+    position: sticky;
+    top: 6rem;
+    right: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 
     &:hover {
         box-shadow: 0px 0px 6px 3px ${props => props.theme.text === `#000` ? props.theme.primaryShadow : props.theme.primaryLight};
     }
 
     .icon {
-        display: none;
+        width: 2.1rem;
+        height: 2.1rem;
+        color: #fff;
+        margin-right: 0.2rem;
     }
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         padding: 0.1rem;
-        position: fixed;
-        bottom: 130px;
-        right: 20px;    
         background: ${props => props.theme.primary};
         border-radius: 50%;
         width: 3.6rem;
@@ -34,13 +40,9 @@ export const StyledAddPostButton = styled.button`
         justify-content: center;
         align-items: center;
         box-shadow: 0px 2px 8px 0 ${props => props.theme.primaryLight}; 
-        
-        .icon {
-            display: block;
-            width: 2.1rem;
-            height: 2.1rem;
-            color: #fff;
-        }
+        position: fixed;
+        top: calc(100vh - 11rem);
+        right: 1rem;
 
         &:hover {
             box-shadow: 0px 2px 8px 0 ${props => props.theme.primaryLight};
@@ -51,8 +53,9 @@ export const StyledAddPostButton = styled.button`
 export const AddPostButtonText = styled.span`
     font-size: 1.2rem;
     font-weight: bold;
-    color: ${props => props.theme.primary};
+    color: #fff;
     font-family: inherit;
+    margin-left: 0.7rem;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         display: none;

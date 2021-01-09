@@ -17,6 +17,7 @@ export const PostFeed = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    padding-bottom: 5rem;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         grid-column: 1 / 6;
@@ -35,7 +36,7 @@ export const MemberList = styled.div`
     }
 `;
 
-export const QuotesSection = styled.div`
+export const AddPostButtonSection = styled.div`
     position: sticky;
     top: 6rem;
     grid-column: 4 / 6;
@@ -43,6 +44,24 @@ export const QuotesSection = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+
+    @media (max-width: ${ScreenSize.SM_MAX}) {
+        position: fixed;
+        top: calc(100vh - 11rem);
+        right: 1rem;
+    }
+`;
+
+export const QuotesSection = styled.div`
+    position: sticky;
+    top: 15rem;
+    grid-column: 4 / 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: ${props => props.theme.paper};
+    height: 30vh;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         display: none;

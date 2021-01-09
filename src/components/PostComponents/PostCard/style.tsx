@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { ScreenSize } from '../../../utils/screenSizes';
 
 export const PostCardCss = css`
-    margin: 1rem 0;
+    margin: 0 0 1.5rem 0;
     width: 90%;
 
     @media (max-width: ${ScreenSize.XS_MAX}) {

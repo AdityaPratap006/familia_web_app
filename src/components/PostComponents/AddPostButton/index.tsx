@@ -21,8 +21,8 @@ const AddPostButton: React.FC = () => {
                 onCancel={closeAddPostModal}
             />
             <StyledAddPostButton type='button' onClick={openAddPostModal}>
-                <AddPostButtonText>Share A Post</AddPostButtonText>
                 <RiHeartAddFill className='icon' />
+                <AddPostButtonText>Share A Post</AddPostButtonText>
             </StyledAddPostButton>
         </React.Fragment>
     );

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { HomeScreenContent, MemberList, PostFeed, QuotesSection } from './style';
+import { AddPostButtonSection, HomeScreenContent, MemberList, PostFeed, QuotesSection } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import { FamilyContext } from '../../contexts/family.context';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -66,9 +66,12 @@ const HomeScreen: React.FC = () => {
                         <AddMemberCard />
                     )}
                     {loadingFamilies && <LoadingSpinner />}
-                    {!loadingFamilies && <AddPostButton />}
                     {!loadingFamilies && <PostList />}
                 </PostFeed>
+                <AddPostButtonSection>
+                    {!loadingFamilies && <AddPostButton />}
+                    {loadingFamilies && <LoadingSpinner small />}
+                </AddPostButtonSection>
                 <MemberList>
                     <HomeMemberList />
                 </MemberList>
