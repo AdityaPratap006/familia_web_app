@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { BsHeart } from 'react-icons/bs';
 import { CSSTransition } from 'react-transition-group';
 import { IPost } from '../../../models/post';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
+import LikesSection from '../LikesSection';
 import {
     PostBody, PostBodyTitle, PostBodyContent,
     PostCardCss, PostHeader, PostHeaderAuthorAvatar,
-    PostHeaderAuthorName, PostFooter, PostLikesData,
-    PostLikeButton,
-    PostBodyImage
+    PostHeaderAuthorName, PostFooter, PostBodyImage
 } from './style';
 
 interface PostCardProps {
@@ -59,12 +57,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     {post.content && <PostBodyContent>{post.content}</PostBodyContent>}
                 </PostBody>
                 <PostFooter>
-                    <PostLikesData>
-                        5 likes
-                </PostLikesData>
-                    <PostLikeButton type='button'>
-                        <BsHeart className={`icon unliked`} />
-                    </PostLikeButton>
+                    <LikesSection postId={post._id} />
                 </PostFooter>
             </Card>
         </CSSTransition>

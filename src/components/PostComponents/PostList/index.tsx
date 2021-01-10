@@ -40,6 +40,16 @@ const PostList: React.FC = () => {
     }, [error]);
 
     useEffect(() => {
+        if (data) {
+            console.group();
+            data.allPostsInFamily.slice(0, 3).forEach((post) => {
+                console.log(post);
+            });
+            console.groupEnd();
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (subscribeToMore) {
             subscribeToMore<PostAddedResult>({
                 document: POST_ADDED_SUBSCRIPTION,
