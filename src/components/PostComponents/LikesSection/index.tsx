@@ -9,6 +9,7 @@ import { ILike } from '../../../models/like';
 import { CREATE_LIKE_MUTATION, DELETE_LIKE_MUTATION } from '../../../graphql/like/mutations';
 import LoadingSpinner from '../../LoadingSpinner';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
+import { ON_LIKED_SUBSCRIPTION, ON_UNLIKED_SUBSCRIPTION } from '../../../graphql/like/subscriptions';
 interface LikesSectionProps {
     postId: string;
 }
@@ -27,6 +28,14 @@ interface CreateLikeMutationResult {
 
 interface DeleteLikeMutationResult {
     deleteLike: string;
+}
+
+interface OnLikedSubscriptionResult {
+    onLiked: ILike;
+}
+
+interface OnUnlikedSubscriptionResult {
+    onUnliked: ILike;
 }
 
 const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
@@ -132,6 +141,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
     useEffect(() => {
         if (allLikesQuery.error) {
             toast.error(allLikesQuery.error.message);
+            console.log(allLikesQuery.error);
         }
     }, [allLikesQuery.error]);
 
@@ -140,6 +150,57 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             toast.error(isPostLikedQuery.error.message);
         }
     }, [isPostLikedQuery.error]);
+
+    const { subscribeToMore: subscribeToMoreLikes } = allLikesQuery;
+    useEffect(() => {
+        subscribeToMoreLikes<OnLikedSubscriptionResult>({
+            document: ON_LIKED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData: { data: { onLiked } } }) => {
+                const prevLikes = prev.allLikesOnPost;
+                const newLike = onLiked;
+
+                let finalLikes: ILike[] = [];
+                if (newLike.post === postId) {
+                    finalLikes = [newLike, ...prevLikes];
+                } else {
+                    finalLikes = [...prevLikes];
+                }
+
+                return {
+                    allLikesOnPost: finalLikes,
+                };
+            },
+            variables: {
+                input: {
+                    postId: postId,
+                },
+            },
+        });
+
+        subscribeToMoreLikes<OnUnlikedSubscriptionResult>({
+            document: ON_UNLIKED_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData: { data: { onUnliked } } }) => {
+                const prevLikes = prev.allLikesOnPost;
+                const deletedLike = onUnliked;
+
+                let finalLikes: ILike[] = [];
+                if (deletedLike.post === postId) {
+                    finalLikes = prevLikes.filter(like => like._id !== deletedLike._id);
+                } else {
+                    finalLikes = [...prevLikes];
+                }
+
+                return {
+                    allLikesOnPost: finalLikes,
+                };
+            },
+            variables: {
+                input: {
+                    postId: postId,
+                },
+            },
+        });
+    }, [subscribeToMoreLikes, postId]);
 
 
     const renderLikesData = (): React.ReactNode => {

@@ -13,6 +13,10 @@ export const CREATE_LIKE_MUTATION = gql`
 
 export const DELETE_LIKE_MUTATION = gql`
     mutation($input: DeleteLikeInput!) {
-        deleteLike(input: $input)
+        deleteLike(input: $input){
+            ...like
+        }
     }
+
+    ${LIKE_FRAGMENT}
 `;
