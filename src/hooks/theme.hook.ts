@@ -21,7 +21,7 @@ export interface ThemeState {
 
 export const INITIAL_STATE: ThemeState = {
     theme: localStorage.getItem('theme') as THEME || THEME.PINK,
-    mode: localStorage.getItem('mode') as MODE || MODE.LIGHT,
+    mode: localStorage.getItem('mode') as MODE || (window.matchMedia && window.matchMedia(`(prefers-color-scheme: dark)`).matches ? MODE.DARK : MODE.LIGHT),
 }
 
 export enum ThemeActionType {
