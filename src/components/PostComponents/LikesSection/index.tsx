@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import LoadingBouncers from '../../LoadingBouncers';
 import { ILike } from '../../../models/like';
 import { CREATE_LIKE_MUTATION, DELETE_LIKE_MUTATION } from '../../../graphql/like/mutations';
 import LoadingSpinner from '../../LoadingSpinner';
+import { UserProfileContext } from '../../../contexts/userProfile.context';
 interface LikesSectionProps {
     postId: string;
 }
@@ -29,6 +30,7 @@ interface DeleteLikeMutationResult {
 }
 
 const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
+    const { profile } = useContext(UserProfileContext);
     const allLikesQuery = useQuery<AllLikesQueryResult>(GET_ALL_LIKES_ON_POST, {
         variables: {
             input: {
@@ -76,6 +78,22 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             },
         ],
         awaitRefetchQueries: true,
+        optimisticResponse: {
+            createLike: {
+                _id: Date.now().toString(),
+                createdAt: Date.now().toLocaleString(),
+                likedBy: {
+                    _id: profile?._id || '',
+                    image: profile?.image || { url: '' },
+                    name: profile?.name || 'User Name'
+                },
+                post: postId,
+                updatedAt: Date.now().toLocaleString(),
+            }
+        },
+        onCompleted: (data) => {
+            setLocallyLiked(true);
+        }
     });
 
     const [deleteLikeMutation, deleteLikeMutationResult] = useMutation<DeleteLikeMutationResult>(DELETE_LIKE_MUTATION, {
@@ -103,6 +121,12 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             },
         ],
         awaitRefetchQueries: true,
+        optimisticResponse: {
+            deleteLike: '',
+        },
+        onCompleted: (data) => {
+            setLocallyLiked(false);
+        }
     });
 
     useEffect(() => {
@@ -197,7 +221,15 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
         if (data) {
             const { isPostLikedByUser } = data;
 
+            const requestInProgress = (createLikeMutationResult.called && createLikeMutationResult.loading) || (deleteLikeMutationResult.called && deleteLikeMutationResult.loading);
+
             const handleLikeButtonClick = () => {
+
+                if (requestInProgress) {
+                    console.log(`network request already under way!`);
+                    return;
+                }
+
                 if (!isPostLikedByUser) {
                     likeHandler();
                 } else {
@@ -205,12 +237,22 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
                 }
             }
 
-            return (
-                <LikeButton type='button' onClick={handleLikeButtonClick}>
-                    {!(locallyLiked) && <BsHeart className={`icon unliked`} />}
-                    {(locallyLiked) && <BsHeartFill className={`icon liked`} />}
-                </LikeButton>
-            );
+            if (requestInProgress) {
+                return (
+                    <LikeButton type='button' onClick={handleLikeButtonClick}>
+                        {!locallyLiked && <BsHeart className={`icon unliked`} />}
+                        {locallyLiked && <BsHeartFill className={`icon liked`} />}
+                    </LikeButton>
+                );
+            } else {
+                return (
+                    <LikeButton type='button' onClick={handleLikeButtonClick}>
+                        {!isPostLikedByUser && <BsHeart className={`icon unliked`} />}
+                        {isPostLikedByUser && <BsHeartFill className={`icon liked`} />}
+                    </LikeButton>
+                );
+            }
+
         }
 
         return (
