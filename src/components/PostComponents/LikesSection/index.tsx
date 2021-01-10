@@ -238,6 +238,10 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
                 numOfLikes = allLikesOnPost.length - 1;
             }
 
+            if (!((createLikeMutationResult.loading) || (deleteLikeMutationResult.loading))) {
+                numOfLikes = allLikesOnPost.length;
+            }
+
             const isSingular = numOfLikes === 1;
             const isZero = numOfLikes <= 0;
 
