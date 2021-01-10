@@ -27,7 +27,7 @@ interface CreateLikeMutationResult {
 }
 
 interface DeleteLikeMutationResult {
-    deleteLike: string;
+    deleteLike: ILike;
 }
 
 interface OnLikedSubscriptionResult {
@@ -106,11 +106,6 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
     });
 
     const [deleteLikeMutation, deleteLikeMutationResult] = useMutation<DeleteLikeMutationResult>(DELETE_LIKE_MUTATION, {
-        variables: {
-            input: {
-                postId: postId,
-            },
-        },
         refetchQueries: [
             {
                 query: GET_ALL_LIKES_ON_POST,
@@ -130,10 +125,20 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             },
         ],
         awaitRefetchQueries: true,
-        optimisticResponse: {
-            deleteLike: '',
-        },
-        onCompleted: (data) => {
+        optimisticResponse: (vars) => ({
+            deleteLike: {
+                _id: vars.input.likeId as string,
+                createdAt: Date.now().toLocaleString(),
+                updatedAt: Date.now().toLocaleString(),
+                post: postId,
+                likedBy: {
+                    _id: profile?._id || '',
+                    image: profile?.image || { url: '' },
+                    name: profile?.name || '',
+                },
+            },
+        }),
+        onCompleted: (_data) => {
             setLocallyLiked(false);
         }
     });
@@ -214,17 +219,25 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             return null;
         }
 
-        if ((createLikeMutationResult.called && createLikeMutationResult.loading) || (deleteLikeMutationResult.called && deleteLikeMutationResult.loading)) {
-            return <LoadingBouncers small />;
-        }
+        // if ((createLikeMutationResult.called && createLikeMutationResult.loading) || (deleteLikeMutationResult.called && deleteLikeMutationResult.loading)) {
+        //     return <LoadingBouncers small />;
+        // }
 
         if (data) {
             const { allLikesOnPost } = data;
 
-            const numOfLikes = allLikesOnPost.length;
+            let numOfLikes = allLikesOnPost.length;
+
+            if ((createLikeMutationResult.called && createLikeMutationResult.loading)) {
+                numOfLikes = allLikesOnPost.length + 1;
+            }
+
+            if ((deleteLikeMutationResult.called && deleteLikeMutationResult.loading)) {
+                numOfLikes = allLikesOnPost.length - 1;
+            }
 
             const isSingular = numOfLikes === 1;
-            const isZero = numOfLikes === 0;
+            const isZero = numOfLikes <= 0;
 
             const text = isSingular ? `${numOfLikes} like` : (isZero ? `no likes yet` : `${numOfLikes} likes`);
 
@@ -254,9 +267,27 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
     }
 
     const unlikeHandler = async () => {
+        const allLikes = allLikesQuery.data?.allLikesOnPost;
+
+        if (!allLikes || !profile) {
+            return;
+        }
+
         try {
             setLocallyLiked(false);
-            const { errors } = await deleteLikeMutation();
+            const like = allLikes.find(like => like.likedBy._id === profile._id);
+
+            if (!like) {
+                return;
+            }
+
+            const { errors } = await deleteLikeMutation({
+                variables: {
+                    input: {
+                        likeId: like._id,
+                    },
+                },
+            });
 
             if (errors) {
                 throw Error(errors[0]?.message || `couldn't unlike post`);
