@@ -8,7 +8,6 @@ import LoadingBouncers from '../../LoadingBouncers';
 import { ILike } from '../../../models/like';
 import { CREATE_LIKE_MUTATION, DELETE_LIKE_MUTATION } from '../../../graphql/like/mutations';
 import LoadingSpinner from '../../LoadingSpinner';
-
 interface LikesSectionProps {
     postId: string;
 }
@@ -52,7 +51,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
 
     const [locallyLiked, setLocallyLiked] = useState(false);
 
-    const [createLikeMutation] = useMutation<CreateLikeMutationResult>(CREATE_LIKE_MUTATION, {
+    const [createLikeMutation, createLikeMutationResult] = useMutation<CreateLikeMutationResult>(CREATE_LIKE_MUTATION, {
         variables: {
             input: {
                 postId: postId,
@@ -79,7 +78,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
         awaitRefetchQueries: true,
     });
 
-    const [deleteLikeMutation] = useMutation<DeleteLikeMutationResult>(DELETE_LIKE_MUTATION, {
+    const [deleteLikeMutation, deleteLikeMutationResult] = useMutation<DeleteLikeMutationResult>(DELETE_LIKE_MUTATION, {
         variables: {
             input: {
                 postId: postId,
@@ -128,6 +127,10 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
 
         if (error) {
             return null;
+        }
+
+        if ((createLikeMutationResult.called && createLikeMutationResult.loading) || (deleteLikeMutationResult.called && deleteLikeMutationResult.loading)) {
+            return <LoadingBouncers small />;
         }
 
         if (data) {
