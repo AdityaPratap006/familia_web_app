@@ -10,6 +10,7 @@ interface IFamilyContext {
     loadingFamilies: boolean;
     currentFamily: IFamily | undefined;
     setCurrentFamilyHandler: (family: IFamily) => void;
+    setCurrentFamilyByForceHandler: (family: IFamily) => void;
     sendCreateFamilyRequest: (args: CreateFamilyArgs) => Promise<FetchResult<{
         createFamily: IFamily;
     }, Record<string, any>, Record<string, any>>>;
@@ -25,13 +26,14 @@ export const FamilyContext = createContext<IFamilyContext>({
     loadingFamilies: false,
     currentFamily: undefined,
     setCurrentFamilyHandler: () => null,
+    setCurrentFamilyByForceHandler: () => null,
     sendCreateFamilyRequest: () => Promise.resolve({}),
 });
 
 const FamilyProvider: React.FC = (props) => {
     const familiesOfUser = useQuery<{ getFamiliesOfUser: IFamily[] }>(GET_FAMILIES_OF_USER_QUERY);
     const [currentFamily, setCurrentFamily] = useState<IFamily>();
-    const createdNewFamily = useRef(false);
+    const setDefaultFamilyByForce = useRef(false);
     const [createFamilyMutation] = useMutation<{ createFamily: IFamily }>(CREATE_FAMILY_MUTATION, {
         refetchQueries: [
             { query: GET_FAMILIES_OF_USER_QUERY },
@@ -46,11 +48,16 @@ const FamilyProvider: React.FC = (props) => {
     const setCurrentFamilyHandler = (family: IFamily) => {
         setCurrentFamily(family);
         localStorage.setItem('defaultFamilyId', family._id);
+    }
 
+    const setCurrentFamilyByForceHandler = (family: IFamily) => {
+        setDefaultFamilyByForce.current = true;
+        setCurrentFamily(family);
+        localStorage.setItem('defaultFamilyId', family._id);
     }
 
     const sendCreateFamilyRequest = async (args: CreateFamilyArgs) => {
-        createdNewFamily.current = true;
+        setDefaultFamilyByForce.current = true;
 
         const result = await createFamilyMutation({
             variables: {
@@ -74,9 +81,9 @@ const FamilyProvider: React.FC = (props) => {
         if (familiesOfUser.data && familiesOfUser.data.getFamiliesOfUser.length) {
             console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
 
-            if (createdNewFamily.current) {
-                console.log('Just created a new family!');
-                createdNewFamily.current = false;
+            if (setDefaultFamilyByForce.current) {
+                console.log('setting new family by force!');
+                setDefaultFamilyByForce.current = false;
                 return;
             }
 
@@ -118,6 +125,7 @@ const FamilyProvider: React.FC = (props) => {
             loadingFamilies: familiesOfUser.loading,
             currentFamily,
             setCurrentFamilyHandler,
+            setCurrentFamilyByForceHandler,
             sendCreateFamilyRequest,
         }}>
             {props.children}

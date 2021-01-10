@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { IInvite } from '../../../models/invite';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
 import { HighlightedText, InviteCardBody, InviteCardFamilyDescription, InviteCardFamilyMembersList, InviteCardFamilyName, InviteCardFooter, InviteCardHeader, InviteCardHeaderTitle } from './style';
 import { IMember } from '../../../models/member';
-import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
+import { GET_MEMBERS_OF_A_FAMILY_QUERY, GET_FAMILY_QUERY } from '../../../graphql/family/queries';
 import LoadingBouncers from '../../LoadingBouncers';
 import Button from '../../Button';
 import { ACCEPT_INVITE_MUTATION, DELETE_INVITE_MUTATION } from '../../../graphql/invite/mutations';
@@ -13,6 +13,8 @@ import { toast } from 'react-toastify';
 import LoadingSpinner from '../../LoadingSpinner';
 import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../../graphql/invite/queries';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
+import { IFamily } from '../../../models/family';
+import { FamilyContext } from '../../../contexts/family.context';
 
 interface InviteCardProps {
     invite: IInvite;
@@ -25,6 +27,12 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
             input: {
                 familyId: invite.family._id,
             }
+        }
+    });
+
+    const familyQuery = useQuery<{ family: IFamily }>(GET_FAMILY_QUERY, {
+        variables: {
+            input: { familyId: invite.family._id },
         }
     });
 
@@ -43,6 +51,8 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
         ],
         awaitRefetchQueries: true,
     });
+
+    const { setCurrentFamilyByForceHandler } = useContext(FamilyContext);
 
     const renderFamilyMembers = (): React.ReactNode => {
 
@@ -99,6 +109,12 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
     }
 
     const acceptInviteHandler = async () => {
+
+        if (!familyQuery.data) {
+            toast.error(`Cannot accept right now, please try later`);
+            return;
+        }
+
         try {
             const result = await acceptInviteMutation({
                 variables: {
@@ -113,6 +129,8 @@ const InviteCard: React.FC<InviteCardProps> = ({ type, invite }) => {
             }
 
             if (result.data) {
+                const family = familyQuery.data.family;
+                setCurrentFamilyByForceHandler(family);
                 toast.success(`Invite accepted`);
                 window.location.replace(`${NavigationRoutes.HOME}`);
             }

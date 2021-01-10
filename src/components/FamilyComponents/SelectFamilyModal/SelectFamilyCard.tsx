@@ -42,7 +42,7 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
         <Card addcss={SelectFamilyCardStyles}>
             <SelectFamilyCardTitle>{family.name}</SelectFamilyCardTitle>
             <SelectFamilyCardContent>
-                <span>Members {`( ${family.memberCount} )`}</span>
+                {data && <span>Members {`( ${data.getMembersOfAFamily.length} )`}</span>}
                 <SelectFamilyCardMemberList>
                     {
                         data?.getMembersOfAFamily.map(member => (
