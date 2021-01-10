@@ -1,16 +1,18 @@
 import styled from 'styled-components';
+import { pinkTheme } from '../../../utils/theme';
 
 export const LikesSectionContainer = styled.div`
     width: 100%;
     margin-top: 0.5rem;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 `;
 
 
 export const LikesData = styled.span`
-    margin: 0;
+    margin: 0.5rem 0;
     padding: 0;
     font-size: 1rem;
     font-weight: bold;
@@ -23,7 +25,7 @@ export const LikesData = styled.span`
 `;
 
 export const LikeButton = styled.button`
-    margin: 0;
+    margin: 0.5rem 0;
     padding: 0;
     outline: none;
     border: none;
@@ -42,6 +44,10 @@ export const LikeButton = styled.button`
 
         &.unliked {
             color: ${props => props.theme.text};
+        }
+
+        &.liked {
+            color: ${pinkTheme.primary};
         }
     }
 `;
