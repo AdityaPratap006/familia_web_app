@@ -10,6 +10,25 @@ export const LikesSectionContainer = styled.div`
     align-items: flex-start;
 `;
 
+export const LikesAvatarContainer = styled.div`
+    width: 100%;
+    margin: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+export const LikeAvatar = styled.div`
+    margin: 0 0.25rem 0 0;
+`;
+
+export const RemainingLikesText = styled.span`
+    padding: 0;
+    margin: 0 0.25rem;
+    color: ${props => props.theme.text};
+    font-weight: bold;
+`;
 
 export const LikesData = styled.span`
     margin: 0.5rem 0;
@@ -18,10 +37,6 @@ export const LikesData = styled.span`
     font-weight: bold;
     color: ${props => props.theme.primary};
     cursor: pointer;
-
-    &:hover {
-        text-decoration: underline;
-    }
 `;
 
 export const LikeButton = styled.button`

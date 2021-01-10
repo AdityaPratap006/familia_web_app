@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { LikeButton, LikesData, LikesSectionContainer, LikesAvatarContainer, LikeAvatar, RemainingLikesText } from './style';
 import { useMutation, useQuery } from '@apollo/client';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { GET_ALL_LIKES_ON_POST, IS_POST_LIKED_BY_USER } from '../../../graphql/like/queries';
-import { LikeButton, LikesData, LikesSectionContainer } from './style';
 import LoadingBouncers from '../../LoadingBouncers';
 import { ILike } from '../../../models/like';
 import { CREATE_LIKE_MUTATION, DELETE_LIKE_MUTATION } from '../../../graphql/like/mutations';
 import LoadingSpinner from '../../LoadingSpinner';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { ON_LIKED_SUBSCRIPTION, ON_UNLIKED_SUBSCRIPTION } from '../../../graphql/like/subscriptions';
+import Avatar from '../../Avatar';
 interface LikesSectionProps {
     postId: string;
 }
@@ -227,6 +228,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             const { allLikesOnPost } = data;
 
             let numOfLikes = allLikesOnPost.length;
+            let likes = allLikesOnPost;
 
             if ((createLikeMutationResult.called && createLikeMutationResult.loading)) {
                 numOfLikes = allLikesOnPost.length + 1;
@@ -241,10 +243,22 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
 
             const text = isSingular ? `${numOfLikes} like` : (isZero ? `no likes yet` : `${numOfLikes} likes`);
 
+            const likesToBeShowed = 3;
+            const remainingLikes = likes.length <= likesToBeShowed ? 0 : likes.length - likesToBeShowed; 
             return (
-                <LikesData>
-                    {text}
-                </LikesData>
+                <React.Fragment>
+                    <LikesData>
+                        {text}
+                    </LikesData>
+                    <LikesAvatarContainer>
+                        {likes.slice(0, likesToBeShowed).map(like => (
+                            <LikeAvatar key={like._id}>
+                                <Avatar tiny alt="like_avatar" src={like.likedBy.image.url} />
+                            </LikeAvatar>
+                        ))}
+                        {!!remainingLikes && <RemainingLikesText>{`and ${remainingLikes} more`}</RemainingLikesText>}
+                    </LikesAvatarContainer>
+                </React.Fragment>
             );
         }
 
