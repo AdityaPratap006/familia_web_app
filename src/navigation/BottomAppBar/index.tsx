@@ -68,10 +68,16 @@ const BottomAppBar: React.FC = () => {
     const renderedLinks = navlinksList.map(navLink => {
         const { id, route, inactiveIcon, activeIcon } = navLink;
 
+        let isActiveRoute = currentRoute === route;
+
+        if (currentRoute.startsWith(`${NavigationRoutes.CHATS}`)) {
+            isActiveRoute = route.startsWith(`${NavigationRoutes.CHATS}`);
+        }
+
         return (
             <NavLinkItem key={id}>
-                <NavLink to={route} activeClassName={`active`} exact>
-                    {currentRoute === route ? activeIcon : inactiveIcon}
+                <NavLink to={route} className={isActiveRoute ? `active` : ``} exact>
+                    {isActiveRoute ? activeIcon : inactiveIcon}
                 </NavLink>
             </NavLinkItem>
         );

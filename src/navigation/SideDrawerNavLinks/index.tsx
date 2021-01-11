@@ -61,11 +61,18 @@ const SideDrawerNavLinks: React.FC = () => {
 
     const renderedLinks = navlinksList.map(navLink => {
         const { id, route, label, inactiveIcon, activeIcon } = navLink;
+
+        let isActiveRoute = currentRoute === route;
+
+        if (currentRoute.startsWith(`${NavigationRoutes.CHATS}`)) {
+            isActiveRoute = route.startsWith(`${NavigationRoutes.CHATS}`);
+        }
+
         return (
             <NavLinkItem key={id}>
-                <NavLink to={route} activeClassName={`active`} exact onClick={sideDrawerCTX.close}>
+                <NavLink to={route} className={isActiveRoute ? `active` : ``} exact onClick={sideDrawerCTX.close}>
                     <div className={`link-container`}>
-                        {currentRoute === route ? activeIcon : inactiveIcon}
+                        {isActiveRoute ? activeIcon : inactiveIcon}
                         <p>{label}</p>
                     </div>
                 </NavLink>
