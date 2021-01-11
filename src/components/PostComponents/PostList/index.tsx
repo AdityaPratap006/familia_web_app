@@ -72,8 +72,8 @@ const PostList: React.FC = () => {
 
         const posts = data.allPostsInFamily;
 
-        return posts.map(post => (
-            <PostCard key={post._id} post={post} />
+        return posts.map((post, index) => (
+            <PostCard key={post._id} post={post} postIndex={index + 1} />
         ));
     }
 

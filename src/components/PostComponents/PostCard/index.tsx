@@ -12,11 +12,12 @@ import {
 
 interface PostCardProps {
     post: IPost;
+    postIndex: number;
 }
 
 let postAnimateTimer: number;
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
     const [shouldDisplay, setShouldDisplay] = useState(false);
 
     const { author } = post;
@@ -24,7 +25,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     useEffect(() => {
         postAnimateTimer = setTimeout(() => {
             setShouldDisplay(true);
-        }, 200);
+        }, 200 * postIndex);
 
         return () => {
             clearTimeout(postAnimateTimer);
