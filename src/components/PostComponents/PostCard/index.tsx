@@ -30,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
         return () => {
             clearTimeout(postAnimateTimer);
         }
-    }, []);
+    }, [postIndex]);
 
     return (
         <CSSTransition
