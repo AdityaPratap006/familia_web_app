@@ -5,6 +5,7 @@ import Screen from '../../components/ScreenComponents/Screen';
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import { FamilyContext } from '../../contexts/family.context';
 import { ChatScreenContent, LobbyContent, LobbyUserListSection, LobbyWelcomeSection, MainChatContent, MainChatUserListSection, MainChatWindowSection } from './style';
+import ChatUserList from '../../components/ChatComponents/ChatUserList';
 
 const ChatsScreen: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
@@ -23,7 +24,7 @@ const ChatsScreen: React.FC = () => {
                     <Route exact path={`${routeMatch.path}`}>
                         <LobbyContent>
                             <LobbyUserListSection>
-                                <Link to={`${routeMatch.url}/room`}>Go To Room</Link>
+                                <ChatUserList />
                             </LobbyUserListSection>
                             <LobbyWelcomeSection>
                                 <h1 >Welcome To Chat</h1>
@@ -33,7 +34,7 @@ const ChatsScreen: React.FC = () => {
                     <Route exact path={`${routeMatch.path}/room`}>
                         <MainChatContent>
                             <MainChatUserListSection>
-                                <Link to={`${routeMatch.url}/room`} >Go To Room</Link>
+                                <ChatUserList />
                             </MainChatUserListSection>
                             <MainChatWindowSection>
                                 <Link to={`${routeMatch.url}`} >Go Back</Link>

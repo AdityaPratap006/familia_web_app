@@ -21,7 +21,6 @@ export const LobbyContent = styled.div`
 export const LobbyUserListSection = styled.div`
     grid-area: lobbyUserList;
     width: 100%;
-    background-color: orange;
 `;
 
 export const LobbyWelcomeSection = styled.div`
@@ -49,7 +48,6 @@ export const MainChatContent = styled.div`
 export const MainChatUserListSection = styled.div`
     grid-area: mainChatUserList;
     width: 100%;
-    background-color: orange;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         display: none;
