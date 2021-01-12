@@ -28,6 +28,7 @@ const HomeScreen: React.FC = () => {
             title="Home"
             subTitle={currentFamily?.name}
             rightComponent={<CurrentFamilyIndicator />}
+            withBottomPaddingInMobile
         >
             <HomeScreenContent>
                 <PostFeed>

@@ -5,11 +5,12 @@ import { UserProfileContext } from '../../../contexts/userProfile.context';
 import ChatUserCard from '../ChatUserCard';
 import { StyledChatUserList } from './styled';
 import { ChatContext } from '../../../contexts/chat.context';
+import { FamilyContext } from '../../../contexts/family.context';
 
 const ChatUserList: React.FC = () => {
     const { membersCalled, membersError, membersLoading, userList } = useContext(ChatContext);
     const { profile } = useContext(UserProfileContext);
-
+    const { currentFamily } = useContext(FamilyContext);
 
     if (membersError) {
         toast.error(membersError.message);
@@ -17,7 +18,7 @@ const ChatUserList: React.FC = () => {
     }
 
 
-    if (!profile || (membersCalled && membersLoading) || !userList || membersLoading) {
+    if (!currentFamily || !profile || (membersCalled && membersLoading) || !userList || membersLoading) {
         return <LoadingSpinner small />;
     }
 
@@ -26,6 +27,7 @@ const ChatUserList: React.FC = () => {
 
         return users.map(user => (
             <ChatUserCard
+                key={user._id}
                 member={user}
             />
         ));

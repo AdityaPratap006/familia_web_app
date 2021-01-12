@@ -11,6 +11,7 @@ interface ScreenProps {
     withGoBackButton?: boolean;
     withoutBottomAppBar?: boolean;
     withoutHeader?: boolean;
+    withBottomPaddingInMobile?: boolean;
 }
 
 const Screen: React.FC<ScreenProps> = (props) => {
@@ -24,7 +25,7 @@ const Screen: React.FC<ScreenProps> = (props) => {
                     withGoBackButton={props.withGoBackButton}
                 />
             )}
-            <ScreenContent withoutBottomAppBar={props.withoutBottomAppBar}>
+            <ScreenContent withBottomPaddingInMobile={props.withBottomPaddingInMobile} withoutBottomAppBar={props.withoutBottomAppBar}>
                 {props.children}
             </ScreenContent>
             {!props.withoutBottomAppBar && <BottomAppBar />}

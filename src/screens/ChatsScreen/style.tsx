@@ -3,7 +3,8 @@ import { ScreenSize } from '../../utils/screenSizes';
 
 export const ChatScreenContent = styled.div`
     width: 100%;
-    min-height: 70vh;
+    height: calc(100vh - 6rem);
+    overflow: hidden;
 `;
 
 export const LobbyContent = styled.div`
@@ -26,8 +27,7 @@ export const LobbyUserListSection = styled.div`
 export const LobbyWelcomeSection = styled.div`
     grid-area: welcome;
     width: 100%;
-    background-color: #00e1ff;
-
+ 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         display: none;
     }
@@ -57,5 +57,4 @@ export const MainChatUserListSection = styled.div`
 export const MainChatWindowSection = styled.div`
     grid-area: chat;
     width: 100%;
-    background-color:  #cc00ff;
 `;

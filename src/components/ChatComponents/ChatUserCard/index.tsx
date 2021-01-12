@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { IMember } from '../../../models/member';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
 import Avatar from '../../Avatar';
@@ -11,9 +12,27 @@ interface ChatUserCardProps {
 }
 
 const ChatUserCard: React.FC<ChatUserCardProps> = ({ member }) => {
+    const { profile } = useContext(UserProfileContext);
+
+    if (!profile) {
+        return null;
+    }
+
+    const you: IMember = {
+        _id: profile._id,
+        about: profile.about,
+        email: profile.email,
+        name: profile.name,
+        image: {
+            url: profile.image.url,
+        }
+    };
+    const other = member;
+    const roomId = `${other._id}`;
+
     return (
         <Link
-            to={`${NavigationRoutes.CHATS}/room`}
+            to={you._id !== other._id ? `${NavigationRoutes.CHATS}/${roomId}` : `${NavigationRoutes.CHATS}`}
             style={{
                 textDecoration: 'none',
             }}

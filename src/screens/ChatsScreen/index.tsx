@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { Switch, Route, Link, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
+import { Switch, Route, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 import { NavigationRoutes } from '../../navigation/navRoutes';
 import Screen from '../../components/ScreenComponents/Screen';
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import { FamilyContext } from '../../contexts/family.context';
 import { ChatScreenContent, LobbyContent, LobbyUserListSection, LobbyWelcomeSection, MainChatContent, MainChatUserListSection, MainChatWindowSection } from './style';
 import ChatUserList from '../../components/ChatComponents/ChatUserList';
+import ChatWindow from '../../components/ChatComponents/ChatWindow';
 
 const ChatsScreen: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
@@ -31,14 +32,13 @@ const ChatsScreen: React.FC = () => {
                             </LobbyWelcomeSection>
                         </LobbyContent>
                     </Route>
-                    <Route exact path={`${routeMatch.path}/room`}>
+                    <Route exact path={`${routeMatch.path}/:roomId`}>
                         <MainChatContent>
                             <MainChatUserListSection>
                                 <ChatUserList />
                             </MainChatUserListSection>
                             <MainChatWindowSection>
-                                <Link to={`${routeMatch.url}`} >Go Back</Link>
-                                <h2 >Room</h2>
+                                <ChatWindow />
                             </MainChatWindowSection>
                         </MainChatContent>
                     </Route>

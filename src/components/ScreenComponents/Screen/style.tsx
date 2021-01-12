@@ -3,12 +3,13 @@ import { ScreenSize } from '../../../utils/screenSizes';
 
 interface ScreenContentProps {
     withoutBottomAppBar?: boolean;
+    withBottomPaddingInMobile?: boolean;
 }
 
 export const ScreenContent = styled.div<ScreenContentProps>`
     /* padding-top: 5rem; */
     /* flex: 1; */
-    padding: 2rem 1rem 2rem 1rem;
+    padding: 1rem 1rem 0rem 1rem;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -18,6 +19,6 @@ export const ScreenContent = styled.div<ScreenContentProps>`
     /* z-index: ${props => props.withoutBottomAppBar ? 30 : 0}; */
 
     @media (max-width: ${ScreenSize.XS_MAX}) {
-        padding-bottom: 6rem;
+        padding-bottom: ${props => props.withBottomPaddingInMobile ? `6rem` : `0rem`};
     }
 `;
