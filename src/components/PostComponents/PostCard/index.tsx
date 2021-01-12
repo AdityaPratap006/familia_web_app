@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { IPost } from '../../../models/post';
+import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
 import Card from '../../Card';
 import LikesSection from '../LikesSection';
 import {
     PostBody, PostBodyTitle, PostBodyContent,
     PostCardCss, PostHeader, PostHeaderAuthorAvatar,
-    PostHeaderAuthorName, PostFooter, PostBodyImage
+    PostHeaderAuthorName, PostFooter, PostBodyImage, PostBodyDate
 } from './style';
 
 interface PostCardProps {
@@ -53,6 +54,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
                     <PostHeaderAuthorName>{author.name}</PostHeaderAuthorName>
                 </PostHeader>
                 <PostBody>
+                    <PostBodyDate>{getLocalDateText(post.createdAt)}</PostBodyDate>
                     <PostBodyTitle>{post.title}</PostBodyTitle>
                     {post.image && <PostBodyImage alt={`picture`} src={post.image.url} />}
                     {post.content && <PostBodyContent>{post.content}</PostBodyContent>}

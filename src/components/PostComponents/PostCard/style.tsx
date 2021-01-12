@@ -61,6 +61,14 @@ export const PostBody = styled.div`
     align-items: flex-start;
 `;
 
+export const PostBodyDate = styled.small`
+    font-size: 0.9rem;
+    font-family: 'roboto';
+    color: ${props => props.theme.text};
+    padding: 0;
+    margin: 0.5rem 0;
+`;
+
 export const PostBodyTitle = styled.h4`
     margin: 0.5rem 0;
     padding: 0;
