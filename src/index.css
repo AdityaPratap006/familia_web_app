@@ -20,15 +20,9 @@ code {
 .app-loading-screen {
   width: 100vw;
   max-width: 100%;
-  height: calc(100vh - 6rem);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-@media (min-width: 760px) {
-  .app-loading-screen {
-    height: calc(100vh - 2rem);
-  }
 }

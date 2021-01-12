@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const StyledNav = styled.nav`
-    padding: 3rem 1rem;
+    padding: 1rem 1rem;
     width: 25%;
     height: 100vh;
     display: flex;

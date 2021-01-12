@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
+import AppLogo from '../AppLogo';
 import SideDrawerNavLinks from '../SideDrawerNavLinks';
 import { AsideDrawer } from './style';
 
@@ -24,6 +25,7 @@ const SideDrawer: React.FC<SideDrawerProps> = (props) => {
             unmountOnExit
         >
             <AsideDrawer key="side-drawer">
+                <AppLogo />
                 <SideDrawerNavLinks />
             </AsideDrawer>
         </CSSTransition>
