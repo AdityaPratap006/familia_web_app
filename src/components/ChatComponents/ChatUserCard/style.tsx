@@ -7,6 +7,11 @@ export const ChatUserCardContainer = styled.div`
 
     &:hover {
         transform: scale(1.035);
+        background-color: ${props => props.theme.primaryShadow};
+    }
+
+    &.active {
+        background-color: ${props => props.theme.primaryLight};
     }
 `;
 

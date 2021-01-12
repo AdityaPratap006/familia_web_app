@@ -7,6 +7,7 @@ import { FamilyContext } from '../../contexts/family.context';
 import { ChatScreenContent, LobbyContent, LobbyUserListSection, LobbyWelcomeSection, MainChatContent, MainChatUserListSection, MainChatWindowSection } from './style';
 import ChatUserList from '../../components/ChatComponents/ChatUserList';
 import ChatWindow from '../../components/ChatComponents/ChatWindow';
+import ChatWelcome from '../../components/ChatComponents/ChatWelcome';
 
 const ChatsScreen: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
@@ -28,7 +29,7 @@ const ChatsScreen: React.FC = () => {
                                 <ChatUserList />
                             </LobbyUserListSection>
                             <LobbyWelcomeSection>
-                                <h1 >Welcome To Chat</h1>
+                                <ChatWelcome />
                             </LobbyWelcomeSection>
                         </LobbyContent>
                     </Route>
