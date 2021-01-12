@@ -1,29 +1,15 @@
-import React, { useContext, useEffect } from 'react';
-import { useLazyQuery } from '@apollo/client';
-import { FamilyContext } from '../../../contexts/family.context';
-import { GET_MEMBERS_OF_A_FAMILY_QUERY } from '../../../graphql/family/queries';
-import { FamilyMember } from '../../../models/family';
+import React, { useContext } from 'react';
 import LoadingSpinner from '../../LoadingSpinner';
 import { toast } from 'react-toastify';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import ChatUserCard from '../ChatUserCard';
 import { StyledChatUserList } from './styled';
+import { ChatContext } from '../../../contexts/chat.context';
 
 const ChatUserList: React.FC = () => {
-    const { currentFamily } = useContext(FamilyContext);
+    const { membersCalled, membersError, membersLoading, userList } = useContext(ChatContext);
     const { profile } = useContext(UserProfileContext);
-    const [fetchMembers, { loading: membersLoading, error: membersError, data: membersData, called: membersCalled }] = useLazyQuery<{ getMembersOfAFamily: FamilyMember[] }>(GET_MEMBERS_OF_A_FAMILY_QUERY);
 
-    useEffect(() => {
-        if (currentFamily) {
-            fetchMembers({
-                variables: {
-                    input: { familyId: currentFamily._id },
-                },
-            });
-        }
-
-    }, [currentFamily, fetchMembers]);
 
     if (membersError) {
         toast.error(membersError.message);
@@ -31,12 +17,12 @@ const ChatUserList: React.FC = () => {
     }
 
 
-    if (!profile || !currentFamily || (membersCalled && membersLoading) || !membersData || membersLoading) {
+    if (!profile || (membersCalled && membersLoading) || !userList || membersLoading) {
         return <LoadingSpinner small />;
     }
 
     const renderUserCards = () => {
-        const users = membersData.getMembersOfAFamily.filter(user => user._id !== profile._id);
+        const users = userList.filter(user => user._id !== profile._id);
 
         return users.map(user => (
             <ChatUserCard

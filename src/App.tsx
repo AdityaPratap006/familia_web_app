@@ -21,6 +21,7 @@ import MemoriesScreen from './screens/MemoriesScreen';
 import InvitesScreen from './screens/InvitesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import ChatsScreen from './screens/ChatsScreen';
+import { ChatProvider } from './contexts/chat.context';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -107,7 +108,9 @@ const App: React.FC = () => {
         <HomeScreen />
       </Route>
       <Route path={`${NavigationRoutes.CHATS}`}>
-        <ChatsScreen />
+        <ChatProvider>
+          <ChatsScreen />
+        </ChatProvider>
       </Route>
       <Route exact path={`${NavigationRoutes.MEMORIES}`}>
         <MemoriesScreen />
