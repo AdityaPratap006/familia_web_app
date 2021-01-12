@@ -30,6 +30,10 @@ const InvitesScreen: React.FC = () => {
     const { subscribeToMore: subscribeToMoreSentInvites } = sentInvitesQuery;
 
     useEffect(() => {
+        document.title = `Invites | Familia`;
+    }, []);
+
+    useEffect(() => {
         subscribeToMoreReceivedInvites<IInviteCreatedResult>({
             document: INVITE_CREATED_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {

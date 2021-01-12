@@ -33,6 +33,10 @@ const ProfileScreen: React.FC = () => {
     });
 
     useEffect(() => {
+        document.title = `Profile | Familia`;
+    }, []);
+
+    useEffect(() => {
         console.log(`Profile Pic:`, profilePic);
     }, [profilePic]);
 

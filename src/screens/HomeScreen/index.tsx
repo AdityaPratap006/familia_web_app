@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AddPostButtonSection, HomeScreenContent, MemberList, PostFeed, QuotesSection } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import { FamilyContext } from '../../contexts/family.context';
@@ -12,6 +12,10 @@ import AddPostButton from '../../components/PostComponents/AddPostButton';
 
 const HomeScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
+
+    useEffect(() => {
+        document.title = `Home | Familia`;
+    }, []);
 
     if (!loadingFamilies && families.length === 0) {
         return (

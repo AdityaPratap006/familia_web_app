@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
 import { NavigationRoutes } from '../../navigation/navRoutes';
 import Screen from '../../components/ScreenComponents/Screen';
@@ -13,6 +13,10 @@ const ChatsScreen: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
     const routeMatch = useRouteMatch();
     const browserLocation = useLocation();
+
+    useEffect(() => {
+        document.title = `Chats | Familia`;
+    }, []);
 
     return (
         <Screen

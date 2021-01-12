@@ -18,6 +18,10 @@ const MemoriesScreen: React.FC = () => {
     const [fetchMembers, fetchMembersResult] = useLazyQuery<{ getMembersOfAFamily: FamilyMember[] }>(GET_MEMBERS_OF_A_FAMILY_QUERY);
 
     useEffect(() => {
+        document.title = `Memories | Familia`;
+    }, []);
+
+    useEffect(() => {
         if (currentFamily) {
             fetchMembers({
                 variables: {

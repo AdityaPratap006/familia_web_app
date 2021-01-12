@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiFacebook, SiTwitter } from 'react-icons/si';
 import Button from '../../components/Button';
@@ -13,6 +13,10 @@ const AuthScreen = () => {
         loginWithFacebookHandler,
         loginWithTwitterHandler,
     } = useLogin();
+
+    useEffect(() => {
+        document.title = `Login | Familia`;
+    }, []);
 
     const authCardContent = (
         <React.Fragment>
