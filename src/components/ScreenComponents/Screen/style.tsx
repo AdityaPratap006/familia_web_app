@@ -9,7 +9,7 @@ interface ScreenContentProps {
 export const ScreenContent = styled.div<ScreenContentProps>`
     /* padding-top: 5rem; */
     /* flex: 1; */
-    padding: 1rem 1rem 0rem 1rem;
+    padding: 0;
     width: 100%;
     display: flex;
     flex-direction: column;

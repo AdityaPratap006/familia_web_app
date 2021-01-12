@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const HomeScreenContent = styled.div`
+    padding: 1rem;
     width: 100%;
     min-height: 70vh;
     display: grid;

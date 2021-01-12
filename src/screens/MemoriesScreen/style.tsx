@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ScreenSize } from '../../utils/screenSizes';
 
 export const MemoriesScreenContent = styled.div`
+    padding: 1rem;
     width: 100%;
     display: flex;
     flex-direction: column;

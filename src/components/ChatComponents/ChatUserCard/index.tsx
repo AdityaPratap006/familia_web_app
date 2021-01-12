@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { IMember } from '../../../models/member';
 import { NavigationRoutes } from '../../../navigation/navRoutes';

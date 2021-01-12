@@ -3,7 +3,7 @@ import { ScreenSize } from '../../utils/screenSizes';
 
 export const ChatScreenContent = styled.div`
     width: 100%;
-    height: calc(100vh - 6rem);
+    height: calc(100vh - 5rem);
     overflow: hidden;
 `;
 
