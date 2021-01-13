@@ -8,15 +8,26 @@ import { ChatScreenContent, LobbyContent, LobbyUserListSection, LobbyWelcomeSect
 import ChatUserList from '../../components/ChatComponents/ChatUserList';
 import ChatWindow from '../../components/ChatComponents/ChatWindow';
 import ChatWelcome from '../../components/ChatComponents/ChatWelcome';
+import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboarder';
 
 const ChatsScreen: React.FC = () => {
-    const { currentFamily } = useContext(FamilyContext);
+    const { currentFamily, families, loadingFamilies } = useContext(FamilyContext);
     const routeMatch = useRouteMatch();
     const browserLocation = useLocation();
 
     useEffect(() => {
         document.title = `Chats | Familia`;
     }, []);
+
+    if (!loadingFamilies && families.length === 0) {
+        return (
+            <Screen
+                title="Chats"
+            >
+                <CreateFamilyOnboarder />
+            </Screen>
+        );
+    }
 
     return (
         <Screen
