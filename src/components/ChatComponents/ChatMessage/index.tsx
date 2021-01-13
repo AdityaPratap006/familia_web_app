@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { IMember } from '../../../models/member';
 import Avatar from '../../Avatar';
@@ -12,6 +12,14 @@ interface ChatMessageProps {
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, toUser, messageText }) => {
     const { profile } = useContext(UserProfileContext);
+    const chatMessageRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        chatMessageRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
+    }, []);
 
     if (!profile) {
         return null;
@@ -20,7 +28,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, toUser, messageText
     const isSent = profile._id === fromUser._id;
 
     return (
-        <StyledMessageContainer className={`${isSent && 'sent'}`}>
+        <StyledMessageContainer ref={chatMessageRef} className={`${isSent && 'sent'}`}>
             <StyledMessageAvatarContainer>
                 <Avatar
                     tiny
