@@ -6,11 +6,13 @@ export const StyledBody = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+
+    @media (max-width: 325px) {
+        flex-direction: column;
+    }
 `;
 
 export const AvatarContainer = styled.div`
-     
-    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -19,6 +21,7 @@ export const AvatarContainer = styled.div`
 
 export const StyledContent = styled.div`
     flex: 1;
+    margin-left: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

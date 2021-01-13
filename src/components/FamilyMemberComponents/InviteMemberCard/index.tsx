@@ -64,20 +64,22 @@ const InviteMemberCard: React.FC<InviteMemberCardProps> = ({ user }) => {
                     <StyledAbout>
                         {user.about}
                     </StyledAbout>
-                    <StyledActionContainer>
-                        {createInviteMutationResult.called && createInviteMutationResult.loading && <LoadingSpinner small />}
-                        {!(createInviteMutationResult.called && createInviteMutationResult.loading) && (
-                            <Button
-                                type="button"
-                                size="small"
-                                onClick={sendInviteHandler}
-                            >
-                                SEND INVITE
-                            </Button>
-                        )}
-                    </StyledActionContainer>
+
                 </StyledContent>
+
             </StyledBody>
+            <StyledActionContainer>
+                {createInviteMutationResult.called && createInviteMutationResult.loading && <LoadingSpinner small />}
+                {!(createInviteMutationResult.called && createInviteMutationResult.loading) && (
+                    <Button
+                        type="button"
+                        size="small"
+                        onClick={sendInviteHandler}
+                    >
+                        SEND INVITE
+                    </Button>
+                )}
+            </StyledActionContainer>
         </Card>
     );
 };
