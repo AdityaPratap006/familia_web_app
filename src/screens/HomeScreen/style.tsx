@@ -9,6 +9,10 @@ export const HomeScreenContent = styled.div`
     gap: 1rem;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: auto;
+
+    @media (max-width: ${ScreenSize.XS_MAX}) {
+        padding: 1rem 0.5rem;
+    }
 `;
 
 export const PostFeed = styled.div`
