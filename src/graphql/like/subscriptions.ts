@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import { LIKE_FRAGMENT } from './fragments';
 
 export const ON_LIKED_SUBSCRIPTION = gql`
-    subscription {
-        onLiked {
+    subscription($input: OnLikedInput!) {
+        onLiked(input: $input) {
             ...like
         }
     }
@@ -12,8 +12,8 @@ export const ON_LIKED_SUBSCRIPTION = gql`
 `;
 
 export const ON_UNLIKED_SUBSCRIPTION = gql`
-    subscription {
-        onUnliked {
+    subscription($input: OnUnlikedInput!) {
+        onUnliked(input: $input) {
             ...like
         }
     }

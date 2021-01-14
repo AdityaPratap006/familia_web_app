@@ -165,12 +165,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
                 const prevLikes = prev.allLikesOnPost;
                 const newLike = onLiked;
 
-                let finalLikes: ILike[] = [];
-                if (newLike.post === postId) {
-                    finalLikes = [newLike, ...prevLikes];
-                } else {
-                    finalLikes = [...prevLikes];
-                }
+                let finalLikes = [newLike, ...prevLikes];
 
                 return {
                     allLikesOnPost: finalLikes,
@@ -189,12 +184,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
                 const prevLikes = prev.allLikesOnPost;
                 const deletedLike = onUnliked;
 
-                let finalLikes: ILike[] = [];
-                if (deletedLike.post === postId) {
-                    finalLikes = prevLikes.filter(like => like._id !== deletedLike._id);
-                } else {
-                    finalLikes = [...prevLikes];
-                }
+                let finalLikes = prevLikes.filter(like => like._id !== deletedLike._id);
 
                 return {
                     allLikesOnPost: finalLikes,
@@ -248,7 +238,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             const text = isSingular ? `${numOfLikes} like` : (isZero ? `no likes yet` : `${numOfLikes} likes`);
 
             const likesToBeShowed = 3;
-            const remainingLikes = likes.length <= likesToBeShowed ? 0 : likes.length - likesToBeShowed; 
+            const remainingLikes = likes.length <= likesToBeShowed ? 0 : likes.length - likesToBeShowed;
             return (
                 <React.Fragment>
                     <LikesData>
