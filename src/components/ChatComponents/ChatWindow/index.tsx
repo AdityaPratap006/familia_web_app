@@ -7,12 +7,13 @@ import { ChatContext } from '../../../contexts/chat.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
 import LoadingSpinner from '../../LoadingSpinner';
-import { ChatWindowContainer, ChatWindowHeader, ChatWindowBody, ChatWindowFooter, GoBackButton, ChatHeaderTitle, ChatHeaderContent } from './style';
+import { ChatWindowContainer, ChatWindowHeader, ChatWindowBody, ChatWindowFooter, GoBackButton, ChatHeaderTitle, ChatHeaderContent, StyledGroupDate, StyledGroup } from './style';
 import Avatar from '../../Avatar';
 import ChatMessage from '../ChatMessage';
 import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
 import { IMessage } from '../../../models/message';
 import { FamilyContext } from '../../../contexts/family.context';
+import { getLocalDateText } from '../../../utils/dates';
 
 interface IAllChatMessages {
     allChatMessages: IMessage[];
@@ -22,6 +23,13 @@ interface AllChatMessagesInput {
     familyId: string;
     from: string;
     to: string;
+}
+
+interface MessageGroups {
+    group: {
+        date: string;
+        messages: IMessage[];
+    };
 }
 
 const ChatWindow: React.FC = () => {
@@ -84,14 +92,52 @@ const ChatWindow: React.FC = () => {
 
         const messages: IMessage[] = data.allChatMessages;
 
-        return messages.map((message, index) => (
-            <ChatMessage
-                key={index}
-                fromUser={message.from}
-                toUser={message.to}
-                messageText={message.text}
-            />
-        ));
+        const messageMap = new Map<string, IMessage[]>();
+
+        messages.forEach(message => {
+            const messageDate = getLocalDateText(message.createdAt).split(',').slice(0, 3).join();
+
+            if (messageMap.has(messageDate)) {
+                const group = messageMap.get(messageDate) || [];
+                group.push(message);
+                messageMap.set(messageDate, group);
+            } else {
+                const group = [message];
+                messageMap.set(messageDate, group);
+            }
+        });
+
+        const messageGroups: MessageGroups[] = [];
+
+        messageMap.forEach((messages, dateString) => {
+
+            messageGroups.push({
+                group: {
+                    date: dateString,
+                    messages,
+                }
+            });
+        });
+
+        return messageGroups.map(({ group: { date, messages } }) => {
+
+            return (
+                <StyledGroup key={date}>
+                    <StyledGroupDate>{date}</StyledGroupDate>
+                    {
+                        messages.map((message) => (
+                            <ChatMessage
+                                key={message._id}
+                                fromUser={message.from}
+                                toUser={message.to}
+                                messageText={message.text}
+                                date={message.createdAt}
+                            />
+                        ))
+                    }
+                </StyledGroup>
+            );
+        });
     }
 
     return (

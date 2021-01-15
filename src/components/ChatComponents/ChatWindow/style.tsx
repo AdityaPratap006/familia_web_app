@@ -96,3 +96,20 @@ export const ChatHeaderTitle = styled.h2`
     font-weight: bold;
     color: ${props => props.theme.primary};
 `;
+
+export const StyledGroup = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+export const StyledGroupDate = styled.span`
+    width: 100%;
+    margin: 0.5rem auto;
+    text-align: center;
+    color: ${props => props.theme.text};
+    font-size: 0.9rem;
+    font-weight: bold;
+`;
