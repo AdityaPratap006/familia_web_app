@@ -30,7 +30,7 @@ interface AllChatMessagesInput {
     to: string;
 }
 
-interface MessageGroups {
+interface MessageGroup {
     group: {
         date: string;
         messages: IMessage[];
@@ -120,12 +120,10 @@ const ChatWindow: React.FC = () => {
         }
 
         const messages: IMessage[] = data.allChatMessages;
-
         const messageMap = new Map<string, IMessage[]>();
 
         messages.forEach(message => {
             const messageDate = getLocalDateText(message.createdAt).split(',').slice(0, 3).join();
-
             if (messageMap.has(messageDate)) {
                 const group = messageMap.get(messageDate) || [];
                 group.push(message);
@@ -136,10 +134,9 @@ const ChatWindow: React.FC = () => {
             }
         });
 
-        const messageGroups: MessageGroups[] = [];
+        const messageGroups: MessageGroup[] = [];
 
         messageMap.forEach((messages, dateString) => {
-
             messageGroups.push({
                 group: {
                     date: dateString,
@@ -148,25 +145,20 @@ const ChatWindow: React.FC = () => {
             });
         });
 
-        return messageGroups.map(({ group: { date, messages } }) => {
-
-            return (
-                <StyledGroup key={date}>
-                    <StyledGroupDate>{date}</StyledGroupDate>
-                    {
-                        messages.map((message) => (
-                            <ChatMessage
-                                key={message._id}
-                                fromUser={message.from}
-                                toUser={message.to}
-                                messageText={message.text}
-                                date={message.createdAt}
-                            />
-                        ))
-                    }
-                </StyledGroup>
-            );
-        });
+        return messageGroups.map(({ group: { date, messages } }) => (
+            <StyledGroup key={date}>
+                <StyledGroupDate>{date}</StyledGroupDate>
+                {messages.map((message) => (
+                    <ChatMessage
+                        key={message._id}
+                        fromUser={message.from}
+                        toUser={message.to}
+                        messageText={message.text}
+                        date={message.createdAt}
+                    />
+                ))}
+            </StyledGroup>
+        ));
     }
 
     return (
