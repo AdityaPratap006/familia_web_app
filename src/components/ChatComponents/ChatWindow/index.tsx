@@ -1,20 +1,36 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
 import { MdArrowBack } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import { ChatContext } from '../../../contexts/chat.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
 import LoadingSpinner from '../../LoadingSpinner';
 import { ChatWindowContainer, ChatWindowHeader, ChatWindowBody, ChatWindowFooter, GoBackButton, ChatHeaderTitle, ChatHeaderContent } from './style';
 import Avatar from '../../Avatar';
-import { IMember } from '../../../models/member';
 import ChatMessage from '../ChatMessage';
+import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
+import { IMessage } from '../../../models/message';
+import { FamilyContext } from '../../../contexts/family.context';
+
+interface IAllChatMessages {
+    allChatMessages: IMessage[];
+}
+
+interface AllChatMessagesInput {
+    familyId: string;
+    from: string;
+    to: string;
+}
 
 const ChatWindow: React.FC = () => {
     const { userList } = useContext(ChatContext);
     const { profile } = useContext(UserProfileContext);
+    const { currentFamily } = useContext(FamilyContext);
     const browserParams = useParams<{ roomId: string }>();
     const browserHistory = useHistory();
+    const [fetchChatMessages, chatMessages] = useLazyQuery<IAllChatMessages>(GET_ALL_CHAT_MESSAGES);
 
     const { roomId } = browserParams;
     const otherUserId = roomId;
@@ -26,6 +42,27 @@ const ChatWindow: React.FC = () => {
         }
     }, [profile, roomId, browserHistory]);
 
+    useEffect(() => {
+        if (currentFamily && profile && otherUser) {
+            fetchChatMessages({
+                variables: {
+                    input: {
+                        familyId: currentFamily._id,
+                        from: profile._id,
+                        to: otherUser._id,
+                    } as AllChatMessagesInput,
+                }
+            });
+        }
+
+    }, [currentFamily, profile, otherUser, fetchChatMessages]);
+
+    useEffect(() => {
+        if (chatMessages.error) {
+            toast.error(chatMessages.error.message);
+        }
+    }, [chatMessages.error]);
+
     if (!profile || !otherUser) {
         return (
             <ChatWindowContainer>
@@ -35,28 +72,17 @@ const ChatWindow: React.FC = () => {
     }
 
     const renderChatMessages = () => {
-        const messages: { from: IMember, to: IMember, text: string }[] = [
-            {
-                from: profile,
-                to: otherUser,
-                text: 'Hello!'
-            },
-            {
-                from: otherUser,
-                to: profile,
-                text: 'Hey! How are you?'
-            },
-            {
-                from: profile,
-                to: otherUser,
-                text: 'Doing good! what about you?'
-            },
-            {
-                from: otherUser,
-                to: profile,
-                text: 'Doing great, thanks :)'
-            }
-        ];
+        const { data, loading } = chatMessages;
+
+        if (loading) {
+            return <LoadingSpinner />;
+        }
+
+        if (!data) {
+            return null;
+        }
+
+        const messages: IMessage[] = data.allChatMessages;
 
         return messages.map((message, index) => (
             <ChatMessage
@@ -82,7 +108,6 @@ const ChatWindow: React.FC = () => {
                 </ChatHeaderContent>
             </ChatWindowHeader>
             <ChatWindowBody>
-                {renderChatMessages()}
                 {renderChatMessages()}
             </ChatWindowBody>
             <ChatWindowFooter>

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
-import { IMember } from '../../../models/member';
+import { MessageUser } from '../../../models/message';
 import Avatar from '../../Avatar';
 import { StyledMessageAvatarContainer, StyledMessageCard, StyledMessageContainer, StyledMessageText } from './style';
 
 interface ChatMessageProps {
-    fromUser: IMember;
-    toUser: IMember;
+    fromUser: MessageUser;
+    toUser: MessageUser;
     messageText: string;
 }
 

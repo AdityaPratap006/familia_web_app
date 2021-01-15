@@ -16,6 +16,6 @@ export const StyledChatUserList = styled.div`
     }
 
     &::-webkit-scrollbar-track {
-        background-color: ${props => props.theme.paper};
+        background-color: ${props => props.theme.background};
     }
 `;

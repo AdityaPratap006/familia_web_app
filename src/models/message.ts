@@ -8,7 +8,7 @@ export interface IMessage {
     to: MessageUser;
 }
 
-interface MessageUser {
+export interface MessageUser {
     _id: string;
     name: string;
     email: string;
