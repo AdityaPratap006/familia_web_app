@@ -14,9 +14,14 @@ import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
 import { IMessage } from '../../../models/message';
 import { FamilyContext } from '../../../contexts/family.context';
 import { getLocalDateText } from '../../../utils/dates';
+import { ON_MESSAGE_ADDED_SUBSCRIPTION } from '../../../graphql/message/subscriptions';
 
 interface IAllChatMessages {
     allChatMessages: IMessage[];
+}
+
+interface MessageAddedResult {
+    onMessageAdded: IMessage;
 }
 
 interface AllChatMessagesInput {
@@ -70,6 +75,30 @@ const ChatWindow: React.FC = () => {
             toast.error(chatMessages.error.message);
         }
     }, [chatMessages.error]);
+
+    const { subscribeToMore: subscribeToMoreMessages } = chatMessages;
+    useEffect(() => {
+        if (currentFamily && profile && otherUser && subscribeToMoreMessages) {
+            subscribeToMoreMessages<MessageAddedResult>({
+                document: ON_MESSAGE_ADDED_SUBSCRIPTION,
+                updateQuery: (prev, { subscriptionData }) => {
+                    const existingMessages = prev.allChatMessages;
+                    const newMessage = subscriptionData.data.onMessageAdded;
+
+                    return {
+                        allChatMessages: [newMessage, ...existingMessages],
+                    };
+                },
+                variables: {
+                    input: {
+                        familyId: currentFamily._id,
+                        from: profile._id,
+                        to: otherUser._id,
+                    } as AllChatMessagesInput,
+                }
+            });
+        }
+    }, [currentFamily, profile, otherUser, subscribeToMoreMessages]);
 
     if (!profile || !otherUser) {
         return (
