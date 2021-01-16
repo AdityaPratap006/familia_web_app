@@ -28,9 +28,9 @@ export const ChatWindowHeader = styled.header`
 
 export const ChatWindowBody = styled.div`
     width: 100%;
-    height: calc(100% - 10rem);
+    height: calc(100% - 9rem);
     position: absolute;
-    top: 5rem;
+    top: 4rem;
     left: 0;
     right: 0;
     overflow-x: hidden;

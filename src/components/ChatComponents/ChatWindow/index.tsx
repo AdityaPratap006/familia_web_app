@@ -101,7 +101,7 @@ const ChatWindow: React.FC = () => {
         }
     }, [currentFamily, profile, otherUser, subscribeToMoreMessages]);
 
-    if (!profile || !otherUser) {
+    if (!profile || !otherUser || !currentFamily) {
         return (
             <ChatWindowContainer>
                 <LoadingSpinner />
@@ -179,7 +179,11 @@ const ChatWindow: React.FC = () => {
                 {renderChatMessages()}
             </ChatWindowBody>
             <ChatWindowFooter>
-                <ChatMessageInput />
+                <ChatMessageInput
+                    familyId={currentFamily._id}
+                    from={profile}
+                    to={otherUser}
+                />
             </ChatWindowFooter>
         </ChatWindowContainer>
     );
