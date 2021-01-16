@@ -19,7 +19,7 @@ export const ChatWindowHeader = styled.header`
     top: 0;
     left: 0;
     right: 0;
-    height: 5rem;
+    height: 4rem;
     border-bottom: 1px solid ${props => props.theme.defaultBorderColor};
     display: flex;
     justify-content: flex-start;
@@ -28,7 +28,7 @@ export const ChatWindowHeader = styled.header`
 
 export const ChatWindowBody = styled.div`
     width: 100%;
-    height: calc(100% - 9rem);
+    height: calc(100% - 10rem);
     position: absolute;
     top: 5rem;
     left: 0;
@@ -53,7 +53,7 @@ export const ChatWindowBody = styled.div`
 
 export const ChatWindowFooter = styled.footer`
     width: 100%;
-    height: 4rem;
+    height: 5rem;
     position: absolute;
     bottom: 0;
     left: 0;
