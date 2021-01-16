@@ -18,7 +18,7 @@ export const StyledChatMessageInputContainer = styled.div`
     align-items: flex-start;
 `;
 
-export const StyledChatMessageInput = styled.input`
+export const StyledChatMessageInput = styled.textarea`
     display: block;
     width: 100%;
     font: inherit;

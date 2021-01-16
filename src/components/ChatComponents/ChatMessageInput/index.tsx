@@ -27,9 +27,7 @@ const ChatMessageInput: React.FC<ChatMessageInputProps> = ({ familyId, from, to 
     const { formState, errors, register, handleSubmit, reset } = useForm<FormInput>({
         mode: "all",
     });
-
     const [createMessageMutation, { loading, error }] = useMutation<CreateMessageResult>(CREATE_MESSAGE_MUTATION);
-
     const { setCurrentMessages } = useContext(ChatContext);
 
     useEffect(() => {
@@ -91,7 +89,7 @@ const ChatMessageInput: React.FC<ChatMessageInputProps> = ({ familyId, from, to 
                 <StyledChatMessageInput
                     id="text"
                     name="text"
-                    type="text"
+                    rows={1}
                     ref={
                         register({
                             pattern: { value: /.*\S.*/, message: "Message cannot be empty" },
