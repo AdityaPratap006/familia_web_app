@@ -6,6 +6,7 @@ export interface IMessage {
     updatedAt: string;
     from: MessageUser;
     to: MessageUser;
+    optimisticUI?: boolean;
 }
 
 export interface MessageUser {

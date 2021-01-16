@@ -10,9 +10,10 @@ interface ChatMessageProps {
     toUser: MessageUser;
     messageText: string;
     date: string;
+    hasOptimisticUI?: boolean;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date }
     const messageDate = getLocalDateText(date);
     const messageTime = messageDate.split(',').slice(3, 4).join('');
     return (
-        <StyledMessageContainer ref={chatMessageRef} className={`${isSent && 'sent'}`}>
+        <StyledMessageContainer ref={chatMessageRef} className={`${isSent && 'sent'} ${hasOptimisticUI && 'optimistic'}`}>
             <StyledMessageAvatarContainer>
                 <Avatar
                     tiny

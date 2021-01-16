@@ -1,10 +1,10 @@
+import React, { useContext, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoIosSend } from 'react-icons/io';
 import { toast } from 'react-toastify';
+import { ChatContext } from '../../../contexts/chat.context';
 import { CREATE_MESSAGE_MUTATION } from '../../../graphql/message/mutations';
-import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
 import { IMessage, MessageUser } from '../../../models/message';
 import LoadingSpinner from '../../LoadingSpinner';
 import { StyledChatMessageButton, StyledChatMessageForm, StyledChatMessageInput, StyledChatMessageInputContainer, StyledChatMessageInputError } from './style';
@@ -30,6 +30,8 @@ const ChatMessageInput: React.FC<ChatMessageInputProps> = ({ familyId, from, to 
 
     const [createMessageMutation, { loading, error }] = useMutation<CreateMessageResult>(CREATE_MESSAGE_MUTATION);
 
+    const { setCurrentMessages } = useContext(ChatContext);
+
     useEffect(() => {
         if (error) {
             toast.error(error.message);
@@ -37,19 +39,21 @@ const ChatMessageInput: React.FC<ChatMessageInputProps> = ({ familyId, from, to 
     }, [error]);
 
     const sendNewMessage = async (text: string) => {
-        await createMessageMutation({
-            refetchQueries: [
-                {
-                    query: GET_ALL_CHAT_MESSAGES,
-                    variables: {
-                        input: {
-                            familyId,
-                            from: from._id,
-                            to: to._id,
-                        },
-                    }
-                }
-            ],
+
+        const newMessageOptimistic: IMessage = {
+            _id: (1_000_000_000_000 * Math.random()).toLocaleString(),
+            createdAt: new Date().toLocaleString(),
+            updatedAt: new Date().toLocaleString(),
+            family: familyId,
+            from,
+            text,
+            to,
+            optimisticUI: true,
+        };
+
+        setCurrentMessages(prevMessages => [...prevMessages, newMessageOptimistic]);
+
+        const { data } = await createMessageMutation({
             variables: {
                 input: {
                     familyId,
@@ -58,8 +62,22 @@ const ChatMessageInput: React.FC<ChatMessageInputProps> = ({ familyId, from, to 
                     text,
                 },
             },
-            awaitRefetchQueries: true,
+            optimisticResponse: {
+                createMessage: newMessageOptimistic,
+            }
         });
+
+        if (data) {
+            const newMessage = data.createMessage;
+
+            setCurrentMessages(prevMessages => {
+                const lastMessage = prevMessages[prevMessages.length - 1];
+                if (lastMessage.from._id === from._id) {
+                    prevMessages.pop();
+                }
+                return [...prevMessages, newMessage]
+            });
+        }
     }
 
     const onFormSubmit = async (input: FormInput) => {

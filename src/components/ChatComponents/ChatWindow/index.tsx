@@ -39,7 +39,7 @@ interface MessageGroup {
 }
 
 const ChatWindow: React.FC = () => {
-    const { userList } = useContext(ChatContext);
+    const { userList, currentMessages, setCurrentMessages } = useContext(ChatContext);
     const { profile } = useContext(UserProfileContext);
     const { currentFamily } = useContext(FamilyContext);
     const browserParams = useParams<{ roomId: string }>();
@@ -76,6 +76,12 @@ const ChatWindow: React.FC = () => {
             toast.error(chatMessages.error.message);
         }
     }, [chatMessages.error]);
+
+    useEffect(() => {
+        if (chatMessages.data) {
+            setCurrentMessages(chatMessages.data.allChatMessages);
+        }
+    }, [chatMessages.data, setCurrentMessages]);
 
     const { subscribeToMore: subscribeToMoreMessages } = chatMessages;
     useEffect(() => {
@@ -120,7 +126,7 @@ const ChatWindow: React.FC = () => {
             return null;
         }
 
-        const messages: IMessage[] = data.allChatMessages;
+        const messages: IMessage[] = currentMessages;
         const messageMap = new Map<string, IMessage[]>();
 
         messages.forEach(message => {
@@ -156,6 +162,7 @@ const ChatWindow: React.FC = () => {
                         toUser={message.to}
                         messageText={message.text}
                         date={message.createdAt}
+                        hasOptimisticUI={message.optimisticUI}
                     />
                 ))}
             </StyledGroup>

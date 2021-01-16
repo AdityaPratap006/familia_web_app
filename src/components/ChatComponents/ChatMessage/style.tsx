@@ -10,6 +10,10 @@ export const StyledMessageContainer = styled.div`
     &.sent {
         flex-direction: row-reverse;
     }
+
+    &.optimistic {
+        opacity: 0.4;
+    }
 `;
 
 export const StyledMessageAvatarContainer = styled.div`
