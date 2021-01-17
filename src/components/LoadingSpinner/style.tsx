@@ -59,14 +59,14 @@ export const Arc = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 3px solid ${props => props.theme.primary || pinkTheme.primary};
+    border: 3px solid ${props => props.theme.primaryShadow || pinkTheme.primaryShadow};
     border-bottom-color: transparent;
     border-radius: 50%;
     animation: ${spinAnimation1} 1.2s linear infinite;
 
     &.second {
         border: 3px solid transparent;
-        border-bottom-color: ${props => props.theme.primaryShadow || pinkTheme.primaryShadow};
+        border-bottom-color: ${props => props.theme.primary || pinkTheme.primary};
         animation: ${spinAnimation2} 1.2s linear infinite;
     }
 `;
