@@ -23,6 +23,7 @@ import InvitesScreen from './screens/InvitesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import ChatsScreen from './screens/ChatsScreen';
 import { ChatProvider } from './contexts/chat.context';
+import LocateScreen from './screens/LocateScreen';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -117,6 +118,9 @@ const App: React.FC = () => {
         <ChatProvider>
           <ChatsScreen />
         </ChatProvider>
+      </Route>
+      <Route exact path={`${NavigationRoutes.LOCATE}`} >
+        <LocateScreen />
       </Route>
       <Route exact path={`${NavigationRoutes.MEMORIES}`}>
         <MemoriesScreen />
