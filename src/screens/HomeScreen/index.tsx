@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { AddPostButtonSection, HomeScreenContent, MemberList, PostFeed, QuotesSection } from './style';
+import { AddPostButtonSection, HomeScreenContent, MemberList, PostFeed } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import { FamilyContext } from '../../contexts/family.context';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -47,9 +47,6 @@ const HomeScreen: React.FC = () => {
                 <MemberList>
                     <HomeMemberList />
                 </MemberList>
-                <QuotesSection>
-
-                </QuotesSection>
             </HomeScreenContent>
         </Screen>
     );

@@ -29,18 +29,6 @@ export const PostFeed = styled.div`
     }
 `;
 
-export const MemberList = styled.div`
-    grid-column: 4 / 6;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-    @media (max-width: ${ScreenSize.SM_MAX}) {
-        display: none;
-    }
-`;
-
 export const AddPostButtonSection = styled.div`
     position: sticky;
     top: 6rem;
@@ -57,16 +45,15 @@ export const AddPostButtonSection = styled.div`
     }
 `;
 
-export const QuotesSection = styled.div`
+export const MemberList = styled.div`
     position: sticky;
-    top: 15rem;
+    top: 12rem;
+    height: calc(100vh - 15rem);
     grid-column: 4 / 6;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background: ${props => props.theme.paper};
-    height: 30vh;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         display: none;

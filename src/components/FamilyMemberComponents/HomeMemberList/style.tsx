@@ -2,6 +2,7 @@ import styled, { css } from  'styled-components';
 
 export const MemberListContainerCSS = css`
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -17,10 +18,26 @@ export const StyledMemberListTitle = styled.h4`
 
 export const StyledMemberList = styled.div`
     width: 100%;
+    height: calc(100% - 3rem);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: ${props => props.theme.background};
+    }
+
+    &::-webkit-scrollbar-thumb {
+        width: 3px;
+        background-color: ${props => props.theme.primary};
+    }
 `;
 
 export const WarningMessage = styled.p`
