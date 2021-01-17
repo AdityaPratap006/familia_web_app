@@ -35,7 +35,7 @@ const spinAnimation1 = keyframes`
         transform: rotate(360deg);
         /* border-width: 6px; */
     }
-`; 
+`;
 
 const spinAnimation2 = keyframes`
     0% {
@@ -52,21 +52,21 @@ const spinAnimation2 = keyframes`
         transform: rotate(360deg);
         /* border-width: 1px; */
     }
-`; 
+`;
 
 export const Arc = styled.div`
     box-sizing: border-box;
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 3px solid transparent;
-    border-top-color: ${props => props.theme.primary || pinkTheme.primary};
+    border: 3px solid ${props => props.theme.primary || pinkTheme.primary};
+    border-bottom-color: transparent;
     border-radius: 50%;
     animation: ${spinAnimation1} 1.2s linear infinite;
 
     &.second {
         border: 3px solid transparent;
-        border-bottom-color: ${props => props.theme.primary || pinkTheme.primary};
+        border-bottom-color: ${props => props.theme.primaryShadow || pinkTheme.primaryShadow};
         animation: ${spinAnimation2} 1.2s linear infinite;
     }
 `;
