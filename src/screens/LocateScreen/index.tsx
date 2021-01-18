@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ReactMapGL, { ViewportProps, NavigationControl } from 'react-map-gl';
+import ReactMapGL, { ViewportProps, NavigationControl, Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { MdLocationOn } from 'react-icons/md';
 import { FamilyContext } from '../../contexts/family.context';
 import Screen from '../../components/ScreenComponents/Screen';
 import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboarder';
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
-import { LocateScreenContent, NavigationControlContainer } from './style';
+import { LocateScreenContent, NavigationControlContainer, PinIconContainer } from './style';
 
 const mapboxAPIAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -13,6 +14,11 @@ interface MapViewport {
     latitude: number;
     longitude: number;
     zoom: number;
+}
+
+interface Position {
+    latitude: number;
+    longitude: number;
 }
 
 const INITIAL_VIEWPORT: MapViewport = {
@@ -23,7 +29,16 @@ const INITIAL_VIEWPORT: MapViewport = {
 
 const LocateScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
-     const [mapViewport, setMapViewport] = useState<MapViewport>(INITIAL_VIEWPORT);
+    const [mapViewport, setMapViewport] = useState<MapViewport>(INITIAL_VIEWPORT);
+    const [myPosition, setMyPosition] = useState<Position>();
+
+    useEffect(() => {
+        document.title = `Locate | Familia`;
+    }, []);
+
+    useEffect(() => {
+        getMyPosition();
+    }, []);
 
     const handleMapViewportChange = (viewport: ViewportProps) => {
         setMapViewport({
@@ -33,10 +48,24 @@ const LocateScreen: React.FC = () => {
         });
     }
 
-    useEffect(() => {
-        document.title = `Locate | Familia`;
-    }, []);
+    const getMyPosition = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { coords: { latitude, longitude } } = position;
 
+                setMapViewport({
+                    latitude,
+                    longitude,
+                    zoom: 6,
+                });
+
+                setMyPosition({
+                    latitude,
+                    longitude,
+                });
+            });
+        }
+    }
 
     if (!loadingFamilies && families.length === 0) {
         return (
@@ -66,10 +95,23 @@ const LocateScreen: React.FC = () => {
                     onViewportChange={handleMapViewportChange}
                 >
                     <NavigationControlContainer>
-                        <NavigationControl 
+                        <NavigationControl
                             onViewportChange={handleMapViewportChange}
                         />
                     </NavigationControlContainer>
+
+                    {myPosition && (
+                        <Marker
+                            latitude={myPosition.latitude}
+                            longitude={myPosition.longitude}
+                            offsetLeft={-19}
+                            offsetTop={-37}
+                        >
+                            <PinIconContainer>
+                                <MdLocationOn className='icon' />
+                            </PinIconContainer>
+                        </Marker>
+                    )}
                 </ReactMapGL>
             </LocateScreenContent>
         </Screen>
