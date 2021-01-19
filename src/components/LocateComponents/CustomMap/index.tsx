@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import ReactMapGL, { ViewportProps, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { NavigationControlContainer } from './style';
@@ -8,6 +8,9 @@ import { IUserLocation } from '../../../models/location';
 import CustomMarker from '../CustomMarker';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import LoadingSpinner from '../../LoadingSpinner';
+import { FamilyContext } from '../../../contexts/family.context';
+import { GET_MEMBER_LOCATIONS } from '../../../graphql/location/queries';
+import { toast } from 'react-toastify';
 
 const mapboxAPIAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -32,11 +35,17 @@ interface UpdateUserLocationResult {
     updateUserLocation: IUserLocation;
 }
 
+interface GetMemberLocationsResult {
+    memberLocations: IUserLocation[];
+}
+
 const CustomMap: React.FC = () => {
     const [mapViewport, setMapViewport] = useState<MapViewport>(INITIAL_VIEWPORT);
     const [myPosition, setMyPosition] = useState<Position>();
     const [updateMyLocationMutation] = useMutation<UpdateUserLocationResult>(UPDATE_USER_LOCATION_MUTATION);
     const { profile } = useContext(UserProfileContext);
+    const { currentFamily } = useContext(FamilyContext);
+    const [fetchMemberLocations, fetchMemberLocationsResult] = useLazyQuery<GetMemberLocationsResult>(GET_MEMBER_LOCATIONS);
 
     useEffect(() => {
         getMyPosition();
@@ -59,6 +68,24 @@ const CustomMap: React.FC = () => {
         }
     }, [myPosition, updateMyLocationMutation]);
 
+    useEffect(() => {
+        if (currentFamily) {
+            fetchMemberLocations({
+                variables: {
+                    input: {
+                        familyId: currentFamily._id,
+                    }
+                }
+            });
+        }
+    }, [currentFamily, fetchMemberLocations]);
+
+    useEffect(() => {
+        if (fetchMemberLocationsResult.error) {
+            toast.error(fetchMemberLocationsResult.error.message);
+        }
+    }, [fetchMemberLocationsResult.error]);
+
     const handleMapViewportChange = (viewport: ViewportProps) => {
         setMapViewport({
             latitude: viewport.latitude,
@@ -79,8 +106,8 @@ const CustomMap: React.FC = () => {
                 });
 
                 setMyPosition({
-                    latitude,
-                    longitude,
+                    latitude: latitude,
+                    longitude: longitude,
                 });
             });
         }
@@ -88,6 +115,28 @@ const CustomMap: React.FC = () => {
 
     if (!profile) {
         return <LoadingSpinner />;
+    }
+
+    const renderMemberMarkers = () => {
+        const { data } = fetchMemberLocationsResult;
+
+        if (!data) {
+            return null;
+        }
+
+        const locations = data.memberLocations.filter(loc => loc.user._id === profile._id);
+
+        return locations.map(userLocation => {
+            const { _id: pinId, user: { image: { url: imageUrl } }, location: { coordinates } } = userLocation;
+            return (
+                <CustomMarker
+                    key={pinId}
+                    lat={coordinates[1]}
+                    long={coordinates[0]}
+                    userImage={imageUrl}
+                />
+            );
+        });
     }
 
     return (
@@ -107,7 +156,6 @@ const CustomMap: React.FC = () => {
                         onViewportChange={handleMapViewportChange}
                     />
                 </NavigationControlContainer>
-
                 {myPosition && (
                     <CustomMarker
                         lat={myPosition.latitude}
@@ -115,6 +163,7 @@ const CustomMap: React.FC = () => {
                         userImage={profile.image.url}
                     />
                 )}
+                {renderMemberMarkers()}
             </ReactMapGL>
         </>
     );
