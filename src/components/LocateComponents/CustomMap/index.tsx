@@ -124,7 +124,7 @@ const CustomMap: React.FC = () => {
             return null;
         }
 
-        const locations = data.memberLocations.filter(loc => loc.user._id === profile._id);
+        const locations = data.memberLocations.filter(loc => loc.user._id !== profile._id);
 
         return locations.map(userLocation => {
             const { _id: pinId, user: { image: { url: imageUrl } }, location: { coordinates } } = userLocation;
