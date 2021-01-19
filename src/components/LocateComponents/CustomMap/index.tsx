@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import ReactMapGL, { ViewportProps, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -6,6 +6,8 @@ import { NavigationControlContainer } from './style';
 import { UPDATE_USER_LOCATION_MUTATION } from '../../../graphql/location/mutations';
 import { IUserLocation } from '../../../models/location';
 import CustomMarker from '../CustomMarker';
+import { UserProfileContext } from '../../../contexts/userProfile.context';
+import LoadingSpinner from '../../LoadingSpinner';
 
 const mapboxAPIAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -34,6 +36,7 @@ const CustomMap: React.FC = () => {
     const [mapViewport, setMapViewport] = useState<MapViewport>(INITIAL_VIEWPORT);
     const [myPosition, setMyPosition] = useState<Position>();
     const [updateMyLocationMutation] = useMutation<UpdateUserLocationResult>(UPDATE_USER_LOCATION_MUTATION);
+    const { profile } = useContext(UserProfileContext);
 
     useEffect(() => {
         getMyPosition();
@@ -83,6 +86,10 @@ const CustomMap: React.FC = () => {
         }
     }
 
+    if (!profile) {
+        return <LoadingSpinner />;
+    }
+
     return (
         <>
             <ReactMapGL
@@ -105,6 +112,7 @@ const CustomMap: React.FC = () => {
                     <CustomMarker
                         lat={myPosition.latitude}
                         long={myPosition.longitude}
+                        userImage={profile.image.url}
                     />
                 )}
             </ReactMapGL>
