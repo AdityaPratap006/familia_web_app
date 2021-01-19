@@ -7,6 +7,9 @@ import Screen from '../../components/ScreenComponents/Screen';
 import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboarder';
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import { LocateScreenContent, NavigationControlContainer, PinIconContainer } from './style';
+import { useMutation } from '@apollo/client';
+import { UPDATE_USER_LOCATION_MUTATION } from '../../graphql/location/mutations';
+import { IUserLocation } from '../../models/location';
 
 const mapboxAPIAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -27,10 +30,15 @@ const INITIAL_VIEWPORT: MapViewport = {
     zoom: 1,
 };
 
+interface UpdateUserLocationResult {
+    updateUserLocation: IUserLocation;
+}
+
 const LocateScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
     const [mapViewport, setMapViewport] = useState<MapViewport>(INITIAL_VIEWPORT);
     const [myPosition, setMyPosition] = useState<Position>();
+    const [updateMyLocationMutation] = useMutation<UpdateUserLocationResult>(UPDATE_USER_LOCATION_MUTATION);
 
     useEffect(() => {
         document.title = `Locate | Familia`;
@@ -39,6 +47,25 @@ const LocateScreen: React.FC = () => {
     useEffect(() => {
         getMyPosition();
     }, []);
+
+
+
+    useEffect(() => {
+        if (myPosition) {
+            const sendLocationUpdate = async () => {
+                await updateMyLocationMutation({
+                    variables: {
+                        input: {
+                            latitude: myPosition.latitude,
+                            longitude: myPosition.longitude,
+                        }
+                    },
+                });
+            }
+
+            sendLocationUpdate();
+        }
+    }, [myPosition, updateMyLocationMutation]);
 
     const handleMapViewportChange = (viewport: ViewportProps) => {
         setMapViewport({
