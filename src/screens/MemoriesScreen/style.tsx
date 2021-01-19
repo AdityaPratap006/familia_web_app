@@ -30,7 +30,8 @@ export const MembersGrid = styled.div`
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(2, 1fr);
-
+    grid-auto-rows: 1fr;
+ 
     @media (min-width: ${ScreenSize.SM_MIN}) {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
