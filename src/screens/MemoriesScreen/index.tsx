@@ -5,6 +5,7 @@ import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboa
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import { MemoriesScreenContent, Section, SectionTitle } from './style';
 import MemoriesMemberGrid from '../../components/FamilyMemberComponents/MemoriesMemberGrid';
+import MemoriesGrid from '../../components/MemoriesComponents/MemoriesGrid';
 
 const MemoriesScreen: React.FC = () => {
     const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
@@ -36,6 +37,7 @@ const MemoriesScreen: React.FC = () => {
                 </Section>
                 <Section>
                     <SectionTitle>Memories</SectionTitle>
+                    <MemoriesGrid />
                 </Section>
             </MemoriesScreenContent>
         </Screen>
