@@ -5,6 +5,7 @@ import { FamilyContext } from '../../../contexts/family.context';
 import { GET_ALL_MEMORIES_IN_FAMILY } from '../../../graphql/memory/queries';
 import { IMemory } from '../../../models/memory';
 import LoadingBouncers from '../../LoadingBouncers';
+import AddMemoriesCard from '../AddMemoryCard';
 import MemoryCard from '../MemoryCard';
 import { StyledMemoriesGrid } from './style';
 
@@ -52,6 +53,7 @@ const MemoriesGrid: React.FC = () => {
             {loading && <LoadingBouncers />}
             <StyledMemoriesGrid>
                 {renderMemoryCards()}
+                {!loading && <AddMemoriesCard />}
             </StyledMemoriesGrid>
         </>
     );
