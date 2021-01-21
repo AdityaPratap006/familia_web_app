@@ -33,7 +33,7 @@ export const StyledMessageCard = styled.div`
     
     &.sent {
         border-radius: 10px 0 10px 10px;
-        background-color: ${props => props.theme.primary};
+        background-color: ${props => props.theme.primaryShadow};
         border: 1px solid ${props => props.theme.primary};
         align-items: flex-end;
     }
@@ -44,10 +44,6 @@ export const StyledMessageText = styled.p`
     margin: 0 0 1rem 0;
     font-size: 1rem;
     color: ${props => props.theme.text};
-
-    &.sent {
-        color: #fff;
-    }
 `;
 
 export const StyledMessageTime = styled.small`
@@ -55,8 +51,4 @@ export const StyledMessageTime = styled.small`
     font-size: 0.75rem;
     font-weight: bold;
     color: ${props => props.theme.text};
-
-    &.sent {
-        color: #fff;
-    }
 `;
