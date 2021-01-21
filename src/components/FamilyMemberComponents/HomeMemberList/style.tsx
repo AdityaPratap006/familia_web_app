@@ -31,7 +31,7 @@ export const StyledMemberList = styled.div`
     }
 
     &::-webkit-scrollbar-track {
-        background-color: ${props => props.theme.background};
+        background-color: ${props => props.theme.paper};
     }
 
     &::-webkit-scrollbar-thumb {
