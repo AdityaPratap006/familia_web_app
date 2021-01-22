@@ -16,6 +16,7 @@ import { FamilyContext } from '../../../contexts/family.context';
 import { getLocalDateText } from '../../../utils/dates';
 import { ON_MESSAGE_ADDED_SUBSCRIPTION } from '../../../graphql/message/subscriptions';
 import ChatMessageInput from '../ChatMessageInput';
+import StartVideoCallButton from '../../VideoCallComponents/StartVideoCallButton';
 
 interface IAllChatMessages {
     allChatMessages: IMessage[];
@@ -207,6 +208,7 @@ const ChatWindow: React.FC = () => {
                     <Avatar tiny alt={otherUser.name} src={otherUser.image.url} />
                     <ChatHeaderTitle >{otherUser.name}</ChatHeaderTitle>
                 </ChatHeaderContent>
+                <StartVideoCallButton />
             </ChatWindowHeader>
             <ChatWindowBody>
                 {renderChatMessages()}
