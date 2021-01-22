@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { MdArrowBack } from 'react-icons/md';
@@ -26,9 +26,11 @@ interface MessageAddedResult {
 }
 
 interface AllChatMessagesInput {
-    familyId: string;
-    from: string;
-    to: string;
+    input: {
+        familyId: string;
+        from: string;
+        to: string;
+    };
 }
 
 interface MessageGroup {
@@ -44,7 +46,8 @@ const ChatWindow: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
     const browserParams = useParams<{ roomId: string }>();
     const browserHistory = useHistory();
-    const [fetchChatMessages, chatMessages] = useLazyQuery<IAllChatMessages>(GET_ALL_CHAT_MESSAGES);
+    const [fetchChatMessages, chatMessages] = useLazyQuery<IAllChatMessages, AllChatMessagesInput>(GET_ALL_CHAT_MESSAGES);
+    const [loadingChat, setLoadingChat] = useState(false);
 
     const { roomId } = browserParams;
     const otherUserId = roomId;
@@ -57,19 +60,35 @@ const ChatWindow: React.FC = () => {
     }, [profile, roomId, browserHistory]);
 
     useEffect(() => {
+        setLoadingChat(true);
+        setCurrentMessages([]);
+    }, [roomId, setCurrentMessages]);
+
+    const { refetch: refetchChatMessages } = chatMessages;
+    useEffect(() => {
         if (currentFamily && profile && otherUser) {
-            fetchChatMessages({
-                variables: {
+            if (refetchChatMessages) {
+                refetchChatMessages({
                     input: {
                         familyId: currentFamily._id,
                         from: profile._id,
                         to: otherUser._id,
-                    } as AllChatMessagesInput,
-                }
-            });
+                    }
+                })
+            } else {
+                fetchChatMessages({
+                    variables: {
+                        input: {
+                            familyId: currentFamily._id,
+                            from: profile._id,
+                            to: otherUser._id,
+                        },
+                    },
+                });
+            }
         }
 
-    }, [currentFamily, profile, otherUser, fetchChatMessages]);
+    }, [currentFamily, profile, otherUser, fetchChatMessages, refetchChatMessages]);
 
     useEffect(() => {
         if (chatMessages.error) {
@@ -79,14 +98,16 @@ const ChatWindow: React.FC = () => {
 
     useEffect(() => {
         if (chatMessages.data) {
+            setLoadingChat(false);
             setCurrentMessages(chatMessages.data.allChatMessages);
         }
     }, [chatMessages.data, setCurrentMessages]);
 
-    const { subscribeToMore: subscribeToMoreMessages } = chatMessages;
+
     useEffect(() => {
-        if (currentFamily && profile && otherUser && subscribeToMoreMessages) {
-            subscribeToMoreMessages<MessageAddedResult>({
+
+        if (currentFamily && profile && otherUser && chatMessages && chatMessages.subscribeToMore) {
+            const unsubscribe = chatMessages.subscribeToMore<MessageAddedResult>({
                 document: ON_MESSAGE_ADDED_SUBSCRIPTION,
                 updateQuery: (prev, { subscriptionData }) => {
                     const existingMessages = prev.allChatMessages;
@@ -101,11 +122,16 @@ const ChatWindow: React.FC = () => {
                         familyId: currentFamily._id,
                         from: profile._id,
                         to: otherUser._id,
-                    } as AllChatMessagesInput,
+                    },
                 }
             });
+
+            return () => {
+                unsubscribe();
+            }
         }
-    }, [currentFamily, profile, otherUser, subscribeToMoreMessages]);
+
+    }, [currentFamily, profile, otherUser, chatMessages]);
 
     if (!profile || !otherUser || !currentFamily) {
         return (
@@ -118,7 +144,7 @@ const ChatWindow: React.FC = () => {
     const renderChatMessages = () => {
         const { data, loading } = chatMessages;
 
-        if (loading) {
+        if (loading || loadingChat) {
             return <LoadingSpinner />;
         }
 
