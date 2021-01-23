@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { io, Socket } from 'socket.io-client';
 import { FamilyContext } from '../../../contexts/family.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { MessageUser } from '../../../models/message';
 import { RoomIOEvents, UserIOEvents } from '../../../utils/socket-events';
-import { StyledVideoCallArea } from './style';
+import { MyVideo, StyledVideoCallArea } from './style';
 
 const socketIOURL = process.env.REACT_APP_SOCKETIO_URL;
 
@@ -12,11 +13,22 @@ interface VideoCallAreaProps {
     toUser: MessageUser;
 }
 
+const getVideoCallRoomId = (familyId: string, user1Id: string, user2Id: string) => {
+    const sortedUserIds = [user1Id, user2Id].sort((a, b) => {
+        return a.localeCompare(b);
+    }).join(`-`);
+
+    const videoCallRoomId = `${familyId}_${sortedUserIds}`;
+    return videoCallRoomId;
+}
+
 const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) => {
     const { currentFamily } = useContext(FamilyContext);
     const { profile: me } = useContext(UserProfileContext);
+    const [stream, setStream] = useState<MediaStream>();
 
     const socket = useRef<Socket>();
+    const myVideo = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         document.title = "Video Call | Familia";
@@ -28,7 +40,6 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
     }, []);
 
     useEffect(() => {
-
         if (!currentFamily || !me) {
             return;
         }
@@ -37,11 +48,14 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
             transports: ['polling'],
         });
 
-        const sortedUserIds = [me._id, otherPerson._id].sort((a, b) => {
-            return a.localeCompare(b);
-        }).join(`-`);
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true, }).then(currentStream => {
+            setStream(currentStream);
+        }).catch(err => {
+            console.log(err);
+            toast.error(err.message);
+        });
 
-        const videoCallRoomId = `${currentFamily._id}_${sortedUserIds}`;
+        const videoCallRoomId = getVideoCallRoomId(currentFamily._id, me._id, otherPerson._id);
         console.log({ videoCallRoomId });
 
         socket.current.emit(RoomIOEvents.JOIN_ROOM, videoCallRoomId, me._id);
@@ -56,9 +70,35 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
 
     }, [currentFamily, me, otherPerson]);
 
+    useEffect(() => {
+        const myVideoElement = myVideo.current;
+        if (myVideoElement && stream) {
+            myVideoElement.srcObject = stream;
+        }
+
+        return () => {
+            if (myVideoElement) {
+                myVideoElement.srcObject = null;
+            }
+
+            if (stream) {
+                stream.getTracks().forEach((track) => {
+                    track.stop();
+                });
+            }
+        };
+    }, [stream]);
+
+
     return (
         <StyledVideoCallArea>
-
+            {stream && (
+                <MyVideo
+                    ref={myVideo}
+                    playsInline
+                    autoPlay
+                />
+            )}
         </StyledVideoCallArea>
     );
 };

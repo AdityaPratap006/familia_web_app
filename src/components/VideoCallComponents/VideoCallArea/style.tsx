@@ -5,3 +5,14 @@ export const StyledVideoCallArea = styled.div`
     height: 100%;
     background: transparent;
 `;
+
+export const MyVideo = styled.video`
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    position: absolute;
+    bottom: 4rem;
+    right: 1rem;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 20px;
+`;
