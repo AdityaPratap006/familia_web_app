@@ -19,23 +19,31 @@ export const VideoCallContainer = styled.div`
     &.VideoCall-enter-active {
         transform: translateY(-100vh);
         opacity: 0;
+        width: 0;
+        height: 0;
     }
     
     &.VideoCall-enter-done {
         transform: translateY(0);
         opacity: 1;
         transition: all 200ms;
+        width: 100vw;
+        height: 100vh;
     }
 
     &.VideoCall-exit-active {
         transform: translateY(0);
         opacity: 1;
+        width: 100vw;
+        height: 100vh;
     }
         
     &.VideoCall-exit {
         transform: translateY(-100vh);
         opacity: 0;
         transition: all 200ms;
+        width: 0;
+        height: 0;
     }
 `;
 

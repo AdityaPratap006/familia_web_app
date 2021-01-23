@@ -4,20 +4,22 @@ import { CSSTransition } from 'react-transition-group';
 import { VideoCallContainer, VideoCallHeader, VideoCallContent, VideoCallFooter } from './style';
 import BackDrop from '../../BackDrop';
 import Button from '../../Button';
-import { VideoCallArea } from '../VideoCallArea/style';
+import VideoCallArea from '../VideoCallArea';
+import { MessageUser } from '../../../models/message';
 
 interface VideoCallOverlayProps {
+    toUser: MessageUser;
     closeOverlay: () => void;
 }
 
-const VideoCallOverlay: React.FC<VideoCallOverlayProps> = ({ closeOverlay }) => {
+const VideoCallOverlay: React.FC<VideoCallOverlayProps> = ({ closeOverlay, toUser }) => {
     const content = (
         <VideoCallContainer>
             <VideoCallHeader>
                 <h2>Video Call</h2>
             </VideoCallHeader>
             <VideoCallContent>
-                <VideoCallArea />
+                <VideoCallArea toUser={toUser} />
             </VideoCallContent>
             <VideoCallFooter>
                 <Button type="button" inverse onClick={closeOverlay}>Leave</Button>
@@ -31,6 +33,7 @@ const VideoCallOverlay: React.FC<VideoCallOverlayProps> = ({ closeOverlay }) => 
 interface VideoCallPortalProps {
     show: boolean;
     closePortal: () => void;
+    toUser: MessageUser;
 }
 
 const VideoCallPortal: React.FC<VideoCallPortalProps> = props => {
@@ -49,7 +52,7 @@ const VideoCallPortal: React.FC<VideoCallPortalProps> = props => {
                     exit: 'VideoCall-exit',
                 }}
             >
-                <VideoCallOverlay closeOverlay={props.closePortal} />
+                <VideoCallOverlay toUser={props.toUser} closeOverlay={props.closePortal} />
             </CSSTransition>
         </React.Fragment>
     );

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { BsFillCameraVideoFill } from 'react-icons/bs';
+import { MessageUser } from '../../../models/message';
 import VideoCallPortal from '../VideoCallPortal';
 import { VideoCallButton } from './style';
 
-const StartVideoCallButton: React.FC = () => {
+interface StartVideoCallButtonProps {
+    toUser: MessageUser;
+}
+
+const StartVideoCallButton: React.FC<StartVideoCallButtonProps> = ({ toUser }) => {
     const [videoCallPortalOpen, setVideoCallPortalOpen] = useState(false);
 
     const openVideoCallPortalHandler = () => {
@@ -17,6 +22,7 @@ const StartVideoCallButton: React.FC = () => {
     return (
         <React.Fragment>
             <VideoCallPortal
+                toUser={toUser}
                 show={videoCallPortalOpen}
                 closePortal={closeVideoCallPortalHandler}
             />

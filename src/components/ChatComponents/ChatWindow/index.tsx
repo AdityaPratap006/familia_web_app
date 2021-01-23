@@ -208,7 +208,7 @@ const ChatWindow: React.FC = () => {
                     <Avatar tiny alt={otherUser.name} src={otherUser.image.url} />
                     <ChatHeaderTitle >{otherUser.name}</ChatHeaderTitle>
                 </ChatHeaderContent>
-                <StartVideoCallButton />
+                <StartVideoCallButton toUser={otherUser} />
             </ChatWindowHeader>
             <ChatWindowBody>
                 {renderChatMessages()}
