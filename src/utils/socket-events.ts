@@ -8,6 +8,7 @@ export enum UserIOEvents {
     ALL_USERS = 'allUsers',
     USER_CONNECTED = 'user-connected',
     USER_DISCONNECTED = 'user-disconnected',
+    USER_JOINED = 'user-joined',
 }
 
 export enum VideoCallIOEvents {
@@ -19,4 +20,11 @@ export enum VideoCallIOEvents {
 
 export enum RoomIOEvents {
     JOIN_ROOM = 'join-room',
+    ROOM_FULL = 'room-full',
+}
+
+export enum SignalIOEvents {
+    SENDING_SIGNAL = 'sending-signal',
+    RETURNING_SIGNAL = 'returning-signal',
+    RECEIVING_RETURNED_SIGNAL = 'receiving-returned-signal',
 }
