@@ -6,7 +6,8 @@ import { FamilyContext } from '../../../contexts/family.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { MessageUser } from '../../../models/message';
 import { RoomIOEvents, SignalIOEvents, UserIOEvents } from '../../../utils/socket-events';
-import { MyVideo, StyledVideoCallArea, PartnerVideo } from './style';
+import { MyVideo, StyledVideoCallArea, PartnerVideo, MyVideoContainer, WaitingMessageContainer, WaitingMessageText } from './style';
+import LoadingBouncers from '../../LoadingBouncers';
 
 const socketIOURL = process.env.REACT_APP_SOCKETIO_URL;
 
@@ -45,6 +46,7 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
     const socketRef = useRef<Socket>();
     const myVideoRef = useRef<HTMLVideoElement>(null);
     const peersRef = useRef<PeerData[]>([]);
+    const [waitingForPeers, setWaitingForPeers] = useState(false);
 
     useEffect(() => {
         const myVideoElement = myVideoRef.current;
@@ -63,6 +65,14 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
     }, []);
 
     useEffect(() => {
+        if (peers.length === 0) {
+            setWaitingForPeers(true);
+        } else {
+            setWaitingForPeers(false);
+        }
+    }, [peers]);
+
+    useEffect(() => {
         if (!currentFamily || !me) {
             return;
         }
@@ -73,10 +83,11 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
         navigator.mediaDevices.getUserMedia({ video: true, audio: true, }).then(stream => {
             if (myVideoRef.current && socketRef.current) {
                 myVideoRef.current.srcObject = stream;
-                const roomID = getVideoCallRoomId(currentFamily._id, me._id, otherPerson._id)
+                const roomID = getVideoCallRoomId(currentFamily._id, me._id, otherPerson._id);
                 socketRef.current.emit(RoomIOEvents.JOIN_ROOM, roomID);
 
                 socketRef.current.on(UserIOEvents.ALL_USERS, (userSocketIDs: string[]) => {
+                    toast(`Starting Video Call...`);
                     const peerList: PeerData[] = [];
                     userSocketIDs.forEach(userSocketID => {
                         if (socketRef.current) {
@@ -104,7 +115,7 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
                     } else {
                         peersRef.current[existingPeerIndex] = peerData;
                     }
-                    
+
                     setPeers(peerList => {
                         const existingPeerIndex = peerList.findIndex(p => p.peerID === peerData.peerID);
                         let newPeerList: PeerData[] = [];
@@ -133,6 +144,7 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
                     const peers = peersRef.current.filter(p => p.peerID !== userSocketID);
                     peersRef.current = peers;
                     setPeers(peers);
+                    toast(`${otherPerson.name} left`);
                 });
 
                 socketRef.current.on(RoomIOEvents.ROOM_FULL, () => {
@@ -193,17 +205,27 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
 
     return (
         <StyledVideoCallArea>
+            {waitingForPeers && (
+                <WaitingMessageContainer>
+                    <WaitingMessageText>
+                        Waiting for other person to join
+                    </WaitingMessageText>
+                    <LoadingBouncers medium />
+                </WaitingMessageContainer>
+            )}
             {peers.map((peerData: PeerData) => {
                 return (
                     <PeerVideo key={peerData.peerID} peerData={peerData} />
                 );
             })}
-            <MyVideo
-                muted
-                ref={myVideoRef}
-                autoPlay
-                playsInline
-            />
+            <MyVideoContainer>
+                <MyVideo
+                    muted
+                    ref={myVideoRef}
+                    autoPlay
+                    playsInline
+                />
+            </MyVideoContainer>
         </StyledVideoCallArea>
     );
 };

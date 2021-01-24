@@ -64,6 +64,7 @@ export const VideoCallContent = styled.div`
     flex: 1;
     width: 100%;
     background: ${props => props.theme.background};
+    overflow: hidden;
 `;
 
 export const VideoCallFooter = styled.footer`
