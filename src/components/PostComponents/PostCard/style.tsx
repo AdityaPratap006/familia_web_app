@@ -98,20 +98,5 @@ export const PostFooter = styled.div`
     padding: 0 1rem;
 `;
 
-export const PostMenuButton = styled.button`
-    outline: none;
-    border: none;
-    background: transparent;
-    padding: 0.25rem;
-    margin: 0 1rem 0 auto;
-    border-radius: 100%;
-    position: relative;
 
-    .icon {
-        cursor: pointer;
-        width: 1.5rem;
-        height: 1.5rem;
-        color: ${props => props.theme.text};
-    }
-`;
 

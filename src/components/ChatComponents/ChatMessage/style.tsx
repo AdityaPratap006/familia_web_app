@@ -14,6 +14,10 @@ export const StyledMessageContainer = styled.div`
     &.optimistic {
         opacity: 0.4;
     }
+
+    &.long-pressed {
+        background-color: ${props => props.theme.primaryShadow};
+    }
 `;
 
 export const StyledMessageAvatarContainer = styled.div`

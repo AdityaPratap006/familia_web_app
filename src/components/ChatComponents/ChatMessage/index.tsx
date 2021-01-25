@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
+import useLongPress from '../../../hooks/useLongPress';
 import { MessageUser } from '../../../models/message';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
@@ -16,6 +17,14 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
+    const [hasBeenLongPressed, setHasBeenLongPressed] = useState(false);
+    
+    const longPressHandler = () => {
+        console.log(`long pressed: ${messageText}`);
+        setHasBeenLongPressed(true);
+    }
+
+    const longPress = useLongPress(longPressHandler, 300);
 
     useEffect(() => {
         chatMessageRef.current?.scrollIntoView({
@@ -23,6 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
             block: 'start',
         });
     }, []);
+    
 
     if (!profile) {
         return null;
@@ -32,7 +42,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     const messageDate = getLocalDateText(date);
     const messageTime = messageDate.split(',').slice(3, 4).join('');
     return (
-        <StyledMessageContainer ref={chatMessageRef} className={`${isSent && 'sent'} ${hasOptimisticUI && 'optimistic'}`}>
+        <StyledMessageContainer
+            ref={chatMessageRef}
+            className={`
+                ${isSent && 'sent'} 
+                ${hasOptimisticUI && 'optimistic'}
+                ${hasBeenLongPressed && 'long-pressed'}
+            `}
+            {...longPress}
+        >
             <StyledMessageAvatarContainer>
                 <Avatar
                     tiny

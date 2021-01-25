@@ -1,6 +1,27 @@
 import styled from 'styled-components';
 import { ScreenSize } from '../../../utils/screenSizes';
 
+export const PostMenuContainer = styled.div`
+    margin: 0 1rem 0 auto;
+    position: relative;
+`;
+
+export const PostMenuButton = styled.button`
+    outline: none;
+    border: none;
+    background: transparent;
+    padding: 0.25rem;
+    border-radius: 100%;
+    
+
+    .icon {
+        cursor: pointer;
+        width: 1.5rem;
+        height: 1.5rem;
+        color: ${props => props.theme.text};
+    }
+`;
+
 export const StyledPostMenu = styled.div`
     position: absolute;
     right: -1rem;

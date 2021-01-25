@@ -1,39 +1,49 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import { FaEllipsisH } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
-import { PostMenuItem, PostMenuItemIconContainer, PostMenuItemLabel, PostMenuItemList, StyledPostMenu } from './style';
+import { useDetectTouchOutside } from '../../../hooks/useDetectTouchOutside';
+import { PostMenuButton, PostMenuContainer, PostMenuItem, PostMenuItemIconContainer, PostMenuItemLabel, PostMenuItemList, StyledPostMenu } from './style';
 
 interface PostMenuProps {
-    show: boolean;
-    closeMenu: () => void;
+
 }
 
-const PostMenu: React.FC<PostMenuProps> = ({ show, closeMenu }) => {
-    const menuRef = useRef<HTMLDivElement>(null);
+const PostMenu: React.FC<PostMenuProps> = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (event.target instanceof HTMLElement && menuRef.current && !menuRef.current.contains(event.target)) {
-                closeMenu();
-            }
-        }
+    const toggleMenuHandler = () => {
+        setMenuOpen(prevState => !prevState);
+    }
 
-        document.addEventListener("mousedown", e => handleClickOutside(e));
-        return () => {
-            document.removeEventListener("mousedown", e => handleClickOutside(e));
-        };
-    }, [closeMenu]);
+    const closeMenuHandler = () => {
+        setMenuOpen(false);
+    }
+
+    const { ref: menuRef } = useDetectTouchOutside<HTMLDivElement>({
+        condition: menuOpen,
+        onInsideTouch: toggleMenuHandler,
+        onOutsideTouch: closeMenuHandler,
+    });
 
     return (
-        <StyledPostMenu ref={menuRef} className={`${!show && 'hidden'}`}>
-            <PostMenuItemList>
-                <PostMenuItem>
-                    <PostMenuItemIconContainer>
-                        <MdDelete className="icon" />
-                    </PostMenuItemIconContainer>
-                    <PostMenuItemLabel>DELETE</PostMenuItemLabel>
-                </PostMenuItem>
-            </PostMenuItemList>
-        </StyledPostMenu>
+        <PostMenuContainer ref={menuRef}>
+            <PostMenuButton >
+                <FaEllipsisH className="icon" onClick={toggleMenuHandler} />
+            </PostMenuButton>
+            {menuOpen && (
+                <StyledPostMenu >
+                    <PostMenuItemList>
+                        <PostMenuItem>
+                            <PostMenuItemIconContainer>
+                                <MdDelete className="icon" />
+                            </PostMenuItemIconContainer>
+                            <PostMenuItemLabel>DELETE</PostMenuItemLabel>
+                        </PostMenuItem>
+                    </PostMenuItemList>
+                </StyledPostMenu>
+            )}
+        </PostMenuContainer>
+
     );
 };
 

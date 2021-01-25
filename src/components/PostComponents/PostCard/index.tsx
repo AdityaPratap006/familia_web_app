@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { FaEllipsisH } from 'react-icons/fa';
 import { IPost } from '../../../models/post';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
@@ -10,7 +9,7 @@ import {
     PostBody, PostBodyTitle, PostBodyContent,
     PostCardCss, PostHeader, PostHeaderAuthorAvatar,
     PostHeaderAuthorName, PostFooter, PostBodyImage,
-    PostBodyDate, PostMenuButton,
+    PostBodyDate
 } from './style';
 import PostMenu from '../PostMenu';
 
@@ -23,7 +22,6 @@ let postAnimateTimer: number;
 
 const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
     const [shouldDisplay, setShouldDisplay] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
 
     const { author } = post;
 
@@ -37,13 +35,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
         }
     }, [postIndex]);
 
-    const toggleMenuHandler = () => {
-        setMenuOpen(prevState => !prevState);
-    }
-
-    const closeMenuHandler = () => {
-        setMenuOpen(false);
-    }
 
     return (
         <CSSTransition
@@ -64,13 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
                         <Avatar alt={`author pic`} src={author.image.url} tiny />
                     </PostHeaderAuthorAvatar>
                     <PostHeaderAuthorName>{author.name}</PostHeaderAuthorName>
-                    <PostMenuButton type="button">
-                        <FaEllipsisH className="icon" onClick={toggleMenuHandler} />
-                        <PostMenu
-                            show={menuOpen}
-                            closeMenu={closeMenuHandler}
-                        />
-                    </PostMenuButton>
+                    <PostMenu />
                 </PostHeader>
                 <PostBody>
                     <PostBodyDate>{getLocalDateText(post.createdAt)}</PostBodyDate>
