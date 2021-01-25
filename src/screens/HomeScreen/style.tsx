@@ -48,7 +48,8 @@ export const AddPostButtonSection = styled.div`
 export const MemberList = styled.div`
     position: sticky;
     top: 12rem;
-    height: calc(100vh - 15rem);
+    max-height: calc(100vh - 15rem);
+    min-height: 50vh;
     grid-column: 4 / 6;
     display: flex;
     flex-direction: column;
