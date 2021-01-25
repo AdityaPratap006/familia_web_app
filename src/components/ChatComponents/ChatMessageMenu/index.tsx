@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
-import { useDetectTouchOutside } from '../../../hooks/useDetectTouchOutside.hook';
+import { useDetectTouchOutside } from '../../../hooks/detectTouchOutside.hook';
 import { ChatMessageMenuButton, ChatMessageMenuContainer, ChatMessageMenuItem, ChatMessageMenuItemIconContainer, ChatMessageMenuItemLabel, ChatMessageMenuItemList, StyledChatMessageMenu } from './style';
 
 const ChatMessageMenu: React.FC = () => {

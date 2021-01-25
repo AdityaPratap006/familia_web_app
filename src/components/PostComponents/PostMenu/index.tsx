@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEllipsisH } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
-import { useDetectTouchOutside } from '../../../hooks/useDetectTouchOutside.hook';
+import { useDetectTouchOutside } from '../../../hooks/detectTouchOutside.hook';
 import { PostMenuButton, PostMenuContainer, PostMenuItem, PostMenuItemIconContainer, PostMenuItemLabel, PostMenuItemList, StyledPostMenu } from './style';
 
 interface PostMenuProps {
