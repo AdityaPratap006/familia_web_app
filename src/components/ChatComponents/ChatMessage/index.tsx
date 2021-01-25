@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
-import useLongPress from '../../../hooks/useLongPress';
+import useLongPress from '../../../hooks/useLongPress.hook';
 import { MessageUser } from '../../../models/message';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
