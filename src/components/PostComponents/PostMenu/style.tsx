@@ -81,6 +81,7 @@ export const PostMenuItemLabel = styled.span`
     font-weight: bold;
     color: ${props => props.theme.text};
     margin-left: 1.2rem;
+    white-space: nowrap;
 
     @media (max-width: ${ScreenSize.SM_MAX}) {
         margin-left: 0.9rem;

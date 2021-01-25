@@ -37,7 +37,7 @@ const PostMenu: React.FC<PostMenuProps> = () => {
                             <PostMenuItemIconContainer>
                                 <MdDelete className="icon" />
                             </PostMenuItemIconContainer>
-                            <PostMenuItemLabel>DELETE</PostMenuItemLabel>
+                            <PostMenuItemLabel>Delete Post</PostMenuItemLabel>
                         </PostMenuItem>
                     </PostMenuItemList>
                 </StyledPostMenu>
