@@ -8,10 +8,10 @@ export const SettingsGrid = styled.div`
     width: 100%;
     display: grid;
     padding: 1rem;
-    grid-template-areas: "backgroundSettings ."
-    "themeSettings ."
-    "themeSettings .";
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: "backgroundSettings backgroundSettings ."
+    "themeSettings themeSettings ."
+    "themeSettings themeSettings .";
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto, minmax(150px, 1fr));
     gap: 20px;
     align-items: center;

@@ -63,8 +63,9 @@ export const PostBody = styled.div`
 `;
 
 export const PostBodyDate = styled.small`
-    font-size: 0.9rem;
-    font-family: 'roboto';
+    font-size: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05rem;
     color: ${props => props.theme.text};
     padding: 0 1rem;
     margin: 0.5rem 0;
@@ -73,7 +74,7 @@ export const PostBodyDate = styled.small`
 export const PostBodyTitle = styled.h4`
     margin: 0.5rem 0;
     padding: 0 1rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: ${props => props.theme.text};
     font-weight: bold;
 `;
