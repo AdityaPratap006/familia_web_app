@@ -4,7 +4,11 @@ import { MdDelete } from 'react-icons/md';
 import { useDetectTouchOutside } from '../../../hooks/detectTouchOutside.hook';
 import { ChatMessageMenuButton, ChatMessageMenuContainer, ChatMessageMenuItem, ChatMessageMenuItemIconContainer, ChatMessageMenuItemLabel, ChatMessageMenuItemList, StyledChatMessageMenu } from './style';
 
-const ChatMessageMenu: React.FC = () => {
+interface ChatMessageMenuProps {
+    onDeleteRequest: () => void;
+}
+
+const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ onDeleteRequest }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenuHandler = () => {
@@ -19,6 +23,10 @@ const ChatMessageMenu: React.FC = () => {
         onOutsideTouch: closeMenuHandler,
     });
 
+    const handleMenuOptionClick = (task: () => void) => {
+        task();
+        setMenuOpen(false);
+    }
 
     return (
         <ChatMessageMenuContainer ref={menuRef}>
@@ -28,7 +36,7 @@ const ChatMessageMenu: React.FC = () => {
             {menuOpen && (
                 <StyledChatMessageMenu>
                     <ChatMessageMenuItemList>
-                        <ChatMessageMenuItem>
+                        <ChatMessageMenuItem onClick={() => handleMenuOptionClick(onDeleteRequest)}>
                             <ChatMessageMenuItemIconContainer>
                                 <MdDelete className="icon" />
                             </ChatMessageMenuItemIconContainer>

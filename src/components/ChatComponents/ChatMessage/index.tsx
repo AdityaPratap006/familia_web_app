@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { MessageUser } from '../../../models/message';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
 import ChatMessageMenu from '../ChatMessageMenu';
+import DeleteMessageModal from '../DeleteMessageModal';
 import { StyledMessageAvatarContainer, StyledMessageCard, StyledMessageContainer, StyledMessageTime, StyledMessageText, StyledMessageHeader } from './style';
 
 interface ChatMessageProps {
@@ -17,6 +19,7 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
+    const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
     useEffect(() => {
         chatMessageRef.current?.scrollIntoView({
@@ -26,6 +29,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     }, []);
 
 
+    const showDeleteWarningHandler = () => {
+        setShowDeleteWarning(true)
+    };
+
+    const cancelDeleteWarningHandler = () => {
+        setShowDeleteWarning(false);
+    }
+
+    const confirmDeleteHandler = async () => {
+        toast.success(`Deleting Message...`);
+        setShowDeleteWarning(false);
+    }
+
     if (!profile) {
         return null;
     }
@@ -34,28 +50,35 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     const messageDate = getLocalDateText(date);
     const messageTime = messageDate.split(',').slice(3, 4).join('');
     return (
-        <StyledMessageContainer
-            ref={chatMessageRef}
-            className={`
+        <React.Fragment>
+            <DeleteMessageModal 
+                show={showDeleteWarning}
+                onCancel={cancelDeleteWarningHandler}
+                onConfirm={confirmDeleteHandler}
+            />
+            <StyledMessageContainer
+                ref={chatMessageRef}
+                className={`
                 ${isSent && 'sent'} 
                 ${hasOptimisticUI && 'optimistic'}
             `}
-        >
-            <StyledMessageAvatarContainer>
-                <Avatar
-                    tiny
-                    alt={'DP'}
-                    src={fromUser.image.url}
-                />
-            </StyledMessageAvatarContainer>
-            <StyledMessageCard className={`${isSent && 'sent'}`}>
-                <StyledMessageHeader>
-                    <StyledMessageTime className={`${isSent && 'sent'}`}>{messageTime}</StyledMessageTime>
-                    {isSent && <ChatMessageMenu />}
-                </StyledMessageHeader>
-                <StyledMessageText className={`${isSent && 'sent'}`}>{messageText}</StyledMessageText>
-            </StyledMessageCard>
-        </StyledMessageContainer>
+            >
+                <StyledMessageAvatarContainer>
+                    <Avatar
+                        tiny
+                        alt={'DP'}
+                        src={fromUser.image.url}
+                    />
+                </StyledMessageAvatarContainer>
+                <StyledMessageCard className={`${isSent && 'sent'}`}>
+                    <StyledMessageHeader>
+                        <StyledMessageTime className={`${isSent && 'sent'}`}>{messageTime}</StyledMessageTime>
+                        {isSent && <ChatMessageMenu onDeleteRequest={showDeleteWarningHandler} />}
+                    </StyledMessageHeader>
+                    <StyledMessageText className={`${isSent && 'sent'}`}>{messageText}</StyledMessageText>
+                </StyledMessageCard>
+            </StyledMessageContainer>
+        </React.Fragment>
     );
 };
 
