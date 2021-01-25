@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
-import useLongPress from '../../../hooks/useLongPress.hook';
 import { MessageUser } from '../../../models/message';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
-import { StyledMessageAvatarContainer, StyledMessageCard, StyledMessageContainer, StyledMessageTime, StyledMessageText } from './style';
+import ChatMessageMenu from '../ChatMessageMenu';
+import { StyledMessageAvatarContainer, StyledMessageCard, StyledMessageContainer, StyledMessageTime, StyledMessageText, StyledMessageHeader } from './style';
 
 interface ChatMessageProps {
     fromUser: MessageUser;
@@ -17,14 +17,6 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
-    const [hasBeenLongPressed, setHasBeenLongPressed] = useState(false);
-    
-    const longPressHandler = () => {
-        console.log(`long pressed: ${messageText}`);
-        setHasBeenLongPressed(true);
-    }
-
-    const longPress = useLongPress(longPressHandler, 300);
 
     useEffect(() => {
         chatMessageRef.current?.scrollIntoView({
@@ -32,7 +24,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
             block: 'start',
         });
     }, []);
-    
+
 
     if (!profile) {
         return null;
@@ -47,9 +39,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
             className={`
                 ${isSent && 'sent'} 
                 ${hasOptimisticUI && 'optimistic'}
-                ${hasBeenLongPressed && 'long-pressed'}
             `}
-            {...longPress}
         >
             <StyledMessageAvatarContainer>
                 <Avatar
@@ -59,8 +49,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
                 />
             </StyledMessageAvatarContainer>
             <StyledMessageCard className={`${isSent && 'sent'}`}>
+                <StyledMessageHeader>
+                    <StyledMessageTime className={`${isSent && 'sent'}`}>{messageTime}</StyledMessageTime>
+                    {isSent && <ChatMessageMenu />}
+                </StyledMessageHeader>
                 <StyledMessageText className={`${isSent && 'sent'}`}>{messageText}</StyledMessageText>
-                <StyledMessageTime className={`${isSent && 'sent'}`}>{messageTime}</StyledMessageTime>
             </StyledMessageCard>
         </StyledMessageContainer>
     );

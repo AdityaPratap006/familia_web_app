@@ -25,7 +25,7 @@ export const StyledMessageAvatarContainer = styled.div`
 `;
 
 export const StyledMessageCard = styled.div`
-    padding: 1rem 1rem 0.2rem 1rem;
+    padding: 0.25rem 1rem;
     border-radius: 0 10px 10px 10px;
     background-color: ${props => props.theme.paper};
     border: 1px solid ${props => props.theme.defaultBorderColor};
@@ -43,16 +43,31 @@ export const StyledMessageCard = styled.div`
     }
 `;
 
+export const StyledMessageHeader = styled.header`
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem 0 1rem 0;
+ 
+`;
+
 export const StyledMessageText = styled.p`
     padding: 0;
-    margin: 0 0 1rem 0;
+    margin: 0;
     font-size: 1rem;
     color: ${props => props.theme.text};
 `;
 
 export const StyledMessageTime = styled.small`
     padding: 0;
+    margin: 0;
     font-size: 0.75rem;
     font-weight: bold;
+    letter-spacing: 0.1rem;
     color: ${props => props.theme.text};
+
+    &.sent {
+        margin: 0 1rem 0 0;
+    }
 `;
