@@ -10,3 +10,13 @@ export const CREATE_MESSAGE_MUTATION = gql`
 
     ${MESSAGE_FRAGMENT}
 `;
+
+export const DELETE_MESSAGE_MUTATION = gql`
+    mutation($input: DeleteMessageInput!) {
+        deleteMessage(input: $input) {
+            ...message
+        }
+    }
+
+    ${MESSAGE_FRAGMENT}
+`;

@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
-import { MessageUser } from '../../../models/message';
+import { IMessage, MessageUser } from '../../../models/message';
 import { getLocalDateText } from '../../../utils/dates';
 import Avatar from '../../Avatar';
 import ChatMessageMenu from '../ChatMessageMenu';
 import DeleteMessageModal from '../DeleteMessageModal';
 import { StyledMessageAvatarContainer, StyledMessageCard, StyledMessageContainer, StyledMessageTime, StyledMessageText, StyledMessageHeader } from './style';
+import { DELETE_MESSAGE_MUTATION } from '../../../graphql/message/mutations';
 
 interface ChatMessageProps {
     fromUser: MessageUser;
@@ -14,12 +16,24 @@ interface ChatMessageProps {
     messageText: string;
     date: string;
     hasOptimisticUI?: boolean;
+    messageId: string;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI }) => {
+interface DeleteMessageResponse {
+    deleteMessage: IMessage;
+}
+
+interface DeleteMessageInput {
+    input: {
+        messageId: string;
+    }
+}
+
+const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI, messageId }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
     const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+    const [deleteMessage, deleteMessageResponse] = useMutation<DeleteMessageResponse, DeleteMessageInput>(DELETE_MESSAGE_MUTATION);
 
     useEffect(() => {
         chatMessageRef.current?.scrollIntoView({
@@ -30,7 +44,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
 
 
     const showDeleteWarningHandler = () => {
-        setShowDeleteWarning(true)
+        setShowDeleteWarning(true);
     };
 
     const cancelDeleteWarningHandler = () => {
@@ -38,8 +52,24 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     }
 
     const confirmDeleteHandler = async () => {
-        toast.success(`Deleting Message...`);
+
+        const { data, errors } = await deleteMessage({
+            variables: {
+                input: {
+                    messageId,
+                },
+            }
+        })
+
         setShowDeleteWarning(false);
+
+        if (errors) {
+            toast.error(errors[0]?.message);
+        }
+
+        if (data) {
+            toast.success(`Message deleted!`);
+        }
     }
 
     if (!profile) {
@@ -51,10 +81,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     const messageTime = messageDate.split(',').slice(3, 4).join('');
     return (
         <React.Fragment>
-            <DeleteMessageModal 
+            <DeleteMessageModal
                 show={showDeleteWarning}
                 onCancel={cancelDeleteWarningHandler}
                 onConfirm={confirmDeleteHandler}
+                deleteReponseLoading={deleteMessageResponse.loading}
             />
             <StyledMessageContainer
                 ref={chatMessageRef}

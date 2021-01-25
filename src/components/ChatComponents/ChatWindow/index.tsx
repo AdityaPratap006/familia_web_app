@@ -185,6 +185,7 @@ const ChatWindow: React.FC = () => {
                 {messages.map((message) => (
                     <ChatMessage
                         key={message._id}
+                        messageId={message._id}
                         fromUser={message.from}
                         toUser={message.to}
                         messageText={message.text}
