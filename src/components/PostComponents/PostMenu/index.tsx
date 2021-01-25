@@ -20,18 +20,16 @@ const PostMenu: React.FC<PostMenuProps> = () => {
     }
 
     const { ref: menuRef } = useDetectTouchOutside<HTMLDivElement>({
-        condition: menuOpen,
-        onInsideTouch: toggleMenuHandler,
         onOutsideTouch: closeMenuHandler,
     });
 
     return (
         <PostMenuContainer ref={menuRef}>
-            <PostMenuButton >
-                <FaEllipsisH className="icon" onClick={toggleMenuHandler} />
+            <PostMenuButton onClick={toggleMenuHandler} >
+                <FaEllipsisH className="icon" />
             </PostMenuButton>
             {menuOpen && (
-                <StyledPostMenu >
+                <StyledPostMenu  >
                     <PostMenuItemList>
                         <PostMenuItem>
                             <PostMenuItemIconContainer>

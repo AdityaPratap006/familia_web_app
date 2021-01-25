@@ -5,7 +5,6 @@ import { useDetectTouchOutside } from '../../../hooks/useDetectTouchOutside.hook
 import { ChatMessageMenuButton, ChatMessageMenuContainer, ChatMessageMenuItem, ChatMessageMenuItemIconContainer, ChatMessageMenuItemLabel, ChatMessageMenuItemList, StyledChatMessageMenu } from './style';
 
 const ChatMessageMenu: React.FC = () => {
-
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenuHandler = () => {
@@ -17,8 +16,6 @@ const ChatMessageMenu: React.FC = () => {
     }
 
     const { ref: menuRef } = useDetectTouchOutside<HTMLDivElement>({
-        condition: menuOpen,
-        onInsideTouch: toggleMenuHandler,
         onOutsideTouch: closeMenuHandler,
     });
 
