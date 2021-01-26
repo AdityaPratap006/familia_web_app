@@ -5,10 +5,11 @@ import { useDetectTouchOutside } from '../../../hooks/detectTouchOutside.hook';
 import { PostMenuButton, PostMenuContainer, PostMenuItem, PostMenuItemIconContainer, PostMenuItemLabel, PostMenuItemList, StyledPostMenu } from './style';
 
 interface PostMenuProps {
+    onDeleteRequest: () => void;
 
 }
 
-const PostMenu: React.FC<PostMenuProps> = () => {
+const PostMenu: React.FC<PostMenuProps> = ({ onDeleteRequest }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenuHandler = () => {
@@ -23,6 +24,11 @@ const PostMenu: React.FC<PostMenuProps> = () => {
         onOutsideTouch: closeMenuHandler,
     });
 
+    const handleMenuOptionClick = (task: () => void) => {
+        task();
+        setMenuOpen(false);
+    }
+
     return (
         <PostMenuContainer ref={menuRef}>
             <PostMenuButton onClick={toggleMenuHandler} >
@@ -31,7 +37,7 @@ const PostMenu: React.FC<PostMenuProps> = () => {
             {menuOpen && (
                 <StyledPostMenu  >
                     <PostMenuItemList>
-                        <PostMenuItem>
+                        <PostMenuItem onClick={e => handleMenuOptionClick(onDeleteRequest)}>
                             <PostMenuItemIconContainer>
                                 <MdDelete className="icon" />
                             </PostMenuItemIconContainer>

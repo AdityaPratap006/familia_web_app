@@ -63,6 +63,7 @@ export const PostBody = styled.div`
 `;
 
 export const PostBodyDate = styled.small`
+    width: 100%;
     font-size: 0.8rem;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 0.05rem;
@@ -72,6 +73,7 @@ export const PostBodyDate = styled.small`
 `;
 
 export const PostBodyTitle = styled.h4`
+    width: 100%;
     margin: 0.5rem 0;
     padding: 0 1rem;
     font-size: 1.1rem;
@@ -80,6 +82,7 @@ export const PostBodyTitle = styled.h4`
 `;
 
 export const PostBodyContent = styled.p`
+    width: 100%;
     margin: 0.5rem 0;
     padding: 0 1rem;
     font-size: 1rem;
@@ -92,6 +95,7 @@ export const PostBodyImage = styled.img`
 `;
 
 export const PostFooter = styled.div`
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

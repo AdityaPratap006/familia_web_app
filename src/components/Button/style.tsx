@@ -68,14 +68,14 @@ const buttonStyles = css`
     }
 
     &.button--danger {
-        background: #830000;
+        background: #ff0000;
 
         &:hover {
-            background: #f34343;
+            background: #eb4c4c;
         }
 
         &:active {
-            background: #f34343;
+            background: #ec4646;
         }
     }
 
