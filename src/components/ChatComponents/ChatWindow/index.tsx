@@ -14,7 +14,7 @@ import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
 import { IMessage } from '../../../models/message';
 import { FamilyContext } from '../../../contexts/family.context';
 import { getLocalDateText } from '../../../utils/dates';
-import { ON_MESSAGE_ADDED_SUBSCRIPTION } from '../../../graphql/message/subscriptions';
+import { ON_MESSAGE_ADDED_SUBSCRIPTION, ON_MESSAGE_DELETED_SUBSCRIPTION } from '../../../graphql/message/subscriptions';
 import ChatMessageInput from '../ChatMessageInput';
 import StartVideoCallButton from '../../VideoCallComponents/StartVideoCallButton';
 
@@ -24,6 +24,10 @@ interface IAllChatMessages {
 
 interface MessageAddedResult {
     onMessageAdded: IMessage;
+}
+
+interface MessageDeletedResult {
+    onMessageDeleted: IMessage;
 }
 
 interface AllChatMessagesInput {
@@ -108,7 +112,7 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
 
         if (currentFamily && profile && otherUser && chatMessages && chatMessages.subscribeToMore) {
-            const unsubscribe = chatMessages.subscribeToMore<MessageAddedResult>({
+            const unsubscribeMessageAdded = chatMessages.subscribeToMore<MessageAddedResult>({
                 document: ON_MESSAGE_ADDED_SUBSCRIPTION,
                 updateQuery: (prev, { subscriptionData }) => {
                     const existingMessages = prev.allChatMessages;
@@ -127,8 +131,28 @@ const ChatWindow: React.FC = () => {
                 }
             });
 
+            const unsubscribeMessageDeleted = chatMessages.subscribeToMore<MessageDeletedResult>({
+                document: ON_MESSAGE_DELETED_SUBSCRIPTION,
+                updateQuery: (prev, { subscriptionData }) => {
+                    const existingMessages = prev.allChatMessages;
+                    const deletedMessage = subscriptionData.data.onMessageDeleted;
+
+                    return {
+                        allChatMessages: existingMessages.filter(message => message._id !== deletedMessage._id),
+                    };
+                },
+                variables: {
+                    input: {
+                        familyId: currentFamily._id,
+                        from: profile._id,
+                        to: otherUser._id,
+                    },
+                }
+            });
+
             return () => {
-                unsubscribe();
+                unsubscribeMessageAdded();
+                unsubscribeMessageDeleted();
             }
         }
 

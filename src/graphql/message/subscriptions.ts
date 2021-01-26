@@ -10,3 +10,13 @@ export const ON_MESSAGE_ADDED_SUBSCRIPTION = gql`
 
     ${MESSAGE_FRAGMENT}
 `;
+
+export const ON_MESSAGE_DELETED_SUBSCRIPTION = gql`
+    subscription($input: OnMessageDeletedInput!) {
+        onMessageDeleted(input: $input) {
+            ...message
+        }
+    }
+
+    ${MESSAGE_FRAGMENT}
+`;
