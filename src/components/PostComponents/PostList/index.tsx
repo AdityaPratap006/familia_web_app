@@ -7,7 +7,7 @@ import { PostsLoadingContainer, StyledPostList } from './style';
 import LoadingBouncers from '../../LoadingBouncers';
 import { toast } from 'react-toastify';
 import PostCard from '../PostCard';
-import { POST_ADDED_SUBSCRIPTION } from '../../../graphql/post/subscriptions';
+import { POST_ADDED_SUBSCRIPTION, POST_DELETED_SUBSCRIPTION } from '../../../graphql/post/subscriptions';
 
 interface PostsQueryResult {
     allPostsInFamily: IPost[];
@@ -17,9 +17,13 @@ interface PostAddedResult {
     onPostAdded: IPost;
 }
 
+interface PostDeletedResult {
+    onPostDeleted: IPost;
+}
+
 const PostList: React.FC = () => {
     const { currentFamily } = useContext(FamilyContext);
-    const [fetchPosts, { called, data, loading, error, subscribeToMore }] = useLazyQuery<PostsQueryResult>(GET_ALL_POSTS_IN_FAMILY);
+    const [fetchPosts, { called, data, loading, error, subscribeToMore }] = useLazyQuery<PostsQueryResult, { input: { familyId: string } }>(GET_ALL_POSTS_IN_FAMILY);
 
     useEffect(() => {
         if (currentFamily) {
@@ -51,7 +55,7 @@ const PostList: React.FC = () => {
 
     useEffect(() => {
         if (subscribeToMore) {
-            subscribeToMore<PostAddedResult>({
+            const unsubscribePostAdded = subscribeToMore<PostAddedResult>({
                 document: POST_ADDED_SUBSCRIPTION,
                 updateQuery: (prev, { subscriptionData }) => {
                     const existingPosts = prev.allPostsInFamily;
@@ -60,8 +64,25 @@ const PostList: React.FC = () => {
                     return {
                         allPostsInFamily: [newPost, ...existingPosts],
                     };
-                }
+                },
             });
+
+            const unsubscribePostDeleted = subscribeToMore<PostDeletedResult>({
+                document: POST_DELETED_SUBSCRIPTION,
+                updateQuery: (prev, { subscriptionData }) => {
+                    const existingPosts = prev.allPostsInFamily;
+                    const deletedPost = subscriptionData.data.onPostDeleted;
+
+                    return {
+                        allPostsInFamily: existingPosts.filter(post => post._id !== deletedPost._id),
+                    }
+                },
+            });
+
+            return () => {
+                unsubscribePostAdded();
+                unsubscribePostDeleted();
+            };
         }
     }, [subscribeToMore]);
 

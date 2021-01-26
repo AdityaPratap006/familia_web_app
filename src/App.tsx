@@ -4,7 +4,6 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split, from } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { ErrorLink } from '@apollo/client/link/error';
 import { AuthContext } from './contexts/auth.context';
 import { SideDrawerProvider } from './contexts/sidedrawer.context';
 import { CustomThemeContext } from './contexts/theme.context';
@@ -85,12 +84,7 @@ const App: React.FC = () => {
     return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription');
   }, wsLink, httpLink);
 
-  const errorLink = new ErrorLink((err) => {
-    console.warn(`Error Occurred!`);
-  });
-
   const link = from([
-    errorLink,
     splitLink,
   ]);
 

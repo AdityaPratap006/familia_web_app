@@ -10,3 +10,13 @@ export const POST_ADDED_SUBSCRIPTION = gql`
 
     ${POST_FRAGMENT}
 `;
+
+export const POST_DELETED_SUBSCRIPTION = gql`
+    subscription {
+        onPostDeleted {
+            ...post
+        }
+    }
+
+    ${POST_FRAGMENT}
+`;

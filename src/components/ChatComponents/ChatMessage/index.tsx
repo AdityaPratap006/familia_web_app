@@ -52,23 +52,26 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, 
     }
 
     const confirmDeleteHandler = async () => {
+        try {
+            const { data, errors } = await deleteMessage({
+                variables: {
+                    input: {
+                        messageId,
+                    },
+                }
+            })
 
-        const { data, errors } = await deleteMessage({
-            variables: {
-                input: {
-                    messageId,
-                },
+            if (errors) {
+                toast.error(errors[0]?.message);
             }
-        })
 
-        setShowDeleteWarning(false);
-
-        if (errors) {
-            toast.error(errors[0]?.message);
-        }
-
-        if (data) {
-            toast.success(`Message deleted!`);
+            if (data) {
+                toast.success(`Message deleted!`);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
+            setShowDeleteWarning(false);
         }
     }
 

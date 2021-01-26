@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CSSTransition } from 'react-transition-group';
 import { toast } from 'react-toastify';
@@ -16,6 +16,7 @@ import {
 import PostMenu from '../PostMenu';
 import DeletePostModal from '../DeletePostModal';
 import { DELETE_POST_MUTATION } from '../../../graphql/post/mutations';
+import { UserProfileContext } from '../../../contexts/userProfile.context';
 
 interface PostCardProps {
     post: IPost;
@@ -38,7 +39,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
     const [shouldDisplay, setShouldDisplay] = useState(false);
     const [showDeleteWarning, setShowDeleteWarning] = useState(false);
     const [deletePost, deletePostResponse] = useMutation<DeletePostResponse, DeletePostInput>(DELETE_POST_MUTATION)
-
+    const { profile } = useContext(UserProfileContext);
     const { author } = post;
 
     useEffect(() => {
@@ -60,23 +61,31 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
     }
 
     const confirmPostDeleteHandler = async () => {
-        const { errors, data } = await deletePost({
-            variables: {
-                input: {
-                    postId: post._id,
+        try {
+            const { errors, data } = await deletePost({
+                variables: {
+                    input: {
+                        postId: post._id,
+                    }
                 }
+            });
+
+            if (data) {
+                toast.success('Post deleted!');
             }
-        });
 
-        setShowDeleteWarning(false);
-
-        if (data) {
-            toast.success('Post deleted!');
+            if (errors) {
+                toast.error(errors[0]?.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
+            setShowDeleteWarning(false);
         }
+    }
 
-        if (errors) {
-            toast.error(errors[0]?.message);
-        }
+    if (!profile) {
+        return null;
     }
 
     return (
@@ -105,7 +114,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, postIndex }) => {
                             <Avatar alt={`author pic`} src={author.image.url} tiny />
                         </PostHeaderAuthorAvatar>
                         <PostHeaderAuthorName>{author.name}</PostHeaderAuthorName>
-                        <PostMenu onDeleteRequest={showDeleteWarningHandler} />
+                        {(profile._id === author._id) && (
+                            <PostMenu onDeleteRequest={showDeleteWarningHandler} />
+                        )}
                     </PostHeader>
                     <PostBody>
                         <PostBodyDate>{getLocalDateText(post.createdAt)}</PostBodyDate>
