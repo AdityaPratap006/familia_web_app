@@ -192,7 +192,7 @@ const ChatWindow: React.FC = () => {
         const chatWindowBodyElem = chatWindowBodyRef.current;
 
         const scrollHandler = () => {
-            console.log(`scrolling`);
+            // console.log(`scrolling`);
             if (!chatWindowBodyRef.current || !chatWindowMessagesContainerRef.current) {
                 return;
             }
@@ -235,7 +235,7 @@ const ChatWindow: React.FC = () => {
                 return;
             }
 
-            console.log(`fetch more messages`);
+            // console.log(`fetch more messages`);
             try {
                 setRefetching(true);
 
@@ -294,7 +294,7 @@ const ChatWindow: React.FC = () => {
     ]);
 
     useEffect(() => {
-        console.log(`reached Top: `, reachedTop);
+        // console.log(`reached Top: `, reachedTop);
     }, [reachedTop]);
 
     if (!profile || !otherUser || !currentFamily) {
