@@ -5,15 +5,26 @@ import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboa
 import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFamilyIndicator';
 import { LocateScreenContent } from './style';
 import CustomMap from '../../components/LocateComponents/CustomMap';
+import SomethingWentWrongCard from '../../components/Onboarding/SomethingWentWrongCard';
 
 const LocateScreen: React.FC = () => {
-    const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
+    const { currentFamily, loadingFamilies, families, errorWhileFetchingFamilies } = useContext(FamilyContext);
 
     useEffect(() => {
         document.title = `Locate | Familia`;
     }, []);
 
-    if (!loadingFamilies && families.length === 0) {
+    if (errorWhileFetchingFamilies) {
+        return (
+            <Screen
+                title="Locate"
+            >
+                <SomethingWentWrongCard />
+            </Screen>
+        );
+    }
+
+    if (!loadingFamilies && !errorWhileFetchingFamilies && families.length === 0) {
         return (
             <Screen
                 title="Locate"

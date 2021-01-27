@@ -6,15 +6,26 @@ import CurrentFamilyIndicator from '../../components/FamilyComponents/CurrentFam
 import { MemoriesScreenContent, Section, SectionTitle } from './style';
 import MemoriesMemberGrid from '../../components/FamilyMemberComponents/MemoriesMemberGrid';
 import MemoriesGrid from '../../components/MemoriesComponents/MemoriesGrid';
+import SomethingWentWrongCard from '../../components/Onboarding/SomethingWentWrongCard';
 
 const MemoriesScreen: React.FC = () => {
-    const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
+    const { currentFamily, loadingFamilies, families, errorWhileFetchingFamilies } = useContext(FamilyContext);
 
     useEffect(() => {
         document.title = `Memories | Familia`;
     }, []);
 
-    if (!loadingFamilies && families.length === 0) {
+    if (errorWhileFetchingFamilies) {
+        return (
+            <Screen
+                title="Memories"
+            >
+                <SomethingWentWrongCard />
+            </Screen>
+        );
+    }
+    
+    if (!loadingFamilies && !errorWhileFetchingFamilies && families.length === 0) {
         return (
             <Screen
                 title="Memories"

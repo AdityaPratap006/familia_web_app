@@ -9,15 +9,26 @@ import OnboardingAddMemberCard from '../../components/Onboarding/OnboardingAddMe
 import HomeMemberList from '../../components/FamilyMemberComponents/HomeMemberList';
 import PostList from '../../components/PostComponents/PostList';
 import AddPostButton from '../../components/PostComponents/AddPostButton';
+import SomethingWentWrongCard from '../../components/Onboarding/SomethingWentWrongCard';
 
 const HomeScreen: React.FC = () => {
-    const { currentFamily, loadingFamilies, families } = useContext(FamilyContext);
+    const { currentFamily, loadingFamilies, families, errorWhileFetchingFamilies } = useContext(FamilyContext);
 
     useEffect(() => {
         document.title = `Home | Familia`;
     }, []);
 
-    if (!loadingFamilies && families.length === 0) {
+    if (errorWhileFetchingFamilies) {
+        return (
+            <Screen
+                title="Home"
+            >
+                <SomethingWentWrongCard />
+            </Screen>
+        );
+    }
+
+    if (!loadingFamilies && !errorWhileFetchingFamilies && families.length === 0) {
         return (
             <Screen
                 title="Home"

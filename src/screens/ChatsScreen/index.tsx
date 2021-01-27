@@ -9,9 +9,10 @@ import ChatUserList from '../../components/ChatComponents/ChatUserList';
 import ChatWindow from '../../components/ChatComponents/ChatWindow';
 import ChatWelcome from '../../components/ChatComponents/ChatWelcome';
 import CreateFamilyOnboarder from '../../components/Onboarding/CreateFamilyOnboarder';
+import SomethingWentWrongCard from '../../components/Onboarding/SomethingWentWrongCard';
 
 const ChatsScreen: React.FC = () => {
-    const { currentFamily, families, loadingFamilies } = useContext(FamilyContext);
+    const { currentFamily, families, loadingFamilies, errorWhileFetchingFamilies } = useContext(FamilyContext);
     const routeMatch = useRouteMatch();
     const browserLocation = useLocation();
 
@@ -19,7 +20,17 @@ const ChatsScreen: React.FC = () => {
         document.title = `Chats | Familia`;
     }, []);
 
-    if (!loadingFamilies && families.length === 0) {
+    if (errorWhileFetchingFamilies) {
+        return (
+            <Screen
+                title="Chats"
+            >
+                <SomethingWentWrongCard />
+            </Screen>
+        );
+    }
+
+    if (!loadingFamilies && !errorWhileFetchingFamilies && families.length === 0) {
         return (
             <Screen
                 title="Chats"

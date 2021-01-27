@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import { FetchResult, useMutation, useQuery } from '@apollo/client';
+import { ApolloError, FetchResult, useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { IFamily } from '../models/family';
 import { GET_FAMILIES_OF_USER_QUERY } from '../graphql/family/queries';
@@ -8,6 +8,7 @@ import { CREATE_FAMILY_MUTATION } from '../graphql/family/mutations';
 interface IFamilyContext {
     families: IFamily[];
     loadingFamilies: boolean;
+    errorWhileFetchingFamilies: ApolloError | undefined;
     currentFamily: IFamily | undefined;
     setCurrentFamilyHandler: (family: IFamily) => void;
     setCurrentFamilyByForceHandler: (family: IFamily) => void;
@@ -24,6 +25,7 @@ interface CreateFamilyArgs {
 export const FamilyContext = createContext<IFamilyContext>({
     families: [],
     loadingFamilies: false,
+    errorWhileFetchingFamilies: undefined,
     currentFamily: undefined,
     setCurrentFamilyHandler: () => null,
     setCurrentFamilyByForceHandler: () => null,
@@ -123,6 +125,7 @@ const FamilyProvider: React.FC = (props) => {
         <FamilyContext.Provider value={{
             families: families,
             loadingFamilies: familiesOfUser.loading,
+            errorWhileFetchingFamilies: familiesOfUser.error,
             currentFamily,
             setCurrentFamilyHandler,
             setCurrentFamilyByForceHandler,
