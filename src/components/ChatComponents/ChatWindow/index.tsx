@@ -107,7 +107,8 @@ const ChatWindow: React.FC = () => {
             }
         }
 
-    }, [currentFamily, profile, otherUser, fetchChatMessages, refetchChatMessages, currentMessages]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentFamily, profile, otherUser, fetchChatMessages, refetchChatMessages]);
 
     useEffect(() => {
         if (chatMessages.error) {
