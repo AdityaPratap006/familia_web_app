@@ -64,6 +64,19 @@ export const ModalContent = styled.div`
     padding: 1rem 0.5rem;
     max-height: 70vh;
     overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: ${props => props.theme.background};
+    }
+
+    &::-webkit-scrollbar-thumb {
+        width: 3px;
+        background-color: ${props => props.theme.primary};
+    }
 `;
 
 export const ModalFooter = styled.footer`

@@ -5,6 +5,14 @@ export const InvitesScreenContent = styled.div`
     padding: 1rem;
 `;
 
+export const InviteButtonContainer = styled.div`
+    width: 100%;
+    padding: 0 0 2rem 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
 export const InvitesContainer = styled.div`
     width: 100%;
     display: flex;

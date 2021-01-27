@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { InvitesLoadingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader, NoInvitesText } from './style';
+import { InviteButtonContainer, InvitesLoadingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader, NoInvitesText } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
 import { GET_INVITES_RECEIVED_BY_USER, GET_INVITES_SENT_BY_USER } from '../../graphql/invite/queries';
 import { IInvite } from '../../models/invite';
 import InviteList from '../../components/InviteComponents/InviteList';
 import LoadingBouncers from '../../components/LoadingBouncers';
 import { INVITE_CREATED_SUBSCRIPTION, INVITE_DELETED_SUBSCRIPTION } from '../../graphql/invite/subscriptions';
+import Button from '../../components/Button';
+import SearchUserModal from '../../components/FamilyMemberComponents/SearchUserModal';
 
 enum InviteTab {
     SENT = 'SENT',
@@ -25,6 +27,7 @@ const InvitesScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<InviteTab>(InviteTab.RECEIVED);
     const receivedInvitesQuery = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
     const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
+    const [showModal, setShowModal] = useState(false);
 
     const { subscribeToMore: subscribeToMoreReceivedInvites } = receivedInvitesQuery;
     const { subscribeToMore: subscribeToMoreSentInvites } = sentInvitesQuery;
@@ -92,58 +95,77 @@ const InvitesScreen: React.FC = () => {
         setActiveTab(tab);
     }
 
+    const handleDisplayModal = () => {
+        setShowModal(true);
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    }
+
     return (
-        <Screen
-            title="Invites"
-            withGoBackButton
-            withoutBottomAppBar
-        >
-            <InvitesScreenContent>
-                <InvitesTabsHeader>
-                    <InvitesTab
-                        type="button"
-                        className={`${activeTab === InviteTab.RECEIVED && 'active'}`}
-                        onClick={() => handleTabChange(InviteTab.RECEIVED)}
-                    >
-                        Received
+        <React.Fragment>
+            <SearchUserModal
+                show={showModal}
+                closeModal={handleCloseModal}
+            />
+            <Screen
+                title="Invites"
+                withGoBackButton
+                withoutBottomAppBar
+            >
+                <InvitesScreenContent>
+                    <InviteButtonContainer>
+                        <Button type="button" onClick={handleDisplayModal}>
+                            Invite Someone
+                        </Button>
+                    </InviteButtonContainer>
+                    <InvitesTabsHeader>
+                        <InvitesTab
+                            type="button"
+                            className={`${activeTab === InviteTab.RECEIVED && 'active'}`}
+                            onClick={() => handleTabChange(InviteTab.RECEIVED)}
+                        >
+                            Received
                     </InvitesTab>
-                    <InvitesTab
-                        type="button"
-                        className={`${activeTab === InviteTab.SENT && 'active'}`}
-                        onClick={() => handleTabChange(InviteTab.SENT)}
-                    >
-                        Sent
+                        <InvitesTab
+                            type="button"
+                            className={`${activeTab === InviteTab.SENT && 'active'}`}
+                            onClick={() => handleTabChange(InviteTab.SENT)}
+                        >
+                            Sent
                     </InvitesTab>
-                </InvitesTabsHeader>
-                {((activeTab === InviteTab.RECEIVED && receivedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
-                    <InvitesLoadingContainer>
-                        <LoadingBouncers />
-                    </InvitesLoadingContainer>
-                )}
-                {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && receivedInvitesQuery.data.getInvitesReceivedByUser.length === 0 && (
-                    <NoInvitesText>
-                        No Invites
-                    </NoInvitesText>
-                )}
-                {activeTab === InviteTab.SENT && sentInvitesQuery.data && sentInvitesQuery.data.getInvitesSentByUser.length === 0 && (
-                    <NoInvitesText>
-                        No Invites
-                    </NoInvitesText>
-                )}
-                {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && (
-                    <InviteList
-                        invites={receivedInvitesQuery.data.getInvitesReceivedByUser}
-                        type='received'
-                    />
-                )}
-                {activeTab === InviteTab.SENT && sentInvitesQuery.data && (
-                    <InviteList
-                        invites={sentInvitesQuery.data.getInvitesSentByUser}
-                        type='sent'
-                    />
-                )}
-            </InvitesScreenContent>
-        </Screen>
+                    </InvitesTabsHeader>
+                    {((activeTab === InviteTab.RECEIVED && receivedInvitesQuery.loading) || (activeTab === InviteTab.SENT && sentInvitesQuery.loading)) && (
+                        <InvitesLoadingContainer>
+                            <LoadingBouncers />
+                        </InvitesLoadingContainer>
+                    )}
+                    {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && receivedInvitesQuery.data.getInvitesReceivedByUser.length === 0 && (
+                        <NoInvitesText>
+                            No Invites
+                        </NoInvitesText>
+                    )}
+                    {activeTab === InviteTab.SENT && sentInvitesQuery.data && sentInvitesQuery.data.getInvitesSentByUser.length === 0 && (
+                        <NoInvitesText>
+                            No Invites
+                        </NoInvitesText>
+                    )}
+                    {activeTab === InviteTab.RECEIVED && receivedInvitesQuery.data && (
+                        <InviteList
+                            invites={receivedInvitesQuery.data.getInvitesReceivedByUser}
+                            type='received'
+                        />
+                    )}
+                    {activeTab === InviteTab.SENT && sentInvitesQuery.data && (
+                        <InviteList
+                            invites={sentInvitesQuery.data.getInvitesSentByUser}
+                            type='sent'
+                        />
+                    )}
+                </InvitesScreenContent>
+            </Screen>
+        </React.Fragment>
     );
 };
 

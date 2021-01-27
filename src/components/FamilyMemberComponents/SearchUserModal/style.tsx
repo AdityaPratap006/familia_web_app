@@ -10,6 +10,19 @@ export const SearchResultsGrid = styled.div`
     grid-template-columns: repeat(1, minmax(150px, 1fr));
     overflow-y: scroll;
     overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: ${props => props.theme.background};
+    }
+
+    &::-webkit-scrollbar-thumb {
+        width: 3px;
+        background-color: ${props => props.theme.primary};
+    }
 `;
 
 export const StatusText = styled.h5`
