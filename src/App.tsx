@@ -23,6 +23,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import ChatsScreen from './screens/ChatsScreen';
 import { ChatProvider } from './contexts/chat.context';
 import LocateScreen from './screens/LocateScreen';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 const cache = new InMemoryCache({ resultCaching: true });
 
@@ -56,6 +57,7 @@ const App: React.FC = () => {
     return (
       <React.Fragment>
         <StyledThemeProvider theme={currentTheme}>
+          <PWAInstallPrompt />
           {authRoutes}
         </StyledThemeProvider>
       </React.Fragment>
@@ -144,6 +146,7 @@ const App: React.FC = () => {
   return (
     <React.Fragment>
       <StyledThemeProvider theme={currentTheme}>
+        <PWAInstallPrompt />
         <ApolloProvider client={apolloClient}>
           <UserProfileProvider>
             <FamilyProvider>
