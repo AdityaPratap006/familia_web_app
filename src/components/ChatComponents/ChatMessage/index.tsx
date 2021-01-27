@@ -17,6 +17,7 @@ interface ChatMessageProps {
     date: string;
     hasOptimisticUI?: boolean;
     messageId: string;
+    isLatestMessage?: boolean;
 }
 
 interface DeleteMessageResponse {
@@ -29,18 +30,20 @@ interface DeleteMessageInput {
     }
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ fromUser, messageText, date, hasOptimisticUI, messageId }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ isLatestMessage, fromUser, messageText, date, hasOptimisticUI, messageId }) => {
     const { profile } = useContext(UserProfileContext);
     const chatMessageRef = useRef<HTMLDivElement>(null);
     const [showDeleteWarning, setShowDeleteWarning] = useState(false);
     const [deleteMessage, deleteMessageResponse] = useMutation<DeleteMessageResponse, DeleteMessageInput>(DELETE_MESSAGE_MUTATION);
 
     useEffect(() => {
-        chatMessageRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-        });
-    }, []);
+        if (isLatestMessage) {
+            chatMessageRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }
+    }, [isLatestMessage]);
 
 
     const showDeleteWarningHandler = () => {

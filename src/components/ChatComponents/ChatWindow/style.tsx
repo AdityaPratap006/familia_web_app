@@ -51,6 +51,10 @@ export const ChatWindowBody = styled.div`
     }
 `;
 
+export const ChatWindowMessagesContainer = styled.div`
+    width: 100%;
+`; 
+
 export const ChatWindowFooter = styled.footer`
     width: 100%;
     height: 5rem;

@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { MdArrowBack } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 import { ChatContext } from '../../../contexts/chat.context';
 import { UserProfileContext } from '../../../contexts/userProfile.context';
 import { NavigationRoutes } from '../../../navigation/navRoutes';
 import LoadingSpinner from '../../LoadingSpinner';
-import { ChatWindowContainer, ChatWindowHeader, ChatWindowBody, ChatWindowFooter, GoBackButton, ChatHeaderTitle, ChatHeaderContent, StyledGroupDate, StyledGroup } from './style';
+import { ChatWindowContainer, ChatWindowHeader, ChatWindowBody, ChatWindowFooter, GoBackButton, ChatHeaderTitle, ChatHeaderContent, StyledGroupDate, StyledGroup, ChatWindowMessagesContainer } from './style';
 import Avatar from '../../Avatar';
 import ChatMessage from '../ChatMessage';
 import { GET_ALL_CHAT_MESSAGES } from '../../../graphql/message/queries';
@@ -20,6 +21,7 @@ import StartVideoCallButton from '../../VideoCallComponents/StartVideoCallButton
 
 interface IAllChatMessages {
     allChatMessages: IMessage[];
+    totalChatMessages: number;
 }
 
 interface MessageAddedResult {
@@ -35,6 +37,7 @@ interface AllChatMessagesInput {
         familyId: string;
         from: string;
         to: string;
+        skip?: number;
     };
 }
 
@@ -53,6 +56,11 @@ const ChatWindow: React.FC = () => {
     const browserHistory = useHistory();
     const [fetchChatMessages, chatMessages] = useLazyQuery<IAllChatMessages, AllChatMessagesInput>(GET_ALL_CHAT_MESSAGES);
     const [loadingChat, setLoadingChat] = useState(false);
+    const [reachedTop, setReachedTop] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const chatWindowBodyRef = useRef<HTMLDivElement>(null);
+    const chatWindowMessagesContainerRef = useRef<HTMLDivElement>(null);
+    const shouldScrollToLatest = useRef(true);
 
     const { roomId } = browserParams;
     const otherUserId = roomId;
@@ -67,6 +75,9 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
         setLoadingChat(true);
         setCurrentMessages([]);
+        setHasMore(true);
+        setReachedTop(false);
+        shouldScrollToLatest.current = true;
     }, [roomId, setCurrentMessages]);
 
     const { refetch: refetchChatMessages } = chatMessages;
@@ -79,7 +90,7 @@ const ChatWindow: React.FC = () => {
                         from: profile._id,
                         to: otherUser._id,
                     }
-                })
+                });
             } else {
                 fetchChatMessages({
                     variables: {
@@ -104,7 +115,8 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
         if (chatMessages.data) {
             setLoadingChat(false);
-            setCurrentMessages(chatMessages.data.allChatMessages);
+            const messages = [...chatMessages.data.allChatMessages].reverse();
+            setCurrentMessages(messages);
         }
     }, [chatMessages.data, setCurrentMessages]);
 
@@ -118,8 +130,13 @@ const ChatWindow: React.FC = () => {
                     const existingMessages = prev.allChatMessages;
                     const newMessage = subscriptionData.data.onMessageAdded;
 
+                    setReachedTop(false);
+                    setHasMore(true);
+                    shouldScrollToLatest.current = true;
+
                     return {
                         allChatMessages: [newMessage, ...existingMessages],
+                        totalChatMessages: prev.totalChatMessages + 1
                     };
                 },
                 variables: {
@@ -137,8 +154,16 @@ const ChatWindow: React.FC = () => {
                     const existingMessages = prev.allChatMessages;
                     const deletedMessage = subscriptionData.data.onMessageDeleted;
 
+                    setReachedTop(false);
+                    setHasMore(true);
+                    shouldScrollToLatest.current = false;
+                    setTimeout(() => {
+                        shouldScrollToLatest.current = true;
+                    }, 1000);
+
                     return {
                         allChatMessages: existingMessages.filter(message => message._id !== deletedMessage._id),
+                        totalChatMessages: prev.totalChatMessages - 1
                     };
                 },
                 variables: {
@@ -157,6 +182,112 @@ const ChatWindow: React.FC = () => {
         }
 
     }, [currentFamily, profile, otherUser, chatMessages]);
+
+
+    useEffect(() => {
+        const chatWindowBodyElem = chatWindowBodyRef.current;
+
+        const scrollHandler = () => {
+            console.log(`scrolling`);
+            if (!chatWindowBodyRef.current || !chatWindowMessagesContainerRef.current) {
+                return;
+            }
+
+            if (!hasMore) {
+                setReachedTop(false);
+                return;
+            }
+
+            if (hasMore && (chatWindowMessagesContainerRef.current.getBoundingClientRect().top >= chatWindowBodyRef.current.getBoundingClientRect().top)) {
+                setReachedTop(true);
+            }
+
+        };
+
+        const scrollHandlerDebounced = _.debounce(scrollHandler, 500, {
+            maxWait: 0,
+        });
+
+
+        if (chatWindowBodyElem) {
+            chatWindowBodyElem.addEventListener('scroll', scrollHandlerDebounced);
+
+            return () => {
+                chatWindowBodyElem.removeEventListener('scroll', scrollHandlerDebounced);
+            }
+        }
+    });
+
+    const { fetchMore: fetchMoreChatMessages } = chatMessages;
+    useEffect(() => {
+
+        const loadMoreMessages = async () => {
+            if (!hasMore || !fetchMoreChatMessages) {
+                return;
+            }
+
+            if (!currentFamily || !profile || !otherUser) {
+                return;
+            }
+
+            console.log(`fetch more messages`);
+            try {
+                await fetchMoreChatMessages({
+                    variables: {
+                        input: {
+                            familyId: currentFamily._id,
+                            from: profile._id,
+                            to: otherUser._id,
+                            skip: chatMessages.data?.allChatMessages.length,
+                        },
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                        if (!fetchMoreResult) {
+                            return prev;
+                        }
+
+                        let combined: IMessage[] = prev.allChatMessages ? [...prev.allChatMessages] : [];
+
+                        fetchMoreResult.allChatMessages.forEach(msg => {
+                            const alreadyExists = prev.allChatMessages.some(prevMsg => prevMsg._id === msg._id);
+                            if (!alreadyExists) {
+                                combined.push(msg);
+                            }
+                        });
+
+                        const newData: IAllChatMessages = {
+                            allChatMessages: combined,
+                            totalChatMessages: fetchMoreResult.totalChatMessages,
+                        };
+
+                        if (newData.allChatMessages.length === fetchMoreResult.totalChatMessages) {
+                            setHasMore(false);
+                        }
+
+                        return newData;
+                    },
+                });
+            } catch (error) {
+                toast.error(error.message);
+            } finally {
+                setReachedTop(false);
+            }
+        };
+
+        if (reachedTop && hasMore) {
+
+            loadMoreMessages();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        reachedTop, hasMore,
+        currentFamily, otherUser, profile,
+        fetchMoreChatMessages,
+    ]);
+
+    useEffect(() => {
+        console.log(`reached Top: `, reachedTop);
+    }, [reachedTop]);
 
     if (!profile || !otherUser || !currentFamily) {
         return (
@@ -215,6 +346,7 @@ const ChatWindow: React.FC = () => {
                         messageText={message.text}
                         date={message.createdAt}
                         hasOptimisticUI={message.optimisticUI}
+                        isLatestMessage={shouldScrollToLatest.current && message._id === currentMessages[currentMessages.length - 1]?._id}
                     />
                 ))}
             </StyledGroup>
@@ -235,8 +367,11 @@ const ChatWindow: React.FC = () => {
                 </ChatHeaderContent>
                 <StartVideoCallButton toUser={otherUser} />
             </ChatWindowHeader>
-            <ChatWindowBody>
-                {renderChatMessages()}
+            <ChatWindowBody ref={chatWindowBodyRef}>
+                {!chatMessages.error && !chatMessages.loading && hasMore && reachedTop && <LoadingSpinner />}
+                <ChatWindowMessagesContainer ref={chatWindowMessagesContainerRef}>
+                    {renderChatMessages()}
+                </ChatWindowMessagesContainer>
             </ChatWindowBody>
             <ChatWindowFooter>
                 <ChatMessageInput
