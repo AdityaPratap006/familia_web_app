@@ -38,6 +38,7 @@ interface AllChatMessagesInput {
         from: string;
         to: string;
         skip?: number;
+        slotSize?: number;
     };
 }
 
@@ -61,6 +62,7 @@ const ChatWindow: React.FC = () => {
     const chatWindowBodyRef = useRef<HTMLDivElement>(null);
     const chatWindowMessagesContainerRef = useRef<HTMLDivElement>(null);
     const shouldScrollToLatest = useRef(true);
+    const [refetching, setRefetching] = useState(false);
 
     const { roomId } = browserParams;
     const otherUserId = roomId;
@@ -89,6 +91,7 @@ const ChatWindow: React.FC = () => {
                         familyId: currentFamily._id,
                         from: profile._id,
                         to: otherUser._id,
+                        slotSize: currentMessages.length,
                     }
                 });
             } else {
@@ -104,7 +107,7 @@ const ChatWindow: React.FC = () => {
             }
         }
 
-    }, [currentFamily, profile, otherUser, fetchChatMessages, refetchChatMessages]);
+    }, [currentFamily, profile, otherUser, fetchChatMessages, refetchChatMessages, currentMessages]);
 
     useEffect(() => {
         if (chatMessages.error) {
@@ -127,7 +130,7 @@ const ChatWindow: React.FC = () => {
             const unsubscribeMessageAdded = chatMessages.subscribeToMore<MessageAddedResult>({
                 document: ON_MESSAGE_ADDED_SUBSCRIPTION,
                 updateQuery: (prev, { subscriptionData }) => {
-                    const existingMessages = prev.allChatMessages;
+                    const existingMessages = currentMessages;
                     const newMessage = subscriptionData.data.onMessageAdded;
 
                     setReachedTop(false);
@@ -151,7 +154,7 @@ const ChatWindow: React.FC = () => {
             const unsubscribeMessageDeleted = chatMessages.subscribeToMore<MessageDeletedResult>({
                 document: ON_MESSAGE_DELETED_SUBSCRIPTION,
                 updateQuery: (prev, { subscriptionData }) => {
-                    const existingMessages = prev.allChatMessages;
+                    const existingMessages = currentMessages;
                     const deletedMessage = subscriptionData.data.onMessageDeleted;
 
                     setReachedTop(false);
@@ -181,7 +184,7 @@ const ChatWindow: React.FC = () => {
             }
         }
 
-    }, [currentFamily, profile, otherUser, chatMessages]);
+    }, [currentFamily, profile, otherUser, chatMessages, currentMessages]);
 
 
     useEffect(() => {
@@ -222,6 +225,7 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
 
         const loadMoreMessages = async () => {
+
             if (!hasMore || !fetchMoreChatMessages) {
                 return;
             }
@@ -232,6 +236,8 @@ const ChatWindow: React.FC = () => {
 
             console.log(`fetch more messages`);
             try {
+                setRefetching(true);
+
                 await fetchMoreChatMessages({
                     variables: {
                         input: {
@@ -271,6 +277,7 @@ const ChatWindow: React.FC = () => {
                 toast.error(error.message);
             } finally {
                 setReachedTop(false);
+                setRefetching(false);
             }
         };
 
@@ -368,7 +375,7 @@ const ChatWindow: React.FC = () => {
                 <StartVideoCallButton toUser={otherUser} />
             </ChatWindowHeader>
             <ChatWindowBody ref={chatWindowBodyRef}>
-                {!chatMessages.error && !chatMessages.loading && hasMore && reachedTop && <LoadingSpinner />}
+                {refetching && <LoadingSpinner />}
                 <ChatWindowMessagesContainer ref={chatWindowMessagesContainerRef}>
                     {renderChatMessages()}
                 </ChatWindowMessagesContainer>
