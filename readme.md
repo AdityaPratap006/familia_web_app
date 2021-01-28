@@ -32,7 +32,11 @@ Familia is just like slack/discord but for families, users can create many famil
 
  - `TypeScript`
  - `React`
+ - `Styled-Components`
+ - `Firebase (only for Authentication)`
  - `Apollo GraphQL`
  - `Mapbox`
  - `Socket.IO`
  - `WebRTC (using simple-peer)` 
+
+### [Code for Backend is here](https://github.com/AdityaPratap006/familia-server)
