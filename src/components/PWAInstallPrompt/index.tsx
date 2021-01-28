@@ -65,7 +65,7 @@ const PWAInstallPrompt: React.FC = () => {
         >
             <StyledText>
                 You will be able to access Familia as a native mobile or desktop app from your
-                device Home Screen! Install it now :)
+                device's Home Screen! Install it now :)
             </StyledText>
         </Modal>
     );

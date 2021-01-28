@@ -91,6 +91,9 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
                 </>
             }
         >
+            <StatusText>
+                Please only invite people you know in real life!!
+            </StatusText>
             <TextFieldInput
                 id="queryText"
                 name="queryText"
