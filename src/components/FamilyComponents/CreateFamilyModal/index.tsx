@@ -25,7 +25,7 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
     const [loading, setLoading] = useState(false);
 
     const onSubmit = async (inputs: IFormInput) => {
-        console.log(inputs);
+        // console.log(inputs);
 
         setLoading(true);
 
@@ -49,7 +49,7 @@ const CreateFamilyModal: React.FC<CreateFamilyModalProps> = ({ show, closeModal 
             }
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
             toast.error(`Something went wrong, please try again`);
         }

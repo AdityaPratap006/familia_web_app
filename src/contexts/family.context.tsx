@@ -81,10 +81,10 @@ const FamilyProvider: React.FC = (props) => {
     useEffect(() => {
 
         if (familiesOfUser.data && familiesOfUser.data.getFamiliesOfUser.length) {
-            console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
+            // console.log('families: ', familiesOfUser.data.getFamiliesOfUser);
 
             if (setDefaultFamilyByForce.current) {
-                console.log('setting new family by force!');
+                // console.log('setting new family by force!');
                 setDefaultFamilyByForce.current = false;
                 return;
             }
@@ -93,7 +93,7 @@ const FamilyProvider: React.FC = (props) => {
             const families = familiesOfUser.data.getFamiliesOfUser;
 
             if (defaultFamilyId) {
-                console.log('user has a default family, load it');
+                // console.log('user has a default family, load it');
 
                 const defaultFamily = families.find(family => family._id === defaultFamilyId);
 
@@ -104,12 +104,12 @@ const FamilyProvider: React.FC = (props) => {
                     if (currentFamily?._id !== defaultFamily._id) {
                         setCurrentFamilyHandler(defaultFamily);
                     } else {
-                        console.log('default family already set!!!!');
+                        // console.log('default family already set!!!!');
                     }
                 }
 
             } else {
-                console.log('set the first family as default family');
+                // console.log('set the first family as default family');
                 setCurrentFamilyHandler(families[0]);
             }
         }
@@ -117,7 +117,7 @@ const FamilyProvider: React.FC = (props) => {
 
     if (familiesOfUser.error) {
         toast.error(familiesOfUser.error.message);
-        console.log("error loading families: ", familiesOfUser.error);
+        // console.log("error loading families: ", familiesOfUser.error);
     }
 
     const families = familiesOfUser.data?.getFamiliesOfUser || []

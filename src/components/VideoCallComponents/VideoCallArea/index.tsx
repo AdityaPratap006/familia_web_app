@@ -152,7 +152,7 @@ const VideoCallArea: React.FC<VideoCallAreaProps> = ({ toUser: otherPerson }) =>
                 });
             }
         }).catch(err => {
-            console.log(err);
+            // console.log(err);
             toast.error(err.message);
         });
 

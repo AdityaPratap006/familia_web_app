@@ -24,12 +24,12 @@ const linkCredentialWithProvider = async (authProvider: Firebase.auth.AuthProvid
                 await user.linkWithCredential(error.credential);
                 toast.success(`Logged in as ${user.email}!`);
             } catch (error) {
-                console.log('Could not link accounts, ', error);
+                // console.log('Could not link accounts, ', error);
                 toast.error(`Could not link accounts`);
             }
         }
     } catch (newError) {
-        console.log('newError', newError);
+        // console.log('newError', newError);
         toast.error(newError.message, { autoClose: false });
     }
 }
@@ -40,15 +40,15 @@ const handleLoginSuccess = async (user: Firebase.User | null) => {
         return;
     }
 
-    const idTokenResult = await user.getIdTokenResult();
+    // const idTokenResult = await user.getIdTokenResult();
 
-    console.log({
-        token: idTokenResult.token,
-        provider: idTokenResult.signInProvider,
-        name: user.displayName,
-        profilePic: user.photoURL,
-        email: user.email,
-    });
+    // console.log({
+    //     token: idTokenResult.token,
+    //     provider: idTokenResult.signInProvider,
+    //     name: user.displayName,
+    //     profilePic: user.photoURL,
+    //     email: user.email,
+    // });
 
     toast.success(`Logged in as ${user.email}!`);
 }
@@ -86,20 +86,20 @@ const twitterMergeToastId = 'twitter-merge';
 const handleAccountAlreadyExistsError = async (error: AuthAlreadyExistsError, toastId: string, provider: string) => {
     const methods = await firebaseAuth.fetchSignInMethodsForEmail(error.email);
 
-    console.log(methods);
+    // console.log(methods);
 
     let authProvider: Firebase.auth.AuthProvider;
     if (methods.includes(Firebase.auth.GoogleAuthProvider.PROVIDER_ID)) {
-        console.log('merge with google');
+        // console.log('merge with google');
         authProvider = googleAuthProvider;
     } else if (methods.includes(Firebase.auth.FacebookAuthProvider.PROVIDER_ID)) {
-        console.log(`merge with facebook`);
+        // console.log(`merge with facebook`);
         authProvider = facebookAuthProvider;
     } else if (methods.includes(Firebase.auth.TwitterAuthProvider.PROVIDER_ID)) {
-        console.log(`merge with twitter`);
+        // console.log(`merge with twitter`);
         authProvider = twitterAuthProvider;
     } else {
-        console.log('something went wrong, cannot login!');
+        // console.log('something went wrong, cannot login!');
         return;
     }
 
@@ -143,7 +143,7 @@ export const useLogin = () => {
             handleLoginSuccess(user);
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             toast.error(error);
             setLoading(false);
         }
@@ -159,7 +159,7 @@ export const useLogin = () => {
 
         } catch (err) {
             const error = err as AuthAlreadyExistsError;
-            console.log(error);
+            // console.log(error);
 
             if (error.code === accountAlreadyExistsErrorCode) {
                 await handleAccountAlreadyExistsError(error, facebookMergeToastId, `Facebook`);
@@ -181,7 +181,7 @@ export const useLogin = () => {
 
         } catch (err) {
             const error = err as AuthAlreadyExistsError;
-            console.log(error);
+            // console.log(error);
 
             if (error.code === accountAlreadyExistsErrorCode) {
                 await handleAccountAlreadyExistsError(error, twitterMergeToastId, `Twitter`);

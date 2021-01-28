@@ -37,7 +37,7 @@ const ProfileScreen: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        console.log(`Profile Pic:`, profilePic);
+        // console.log(`Profile Pic:`, profilePic);
     }, [profilePic]);
 
     if (!profile) {
@@ -89,7 +89,7 @@ const ProfileScreen: React.FC = () => {
             }
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             toast.error(error.message);
         }
     }

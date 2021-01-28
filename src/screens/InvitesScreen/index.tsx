@@ -65,7 +65,7 @@ const InvitesScreen: React.FC = () => {
         subscribeToMoreReceivedInvites<IInviteDeletedResult>({
             document: INVITE_DELETED_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {
-                console.log(subscriptionData);
+                // console.log(subscriptionData);
                 const existingInvites = prev.getInvitesReceivedByUser;
                 const deletedInviteId = subscriptionData.data.onInviteDeleted;
 
@@ -93,7 +93,7 @@ const InvitesScreen: React.FC = () => {
         subscribeToMoreSentInvites<IInviteDeletedResult>({
             document: INVITE_DELETED_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {
-                console.log(subscriptionData);
+                // console.log(subscriptionData);
                 const existingInvites = prev.getInvitesSentByUser;
                 const deletedInviteId = subscriptionData.data.onInviteDeleted;
 

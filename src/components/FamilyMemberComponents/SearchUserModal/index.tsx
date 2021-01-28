@@ -50,7 +50,7 @@ const SearchUserModal: React.FC<SearchUserModalProps> = ({ show, closeModal }) =
     useEffect(() => {
         if (searchUsersResult.error) {
             toast.error(searchUsersResult.error.message);
-            console.log(`Error searching users:`, searchUsersResult.error);
+            // console.log(`Error searching users:`, searchUsersResult.error);
         }
     }, [searchUsersResult.error]);
 

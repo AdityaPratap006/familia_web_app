@@ -78,7 +78,7 @@ const logoutAction = (dispatch: React.Dispatch<AuthAction>) => {
 export const AuthProvider: React.FC = (props) => {
     const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
     const [loading, setLoading] = useState(true);
-    const [tokenExpirationTime, setTokenExpirationTime] = useState<Date>(new Date(new Date().getTime() + 1000 * 60 * 10));
+    // const [tokenExpirationTime, setTokenExpirationTime] = useState<Date>(new Date(new Date().getTime() + 1000 * 60 * 10));
 
     const handleUserAuthState = async (user: Firebase.User | null) => {
         setLoading(true);
@@ -91,8 +91,8 @@ export const AuthProvider: React.FC = (props) => {
 
         const idTokenResult = await user.getIdTokenResult(true);
 
-        const expiryTime = new Date(idTokenResult.expirationTime);
-        setTokenExpirationTime(expiryTime);
+        // const expiryTime = new Date(idTokenResult.expirationTime);
+        // setTokenExpirationTime(expiryTime);
 
         loginAction(dispatch, {
             name: user.displayName || '',
@@ -120,13 +120,13 @@ export const AuthProvider: React.FC = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        console.log(`token: ${state.user?.token}`);
-    }, [state.user?.token]);
+    // useEffect(() => {
+    //     console.log(`token: ${state.user?.token}`);
+    // }, [state.user?.token]);
 
-    useEffect(() => {
-        console.log(`expiry time: ${tokenExpirationTime.toLocaleString()}`);
-    }, [tokenExpirationTime]);
+    // useEffect(() => {
+    //     console.log(`expiry time: ${tokenExpirationTime.toLocaleString()}`);
+    // }, [tokenExpirationTime]);
 
     const value: IAuthContext = { state, dispatch, loading, setLoading };
 

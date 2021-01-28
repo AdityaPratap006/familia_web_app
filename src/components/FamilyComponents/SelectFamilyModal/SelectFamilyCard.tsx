@@ -32,7 +32,7 @@ const SelectFamilyCard: React.FC<SelectFamilyCardProps> = ({ family, onSelect })
     useEffect(() => {
         if (error) {
             toast.error(`Couldn't load family members`);
-            console.log('members loading failed: ', error);
+            // console.log('members loading failed: ', error);
         }
     }, [error]);
 

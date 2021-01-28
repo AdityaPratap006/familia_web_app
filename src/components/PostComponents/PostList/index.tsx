@@ -45,11 +45,11 @@ const PostList: React.FC = () => {
 
     useEffect(() => {
         if (data) {
-            console.group();
-            data.allPostsInFamily.slice(0, 3).forEach((post) => {
-                console.log(post);
-            });
-            console.groupEnd();
+            // console.group();
+            // data.allPostsInFamily.slice(0, 3).forEach((post) => {
+            //     console.log(post);
+            // });
+            // console.groupEnd();
         }
     }, [data]);
 

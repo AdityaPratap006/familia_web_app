@@ -33,7 +33,7 @@ const UserProfileProvider: React.FC = (props) => {
                 const result = await createUser();
                 if (result.errors) {
                     toast.error(result.errors[0].message);
-                    console.log(result.errors);
+                    // console.log(result.errors);
                 }
 
                 if (result.data) {
@@ -45,7 +45,7 @@ const UserProfileProvider: React.FC = (props) => {
 
             } catch (error) {
                 toast.error(error.message, { autoClose: false });
-                console.log(error);
+                // console.log(error);
             }
         }
 
@@ -56,11 +56,11 @@ const UserProfileProvider: React.FC = (props) => {
         };
     }, [createUser]);
 
-    useEffect(() => {
-        if (userProfileResult.data) {
-            console.log(`refetched user profile: `, userProfileResult.data.profile);
-        }
-    }, [userProfileResult.data]);
+    // useEffect(() => {
+    //     if (userProfileResult.data) {
+    //         console.log(`refetched user profile: `, userProfileResult.data.profile);
+    //     }
+    // }, [userProfileResult.data]);
 
     return (
         <UserProfileContext.Provider value={{

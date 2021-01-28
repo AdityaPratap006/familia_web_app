@@ -147,7 +147,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
     useEffect(() => {
         if (allLikesQuery.error) {
             toast.error(allLikesQuery.error.message);
-            console.log(allLikesQuery.error);
+            // console.log(allLikesQuery.error);
         }
     }, [allLikesQuery.error]);
 
@@ -326,7 +326,7 @@ const LikesSection: React.FC<LikesSectionProps> = ({ postId }) => {
             const handleLikeButtonClick = () => {
 
                 if (requestInProgress) {
-                    console.log(`network request already under way!`);
+                    // console.log(`network request already under way!`);
                     return;
                 }
 
