@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { InviteButtonContainer, InvitesLoadingContainer, InvitesScreenContent, InvitesTab, InvitesTabsHeader, NoInvitesText } from './style';
 import Screen from '../../components/ScreenComponents/Screen';
@@ -9,6 +9,9 @@ import LoadingBouncers from '../../components/LoadingBouncers';
 import { INVITE_CREATED_SUBSCRIPTION, INVITE_DELETED_SUBSCRIPTION } from '../../graphql/invite/subscriptions';
 import Button from '../../components/Button';
 import SearchUserModal from '../../components/FamilyMemberComponents/SearchUserModal';
+import SomethingWentWrongCard from '../../components/Onboarding/SomethingWentWrongCard';
+import { FamilyContext } from '../../contexts/family.context';
+import CreateFamilyModal from '../../components/FamilyComponents/CreateFamilyModal';
 
 enum InviteTab {
     SENT = 'SENT',
@@ -28,6 +31,16 @@ const InvitesScreen: React.FC = () => {
     const receivedInvitesQuery = useQuery<{ getInvitesReceivedByUser: IInvite[] }>(GET_INVITES_RECEIVED_BY_USER);
     const sentInvitesQuery = useQuery<{ getInvitesSentByUser: IInvite[] }>(GET_INVITES_SENT_BY_USER);
     const [showModal, setShowModal] = useState(false);
+    const { families, errorWhileFetchingFamilies, loadingFamilies } = useContext(FamilyContext);
+    const [showCreateFamilyModal, setShowCreateFamilyModal] = useState<boolean>(false);
+
+    const closeCreateFamilyModal = () => {
+        setShowCreateFamilyModal(false);
+    }
+
+    const openCreateFamilyModal = () => {
+        setShowCreateFamilyModal(true);
+    }
 
     const { subscribeToMore: subscribeToMoreReceivedInvites } = receivedInvitesQuery;
     const { subscribeToMore: subscribeToMoreSentInvites } = sentInvitesQuery;
@@ -62,7 +75,7 @@ const InvitesScreen: React.FC = () => {
             }
         });
 
-    }, [subscribeToMoreReceivedInvites]);
+    }, [subscribeToMoreReceivedInvites, families]);
 
     useEffect(() => {
         subscribeToMoreSentInvites<IInviteCreatedResult>({
@@ -103,8 +116,22 @@ const InvitesScreen: React.FC = () => {
         setShowModal(false);
     }
 
+    if (errorWhileFetchingFamilies) {
+        return (
+            <Screen
+                title="Invites"
+            >
+                <SomethingWentWrongCard />
+            </Screen>
+        );
+    }
+
     return (
         <React.Fragment>
+            <CreateFamilyModal
+                show={showCreateFamilyModal}
+                closeModal={closeCreateFamilyModal}
+            />
             <SearchUserModal
                 show={showModal}
                 closeModal={handleCloseModal}
@@ -116,9 +143,16 @@ const InvitesScreen: React.FC = () => {
             >
                 <InvitesScreenContent>
                     <InviteButtonContainer>
-                        <Button type="button" onClick={handleDisplayModal}>
-                            Invite Someone
-                        </Button>
+                        {(!loadingFamilies && !errorWhileFetchingFamilies && families.length === 0) && (
+                            <Button type="button" onClick={openCreateFamilyModal}>
+                                Create a Family
+                            </Button>
+                        )}
+                        {(!loadingFamilies && !errorWhileFetchingFamilies && families.length > 0) && (
+                            <Button type="button" onClick={handleDisplayModal}>
+                                Invite Someone
+                            </Button>
+                        )}
                     </InviteButtonContainer>
                     <InvitesTabsHeader>
                         <InvitesTab
