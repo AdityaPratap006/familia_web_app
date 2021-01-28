@@ -3,8 +3,9 @@ import { FcGoogle } from 'react-icons/fc';
 import { SiFacebook, SiTwitter } from 'react-icons/si';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import { Container, authCardStyle, btnStyle, IconContainer } from './style';
+import { Container, authCardStyle, btnStyle, IconContainer, AuthenticatingText } from './style';
 import { useLogin } from './service';
+import LoadingBouncers from '../../components/LoadingBouncers';
 
 const AuthScreen = () => {
     const {
@@ -45,7 +46,8 @@ const AuthScreen = () => {
         <Container>
             <Card addcss={authCardStyle}>
                 {!loading && authCardContent}
-                {loading && `...loading`}
+                {loading && <AuthenticatingText>Authenticating...</AuthenticatingText>}
+                {loading && <LoadingBouncers medium />}
             </Card>
         </Container>
     );

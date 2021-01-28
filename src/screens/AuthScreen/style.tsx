@@ -119,3 +119,10 @@ export const MergeAccountFooter = styled.footer`
         }
     }
 `;
+
+export const AuthenticatingText = styled.p`
+    font-size: 1.2rem;
+    color: ${props => props.theme.text};
+    font-weight: bold;
+    margin: 2rem 1rem;
+`;
