@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAddToHomescreenPrompt } from '../../hooks/addToHomescreenPrompt.hook';
 import Button from '../Button';
@@ -6,9 +6,9 @@ import Modal from '../Modal';
 import { StyledText } from './style';
 
 const PWAInstallPrompt: React.FC = () => {
-    const { promptState, promptToInstall } = useAddToHomescreenPrompt();
-
+    const { promptState, promptToInstall, setPromptState } = useAddToHomescreenPrompt();
     const [visible, setVisible] = useState(false);
+    const justPrompted = useRef(false);
 
     const hidePrompt = () => {
         setVisible(false);
@@ -17,35 +17,39 @@ const PWAInstallPrompt: React.FC = () => {
     useEffect(() => {
         if (promptState) {
             setVisible(true);
+        } else {
+            setVisible(false);
         }
     }, [promptState]);
 
-    const installHandler = () => {
+    const installHandler = async () => {
         try {
-            promptToInstall();
-            
-            promptState?.userChoice
-            .then(result => {
+            if (promptState) {
+                await promptToInstall();
+
+                const result = await promptState.userChoice;
+
                 if (result.outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
+                    toast.success('Installing Familia App');
+                    setPromptState(null);
+                    hidePrompt();
+                    justPrompted.current = true;
                 } else {
-                    console.log('User dismissed the A2HS prompt');
+                    toast.warn('Installation denied');
+                    hidePrompt();
                 }
-            })
-            .catch(err => {
-                throw err;
-            });
+            }
 
         } catch (error) {
             toast.error(error.message);
-        } finally {
             hidePrompt();
+            justPrompted.current = true;
         }
     }
 
     return (
         <Modal
-            show={visible}
+            show={visible && !justPrompted.current}
             onCancel={hidePrompt}
             headerComponent="Install Familia on your device!"
             footerComponent={

@@ -12,9 +12,10 @@ interface IBeforeInstallPromptEvent extends Event {
 export const useAddToHomescreenPrompt = () => {
     const  [promptState, setPromptState] = useState<IBeforeInstallPromptEvent | null>(null);
 
-    const promptToInstall = () => {
+    const promptToInstall = async () => {
         if (promptState) {
-            return promptState.prompt();
+            await promptState.prompt();
+            return;
         }
 
         return Promise.reject(new Error(`Tried installing before browser sent "beforeinstallprompt" event`));
@@ -35,5 +36,6 @@ export const useAddToHomescreenPrompt = () => {
     return {
         promptState,
         promptToInstall,
+        setPromptState,
     }
 }
